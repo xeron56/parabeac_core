@@ -58,7 +58,7 @@ class FileSystemAnalyzer {
 
   bool containsFile(String path) {
     if (path == null) {
-      throw NullThrownError();
+      //throw NullThrownError();
     }
     return _pathSet.contains(p.normalize(path));
   }

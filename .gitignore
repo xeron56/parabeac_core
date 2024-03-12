@@ -17,3 +17,6 @@ temp/
 .DS_Store
 TestingSketch
 debug
+
+# FVM Version Cache
+.fvm/

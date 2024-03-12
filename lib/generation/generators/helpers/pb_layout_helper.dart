@@ -9,7 +9,7 @@ class PBLayoutManager implements PBGenHelper {
   @override
   String generate(PBIntermediateNode source, PBContext generatorContext) {
     if (source == null) {
-      throw NullThrownError();
+      //throw NullThrownError();
     }
     if (source is PBLayoutIntermediateNode) {
       var buffer = StringBuffer();
@@ -32,7 +32,7 @@ class PBLayoutManager implements PBGenHelper {
   @override
   void registerIntemediateNode(PBIntermediateNode generator) {
     if (generator == null) {
-      throw NullThrownError();
+      //throw NullThrownError();
     }
     if (!containsIntermediateNode(generator)) {
       _registeredGenLayouts.add(generator);

@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
             ownership) {
     if ((entryScreenImport == null && entryScreenName != null) ||
         (entryScreenName == null && entryScreenName != null)) {
-      throw NullThrownError();
+      //throw NullThrownError();
     }
   }
 

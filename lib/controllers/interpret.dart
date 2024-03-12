@@ -134,7 +134,7 @@ class AITServiceBuilder {
   Future<PBIntermediateTree> build(
       {PBIntermediateTree tree, PBContext context}) async {
     if (_intermediateTree == null && tree == null) {
-      throw NullThrownError();
+     // throw NullThrownError();
     }
     _intermediateTree ??= tree;
 
