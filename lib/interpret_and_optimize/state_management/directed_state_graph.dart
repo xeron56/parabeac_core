@@ -10,18 +10,23 @@ class DirectedStateGraph extends DirectedGraph<PBIntermediateNode> {
   /// a `variation` of the `defaultNode`.
   PBIntermediateNode defaultNode;
 
-  // DirectedStateGraph(
-  //   this.defaultNode, {
-  //   Map<Vertex<PBIntermediateNode>, List<Vertex<PBIntermediateNode>>> edges,
-  // }) : super(edges);
   DirectedStateGraph(
-  this.defaultNode, {
-  Map<PBIntermediateNode, Set<PBIntermediateNode>> edges,
-}) : super(edges);
+    this.defaultNode, {
+    Map<Vertex<PBIntermediateNode>, List<Vertex<PBIntermediateNode>>> edges,
+  }) : super(edges);
+
+  
+//   DirectedStateGraph(
+//   this.defaultNode, {
+//   Map<PBIntermediateNode, Set<PBIntermediateNode>> edges,
+// }) : super(edges);
 
   /// Adds `variation` as a state of `defaultNode`
+  // void addVariation(PBIntermediateNode variation) =>
+  //     super.addEdges(defaultNode, {variation});
+
   void addVariation(PBIntermediateNode variation) =>
-      super.addEdges(defaultNode, {variation});
+    super.addEdges(defaultNode, [Vertex(variation)]);
 
   /// Retrieves the states of `defaultNode`
   List<PBIntermediateNode> get states =>
