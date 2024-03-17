@@ -11,9 +11,9 @@ class PBDenyListNode extends PBIntermediateNode {
   @override
   ChildrenStrategy childrenStrategy = NoChildStrategy();
   PBDenyListNode(
-    String UUID,
-    Rectangle3D frame, {
-    String name,
+    String? UUID,
+    Rectangle3D? frame, {
+    String? name,
   }) : super(
           UUID,
           frame,
@@ -21,5 +21,5 @@ class PBDenyListNode extends PBIntermediateNode {
         );
 
   @override
-  PBIntermediateNode fromJson(Map<String, dynamic> json) => null;
+  PBIntermediateNode? fromJson(Map<String, dynamic> json) => null;
 }

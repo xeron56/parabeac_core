@@ -10,19 +10,19 @@ class PBColorGenHelper extends PBAttributesHelper {
   PBColorGenHelper() : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext generatorContext) {
+  String generate(PBIntermediateNode? source, PBContext? generatorContext) {
     if (source == null) {
       return '';
     }
 
-    if (source.auxiliaryData.colors != null &&
-        source.auxiliaryData.colors.first.type
+    if (source.auxiliaryData!.colors != null &&
+        source.auxiliaryData!.colors!.first.type!
             .toLowerCase()
             .contains('gradient')) {
-      return _gradientColor(source.auxiliaryData.colors.first);
+      return _gradientColor(source.auxiliaryData!.colors!.first);
     }
 
-    var color = source.auxiliaryData.color?.toString();
+    var color = source.auxiliaryData!.color?.toString();
     if (color == null) {
       return '';
     }
@@ -52,10 +52,10 @@ class PBColorGenHelper extends PBAttributesHelper {
 
   /// Generate gradient for decoration box
   String _gradientColor(PBFill gradient) {
-    var beginX = _roundNumber(gradient.gradientHandlePositions[0].x);
-    var beginY = _roundNumber(gradient.gradientHandlePositions[0].y);
-    var endX = _roundNumber(gradient.gradientHandlePositions[1].x);
-    var endY = _roundNumber(gradient.gradientHandlePositions[1].y);
+    var beginX = _roundNumber(gradient.gradientHandlePositions![0].x);
+    var beginY = _roundNumber(gradient.gradientHandlePositions![0].y);
+    var endX = _roundNumber(gradient.gradientHandlePositions![1].x);
+    var endY = _roundNumber(gradient.gradientHandlePositions![1].y);
 
     var gradientInfo = _getGradientInfo(gradient);
 
@@ -79,7 +79,7 @@ class PBColorGenHelper extends PBAttributesHelper {
   /// 1 is for gradient stop position
   List<String> _getGradientInfo(PBFill gradient) {
     var gradientInfo = <String>['', ''];
-    for (var stop in gradient.gradientStops) {
+    for (var stop in gradient.gradientStops!) {
       gradientInfo[0] += 'Color(${stop.color.toString()}),';
       gradientInfo[1] += '${stop.position},';
     }
@@ -91,7 +91,7 @@ class PBColorGenHelper extends PBAttributesHelper {
   }
 
   /// Get String from Color
-  String getHexColor(PBColor color) {
+  String getHexColor(PBColor? color) {
     if (color == null) {
       return '';
     }
@@ -101,7 +101,7 @@ class PBColorGenHelper extends PBAttributesHelper {
   /// Finds default color based on common hex patterns.
   ///
   /// Returns `null` if no pattern was found
-  String findDefaultColor(String hex) {
+  String? findDefaultColor(String hex) {
     switch (hex) {
       case '0xffffffff':
         return 'Colors.white';

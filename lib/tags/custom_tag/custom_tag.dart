@@ -23,22 +23,22 @@ import 'package:path/path.dart' as path;
 
 class CustomTag extends PBTag implements PBInjectedIntermediate {
   @override
-  String semanticName = '<custom>';
+  String? semanticName = '<custom>';
 
   @override
-  String name;
+  String? name;
 
   @override
-  ParentLayoutSizing layoutCrossAxisSizing;
+  ParentLayoutSizing? layoutCrossAxisSizing;
   @override
-  ParentLayoutSizing layoutMainAxisSizing;
+  ParentLayoutSizing? layoutMainAxisSizing;
 
-  bool isComponent;
+  bool? isComponent;
   CustomTag(
-    String UUID,
-    Rectangle3D frame,
+    String? UUID,
+    Rectangle3D? frame,
     this.name, {
-    PBIntermediateConstraints constraints,
+    PBIntermediateConstraints? constraints,
     this.layoutCrossAxisSizing,
     this.layoutMainAxisSizing,
     this.isComponent,
@@ -65,13 +65,13 @@ class CustomTag extends PBTag implements PBInjectedIntermediate {
   void extractInformation(PBIntermediateNode incomingNode) {}
 
   @override
-  PBTag generatePluginNode(Rectangle3D frame, PBIntermediateNode originalRef,
+  PBTag generatePluginNode(Rectangle3D? frame, PBIntermediateNode originalRef,
       PBIntermediateTree tree) {
     return CustomTag(
       null,
-      frame.copyWith(),
-      originalRef.name.replaceAll('<custom>', '').pascalCase + 'Custom',
-      constraints: originalRef.constraints.copyWith(),
+      frame!.copyWith(),
+      originalRef.name!.replaceAll('<custom>', '').pascalCase + 'Custom',
+      constraints: originalRef.constraints!.copyWith(),
       layoutCrossAxisSizing: originalRef.layoutCrossAxisSizing,
       layoutMainAxisSizing: originalRef.layoutMainAxisSizing,
       isComponent: originalRef is PBSharedMasterNode &&
@@ -88,8 +88,8 @@ class CustomTagGenerator extends PBGenerator {
       GetIt.I.get<PathService>().customRelativePath;
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
-    var firstChild = context.tree.childrenOf(source).first;
+  String generate(PBIntermediateNode? source, PBContext? context) {
+    var firstChild = context!.tree!.childrenOf(source).first;
     var customDirectory;
 
     /// Need to check if the custom tag belongs to a different page.
@@ -97,38 +97,38 @@ class CustomTagGenerator extends PBGenerator {
     if (firstChild is PBSharedInstanceIntermediateNode) {
       var storage = ElementStorage();
       var treeId = storage.elementToTree[firstChild.SYMBOL_ID];
-      var componentTree = storage.treeUUIDs[treeId];
+      var componentTree = storage.treeUUIDs[treeId]!;
       customDirectory =
           path.join(DIRECTORY_GEN, componentTree.name, DIRECTORY_CUSTOM);
     } else {
       customDirectory =
-          path.join(DIRECTORY_GEN, context.tree.name, DIRECTORY_CUSTOM);
+          path.join(DIRECTORY_GEN, context.tree!.name, DIRECTORY_CUSTOM);
     }
 
-    var children = context.tree.childrenOf(source);
+    var children = context.tree!.childrenOf(source);
     var titleName = PBInputFormatter.formatLabel(
-      source.name,
+      source!.name!,
       isTitle: true,
       destroySpecialSym: true,
     );
-    var cleanName = PBInputFormatter.formatLabel(source.name.snakeCase);
+    var cleanName = PBInputFormatter.formatLabel(source.name!.snakeCase);
 
     // TODO: correct import
-    context.managerData.addImport(FlutterImport(
+    context.managerData!.addImport(FlutterImport(
       '$customDirectory/$cleanName.dart',
       MainInfo().projectName,
     ));
 
-    context.configuration.generationConfiguration.fileStructureStrategy
+    context.configuration!.generationConfiguration!.fileStructureStrategy!
         .commandCreated(
       WriteSymbolCommand(
         Uuid().v4(),
         cleanName,
         customBoilerPlate(
           titleName,
-          context.tree.childrenOf(source).first,
+          context.tree!.childrenOf(source).first,
           context,
-          source,
+          source as CustomTag,
         ),
         symbolPath: '$customDirectory',
         ownership: FileOwnership.DEV,
@@ -137,14 +137,14 @@ class CustomTagGenerator extends PBGenerator {
 
     if (source is CustomTag) {
       // Add tag to analytics
-      if (!context.tree.lockData) {
+      if (!context.tree!.lockData) {
         GetIt.I
             .get<AmplitudeService>()
             .addToSpecified('CustomTag', 'tag', 'Number of tags generated');
       }
       return '''
         $titleName(
-          child: ${children[0].generator.generate(children[0], context)}
+          child: ${children[0].generator!.generate(children[0], context)}
         )
       ''';
     }
@@ -154,7 +154,7 @@ class CustomTagGenerator extends PBGenerator {
   String customBoilerPlate(
     String className,
     PBIntermediateNode child,
-    PBContext context,
+    PBContext? context,
     CustomTag source,
   ) {
     /// Import variable in case we need to import
@@ -165,12 +165,12 @@ class CustomTagGenerator extends PBGenerator {
     /// The '!' is for null safety. Optionally,
     /// we can also add reference to the component.
     var suffix = '!';
-    if (source.isComponent) {
+    if (source.isComponent!) {
       var baseCompName = className.replaceAll('Custom', '');
       import = FlutterImport(
         path.join(
           WriteSymbolCommand.DEFAULT_SYMBOL_PATH,
-          context.tree.name,
+          context!.tree!.name,
           '${baseCompName.snakeCase}.g.dart',
         ),
         MainInfo().projectName,

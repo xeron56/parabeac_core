@@ -3,7 +3,7 @@ import 'package:parabeac_core/generation/flutter_project_builder/post_gen_tasks/
 
 /// Node that represents a Widgetbook component.
 class DashBookStory extends IsolationNode {
-  DashBookStory(String name) : super(name: name);
+  DashBookStory(String? name) : super(name: name);
 
   @override
   String generate() {

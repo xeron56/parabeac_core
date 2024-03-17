@@ -13,7 +13,7 @@ class SentryService {
   /// The [id] is the unique name of the transaction. The [operation] is what is being performed.
   /// The optional [description] is used to provide more context on the [operation] within Sentry.
   static void startTransaction(String id, String operation,
-      {String description}) {
+      {String? description}) {
     if (!transactions.containsKey(id)) {
       final transaction =
           Sentry.startTransaction(id, operation, description: description);
@@ -31,10 +31,10 @@ class SentryService {
   /// The [operation] is what the `child` transaction is performing, and must be unique.
   /// The optional [description] is used to provide more context on the [operation] within Sentry.
   static void startChildTransactionFrom(String id, String operation,
-      {String description}) {
+      {String? description}) {
     if (transactions.containsKey(id) && !transactions.containsKey(operation)) {
       final transaction =
-          transactions[id].startChild(operation, description: description);
+          transactions[id]!.startChild(operation, description: description);
 
       transactions[operation] = transaction;
     } else {
@@ -46,7 +46,7 @@ class SentryService {
   /// Finishes transaction with a unique [id].
   static Future<void> finishTransaction(String id) async {
     if (transactions.containsKey(id)) {
-      await transactions[id].finish();
+      await transactions[id]!.finish();
       transactions.remove(id);
     } else {
       _logger

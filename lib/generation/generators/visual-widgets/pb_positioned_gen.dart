@@ -16,9 +16,9 @@ class PBPositionedGenerator extends PBGenerator {
   PBPositionedGenerator({this.overrideChildDim = false}) : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     if (source is InjectedPositioned) {
-      var sourceChildren = context.tree.childrenOf(source);
+      var sourceChildren = context!.tree!.childrenOf(source);
 
       var buffer = StringBuffer('Positioned(');
 
@@ -29,14 +29,14 @@ class PBPositionedGenerator extends PBGenerator {
       /// This is going to be the case until we find a more suitable solution for the generation
       /// phase overall.
       var valueHolder = PositionedValueHolder(
-          top: source.valueHolder.top,
-          bottom: source.valueHolder.bottom,
-          left: source.valueHolder.left,
-          right: source.valueHolder.right,
-          width: source.valueHolder.width,
-          height: source.valueHolder.height);
+          top: source.valueHolder!.top,
+          bottom: source.valueHolder!.bottom,
+          left: source.valueHolder!.left,
+          right: source.valueHolder!.right,
+          width: source.valueHolder!.width,
+          height: source.valueHolder!.height);
 
-      var positionalAtt = _getPositionalAtt(valueHolder, source.constraints)
+      var positionalAtt = _getPositionalAtt(valueHolder, source.constraints!)
         ..forEach((pos) =>
             pos.boilerplate = _getBoilerplate(context.sizingContext, pos));
 
@@ -45,7 +45,7 @@ class PBPositionedGenerator extends PBGenerator {
 
         var ratio = context.getRatioPercentage;
         for (var attribute in positionalAtt) {
-          if (!attribute.remainPointValue) {
+          if (!attribute.remainPointValue!) {
             attribute.value =
                 ratio(attribute.value, isHorizontal: attribute.isXAxis);
           }
@@ -59,7 +59,7 @@ class PBPositionedGenerator extends PBGenerator {
 
         // source.child.currentContext = source.currentContext;
         buffer.write(
-            'child: ${sourceChildren.first.generator.generate(sourceChildren.first, context)},');
+            'child: ${sourceChildren.first.generator!.generate(sourceChildren.first, context)},');
       } catch (e, stackTrace) {
         logger.error(e.toString());
         Sentry.captureException(e, stackTrace: stackTrace);
@@ -73,7 +73,7 @@ class PBPositionedGenerator extends PBGenerator {
   /// Getting the boilerplate needed to fill in the generation depending on the [sizingValueContext].
   String _getBoilerplate(SizingValueContext sizingValueContext,
       _PositionedValue _positionedValue) {
-    if (_positionedValue.remainPointValue) {
+    if (_positionedValue.remainPointValue!) {
       return '';
     }
 
@@ -108,12 +108,12 @@ class PBPositionedGenerator extends PBGenerator {
   /// ```
   /// Where it should be `0`.
   String _normalizeValue(
-      String preValueStatement, _PositionedValue positionalValue) {
-    var n = double.parse(positionalValue.value.toStringAsFixed(3));
+      String? preValueStatement, _PositionedValue positionalValue) {
+    var n = double.parse(positionalValue.value!.toStringAsFixed(3));
     if (n == 0) {
       return '0';
     }
-    if (positionalValue.remainPointValue) {
+    if (positionalValue.remainPointValue!) {
       return '$n';
     }
     return '$preValueStatement$n';
@@ -123,25 +123,25 @@ class PBPositionedGenerator extends PBGenerator {
       PositionedValueHolder positionedValueHolder,
       PBIntermediateConstraints constraints) {
     var attributes = <_PositionedValue>[];
-    if (!constraints.pinLeft && !constraints.pinRight) {
+    if (!constraints.pinLeft! && !constraints.pinRight!) {
       ///use [positionedValueHolder.left]
       attributes
           .add(_PositionedValue(positionedValueHolder.left, 'left', false));
       attributes.add(_PositionedValue(
           positionedValueHolder.width, 'width', constraints.fixedWidth));
-    } else if (constraints.pinLeft && !constraints.pinRight) {
+    } else if (constraints.pinLeft! && !constraints.pinRight!) {
       ///use [positionedValueHolder.left]
       attributes
           .add(_PositionedValue(positionedValueHolder.left, 'left', true));
       attributes.add(_PositionedValue(
           positionedValueHolder.width, 'width', constraints.fixedWidth));
-    } else if (!constraints.pinLeft && constraints.pinRight) {
+    } else if (!constraints.pinLeft! && constraints.pinRight!) {
       /// use [positionedValueHolder.right]
       attributes
           .add(_PositionedValue(positionedValueHolder.right, 'right', true));
       attributes.add(_PositionedValue(
           positionedValueHolder.width, 'width', constraints.fixedWidth));
-    } else if (constraints.pinLeft && constraints.pinRight) {
+    } else if (constraints.pinLeft! && constraints.pinRight!) {
       attributes
           .add(_PositionedValue(positionedValueHolder.left, 'left', true));
       attributes
@@ -149,23 +149,23 @@ class PBPositionedGenerator extends PBGenerator {
     }
 
     ///Vertical constrains
-    if (!constraints.pinTop && !constraints.pinBottom) {
+    if (!constraints.pinTop! && !constraints.pinBottom!) {
       attributes.add(
           _PositionedValue(positionedValueHolder.top, 'top', false, false));
       attributes.add(_PositionedValue(positionedValueHolder.height, 'height',
           constraints.fixedHeight, false));
-    } else if (constraints.pinTop && !constraints.pinBottom) {
+    } else if (constraints.pinTop! && !constraints.pinBottom!) {
       attributes
           .add(_PositionedValue(positionedValueHolder.top, 'top', true, false));
       attributes.add(_PositionedValue(positionedValueHolder.height, 'height',
           constraints.fixedHeight, false));
-    } else if (!constraints.pinTop && constraints.pinBottom) {
+    } else if (!constraints.pinTop! && constraints.pinBottom!) {
       /// use [positionedValueHolder.right]
       attributes.add(_PositionedValue(
           positionedValueHolder.bottom, 'bottom', true, false));
       attributes.add(_PositionedValue(positionedValueHolder.height, 'height',
           constraints.fixedHeight, false));
-    } else if (constraints.pinTop && constraints.pinBottom) {
+    } else if (constraints.pinTop! && constraints.pinBottom!) {
       attributes
           .add(_PositionedValue(positionedValueHolder.top, 'top', true, false));
       attributes.add(_PositionedValue(
@@ -177,11 +177,11 @@ class PBPositionedGenerator extends PBGenerator {
 
 class _PositionedValue {
   final String attributeName;
-  final bool remainPointValue;
+  final bool? remainPointValue;
   final bool isXAxis;
 
-  String boilerplate;
-  double value;
+  String? boilerplate;
+  double? value;
 
   _PositionedValue(this.value, this.attributeName, this.remainPointValue,
       [this.isXAxis = true]);

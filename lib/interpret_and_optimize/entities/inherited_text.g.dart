@@ -1,5 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+import 'package:collection/collection.dart' show IterableExtension;
 part of 'inherited_text.dart';
 
 // **************************************************************************
@@ -8,15 +9,15 @@ part of 'inherited_text.dart';
 
 InheritedText _$InheritedTextFromJson(Map<String, dynamic> json) {
   return InheritedText(
-    json['UUID'] as String,
+    json['UUID'] as String?,
     Rectangle3D.fromJson(json['boundaryRectangle'] as Map<String, dynamic>),
     name: json['name'],
-    isTextParameter: json['isTextParameter'] as bool ?? false,
+    isTextParameter: json['isTextParameter'] as bool? ?? false,
     prototypeNode: PrototypeNode.prototypeNodeFromJson(
-        json['prototypeNodeUUID'] as String),
-    text: json['content'] as String,
+        json['prototypeNodeUUID'] as String?),
+    text: json['content'] as String?,
   )
-    ..subsemantic = json['subsemantic'] as String
+    ..subsemantic = json['subsemantic'] as String?
     ..constraints = json['constraints'] == null
         ? null
         : PBIntermediateConstraints.fromJson(
@@ -29,7 +30,7 @@ InheritedText _$InheritedTextFromJson(Map<String, dynamic> json) {
         ? null
         : IntermediateAuxiliaryData.fromJson(
             json['style'] as Map<String, dynamic>)
-    ..type = json['type'] as String;
+    ..type = json['type'] as String?;
 }
 
 Map<String, dynamic> _$InheritedTextToJson(InheritedText instance) =>
@@ -41,7 +42,7 @@ Map<String, dynamic> _$InheritedTextToJson(InheritedText instance) =>
           _$ParentLayoutSizingEnumMap[instance.layoutMainAxisSizing],
       'layoutCrossAxisSizing':
           _$ParentLayoutSizingEnumMap[instance.layoutCrossAxisSizing],
-      'boundaryRectangle': Rectangle3D.toJson(instance.frame),
+      'boundaryRectangle': Rectangle3D.toJson(instance.frame!),
       'style': instance.auxiliaryData,
       'name': instance.name,
       'isTextParameter': instance.isTextParameter,
@@ -50,10 +51,10 @@ Map<String, dynamic> _$InheritedTextToJson(InheritedText instance) =>
       'content': instance.text,
     };
 
-T _$enumDecode<T>(
+T? _$enumDecode<T>(
   Map<T, dynamic> enumValues,
   dynamic source, {
-  T unknownValue,
+  T? unknownValue,
 }) {
   if (source == null) {
     throw ArgumentError('A value must be provided. Supported values: '
@@ -61,7 +62,7 @@ T _$enumDecode<T>(
   }
 
   final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
+      .singleWhereOrNull((e) => e.value == source)
       ?.key;
 
   if (value == null && unknownValue == null) {
@@ -71,10 +72,10 @@ T _$enumDecode<T>(
   return value ?? unknownValue;
 }
 
-T _$enumDecodeNullable<T>(
+T? _$enumDecodeNullable<T>(
   Map<T, dynamic> enumValues,
   dynamic source, {
-  T unknownValue,
+  T? unknownValue,
 }) {
   if (source == null) {
     return null;

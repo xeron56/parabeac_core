@@ -23,56 +23,56 @@ class PBConfiguration {
   /// TODO: Abstract this when we have a Figma Command and change command-line names
   /// OAuth Token to call Figma API
   @JsonKey(name: 'oauth')
-  String figmaOauthToken;
+  String? figmaOauthToken;
 
   /// API key needed to do API calls
   @JsonKey(name: 'figKey')
-  String figmaKey;
+  String? figmaKey;
 
   @JsonKey(name: 'fig')
-  String figmaProjectID;
+  String? figmaProjectID;
 
   /// Name to be given to the exported project
   @JsonKey(name: 'project-name', defaultValue: 'foo')
-  String projectName;
+  String? projectName;
 
   /// Where the conversion result will be output.
   @JsonKey(name: 'out')
-  String outputPath;
+  String? outputPath;
 
   /// Path to PBDL file
   @JsonKey(name: 'pbdl-in')
-  String pbdlPath;
+  String? pbdlPath;
 
   /// Whether parabeac_core should export a PBDL file
   @JsonKey(name: 'export-pbdl', defaultValue: false)
-  bool exportPBDL;
+  bool? exportPBDL;
 
   ///The [GenerationConfiguration] that is going to be use in the generation of the code
   ///
   ///This is going to be defaulted to [GenerationConfiguration] if nothing else is specified.
-  GenerationConfiguration generationConfiguration;
+  GenerationConfiguration? generationConfiguration;
 
   @JsonKey(defaultValue: 'material3')
-  String designSystem;
+  String? designSystem;
 
   /// The type of folder architecture that Parabeac-Core should follow
   /// It will be domain, as default
   @JsonKey(defaultValue: 'domain')
-  String folderArchitecture;
+  String? folderArchitecture;
 
   @JsonKey(defaultValue: true)
   final bool scaling;
 
   @JsonKey(name: 'breakpoints')
-  final Map breakpoints;
+  final Map? breakpoints;
 
   @JsonKey(defaultValue: 'None')
-  String componentIsolation;
+  String? componentIsolation;
 
   /// The level of integration of this project
   @JsonKey(defaultValue: IntegrationLevel.screens, name: 'project-type')
-  IntegrationLevel integrationLevel;
+  IntegrationLevel? integrationLevel;
 
   PBConfiguration(
     this.scaling,

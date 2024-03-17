@@ -23,7 +23,7 @@ class RiverpodMiddleware extends StateManagementMiddleware {
   final PACKAGE_NAME = 'flutter_riverpod';
   final PACKAGE_VERSION = '^0.12.1';
 
-  RiverpodMiddleware(PBGenerationManager generationManager,
+  RiverpodMiddleware(PBGenerationManager? generationManager,
       RiverpodGenerationConfiguration configuration)
       : super(generationManager, configuration);
 
@@ -38,33 +38,33 @@ class RiverpodMiddleware extends StateManagementMiddleware {
     ''';
   }
 
-  String getImportPath(PBSharedInstanceIntermediateNode node, fileStrategy) {
+  String? getImportPath(PBSharedInstanceIntermediateNode node, fileStrategy) {
     var symbolMaster =
-        PBSymbolStorage().getSharedMasterNodeBySymbolID(node.SYMBOL_ID);
+        PBSymbolStorage().getSharedMasterNodeBySymbolID(node.SYMBOL_ID)!;
     return fileStrategy.GENERATED_PROJECT_PATH +
         fileStrategy.RELATIVE_MODEL_PATH +
-        '${ImportHelper.getName(symbolMaster.name).snakeCase}.dart';
+        '${ImportHelper.getName(symbolMaster.name!).snakeCase}.dart';
   }
 
   @override
   Future<PBIntermediateNode> handleStatefulNode(
-      PBIntermediateNode node, PBContext context) {
+      PBIntermediateNode? node, PBContext context) {
     String watcherName;
     var managerData = context.managerData;
     var fileStrategy =
-        configuration.fileStructureStrategy as RiverpodFileStructureStrategy;
+        configuration.fileStructureStrategy as RiverpodFileStructureStrategy?;
     var elementStorage = ElementStorage();
 
     if (node is PBSharedInstanceIntermediateNode) {
-      context.project.genProjectData
+      context.project!.genProjectData!
           .addDependencies(PACKAGE_NAME, PACKAGE_VERSION);
-      managerData.addImport(
+      managerData!.addImport(
           FlutterImport('flutter_riverpod.dart', 'flutter_riverpod'));
-      watcherName = getVariableName(node.functionCallName.snakeCase);
+      watcherName = getVariableName(node.functionCallName!.snakeCase);
       var watcher = PBVariable(watcherName + '_provider', 'final ', true,
-          'ChangeNotifierProvider((ref) => ${ImportHelper.getName(node.functionCallName).pascalCase}())');
+          'ChangeNotifierProvider((ref) => ${ImportHelper.getName(node.functionCallName!).pascalCase}())');
 
-      if (context.tree.rootNode.generator.templateStrategy
+      if (context.tree!.rootNode!.generator!.templateStrategy
           is StatelessTemplateStrategy) {
         managerData.addGlobalVariable(watcher);
       } else {
@@ -75,10 +75,10 @@ class RiverpodMiddleware extends StateManagementMiddleware {
       ///
       /// This ensures we have the correct model imports when generating the tree.
       var defaultNodeTreeUUID = elementStorage
-          .elementToTree[stmgHelper.getStateGraphOfNode(node).defaultNode.UUID];
+          .elementToTree[stmgHelper.getStateGraphOfNode(node)!.defaultNode.UUID];
       var defaultNodeTree = elementStorage.treeUUIDs[defaultNodeTreeUUID];
 
-      context.tree.addDependent(defaultNodeTree);
+      context.tree!.addDependent(defaultNodeTree);
 
       if (node.generator is! StringGeneratorAdapter) {
         node.generator = StringGeneratorAdapter(getConsumer(
@@ -87,10 +87,10 @@ class RiverpodMiddleware extends StateManagementMiddleware {
 
       return Future.value(node);
     }
-    watcherName = getNameOfNode(node);
+    watcherName = getNameOfNode(node!);
 
     var parentDirectory = WriteSymbolCommand.DEFAULT_SYMBOL_PATH +
-        ImportHelper.getName(node.name).snakeCase;
+        ImportHelper.getName(node.name!).snakeCase;
 
     // Generate model's imports
     var modelGenerator = PBFlutterGenerator(ImportHelper(),
@@ -103,17 +103,17 @@ class RiverpodMiddleware extends StateManagementMiddleware {
     [
       /// This generated the `changeNotifier` that goes under the [fileStrategy.RELATIVE_MODEL_PATH]
       WriteSymbolCommand(
-        context.tree.UUID,
+        context.tree!.UUID,
         parentDirectory,
         code,
-        symbolPath: fileStrategy.RELATIVE_MODEL_PATH,
+        symbolPath: fileStrategy!.RELATIVE_MODEL_PATH,
         ownership: FileOwnership.DEV,
       ),
       // Generate default node's view page
       WriteSymbolCommand(
-        context.tree.UUID,
-        node.name.snakeCase,
-        generationManager.generate(node, context),
+        context.tree!.UUID,
+        node.name!.snakeCase,
+        generationManager!.generate(node, context),
         symbolPath: parentDirectory,
       ),
     ].forEach(fileStrategy.commandCreated);
@@ -121,18 +121,18 @@ class RiverpodMiddleware extends StateManagementMiddleware {
     var nodeStateGraph = stmgHelper.getStateGraphOfNode(node);
     nodeStateGraph?.states?.forEach((state) {
       var treeUUID = elementStorage.elementToTree[state.UUID];
-      var tree = elementStorage.treeUUIDs[treeUUID];
+      var tree = elementStorage.treeUUIDs[treeUUID]!;
       // generate imports for state view
       var data = PBGenerationViewData()
         ..addImport(FlutterImport('material.dart', 'flutter'));
-      tree.generationViewData.importsList.forEach(data.addImport);
-      tree.context.generationManager =
+      tree.generationViewData!.importsList.forEach(data.addImport);
+      tree.context!.generationManager =
           PBFlutterGenerator(ImportHelper(), data: data);
 
       fileStrategy.commandCreated(WriteSymbolCommand(
         tree.UUID,
-        state.name.snakeCase,
-        tree.context.generationManager.generate(state, tree.context),
+        state.name!.snakeCase,
+        tree.context!.generationManager!.generate(state, tree.context),
         symbolPath: parentDirectory,
       ));
     });

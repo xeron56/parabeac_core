@@ -25,13 +25,13 @@ enum TREE_TYPE {
 }
 
 @JsonSerializable()
-class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
-  Logger _logger;
-  String _UUID;
-  String get UUID => _UUID;
+class PBIntermediateTree extends DirectedGraph<PBIntermediateNode?> {
+  late Logger _logger;
+  String? _UUID;
+  String? get UUID => _UUID;
 
   @JsonKey(ignore: true)
-  PBContext context;
+  PBContext? context;
 
   /// The [TREE_TYPE] of the [PBIntermediateTree].
   @JsonKey(ignore: true)
@@ -48,22 +48,22 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
   bool lockData = false;
 
   @JsonKey(defaultValue: true)
-  bool convert;
+  bool? convert;
 
-  PBGenerationViewData _generationViewData;
+  PBGenerationViewData? _generationViewData;
   @JsonKey(ignore: true)
-  PBGenerationViewData get generationViewData => _generationViewData;
-  set generationViewData(PBGenerationViewData viewData) {
+  PBGenerationViewData? get generationViewData => _generationViewData;
+  set generationViewData(PBGenerationViewData? viewData) {
     if (!lockData) {
       _generationViewData = viewData;
     }
   }
 
   @JsonKey(ignore: true)
-  PBIntermediateNode _rootNode;
+  PBIntermediateNode? _rootNode;
   @JsonKey(ignore: true)
-  PBIntermediateNode get rootNode => _rootNode;
-  set rootNode(PBIntermediateNode rootNode) {
+  PBIntermediateNode? get rootNode => _rootNode;
+  set rootNode(PBIntermediateNode? rootNode) {
     if (!lockData) {
       _rootNode = rootNode;
       _identifier ??= rootNode?.name?.snakeCase ?? name.snakeCase;
@@ -81,23 +81,23 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
   /// List of [PBIntermediteTree]s that `this` depends on.
   ///
   /// In other words, `this` can not be generated until its [dependentsOn]s are generated.
-  Set<PBIntermediateTree> _dependentsOn;
+  late Set<PBIntermediateTree> _dependentsOn;
   Iterator<PBIntermediateTree> get dependentsOn => _dependentsOn.iterator;
 
   /// The [name] of the original [DesignPage] that the [PBIntermediateTree] belongs to.
-  String _name;
-  String get name => _name.snakeCase;
-  set name(String name) {
+  String? _name;
+  String get name => _name!.snakeCase;
+  set name(String? name) {
     if (!lockData) {
       _name = name;
     }
   }
 
-  String get platformName => _name;
+  String? get platformName => _name;
 
   final _childrenModObservers = <String, List<ChildrenModEventHandler>>{};
 
-  ElementStorage _elementStorage;
+  late ElementStorage _elementStorage;
 
   /// [identifier] represents the name of an actual tree or the [DesignScreen],
   /// while [name] originally represented the [name] of a [DesignPage].
@@ -105,20 +105,20 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
   /// This primarly is used to group all [DesignScreen]s independent of their [UUID],
   /// platform or orientation. The [identifier] is just going to be set once, its going
   /// to be the [name] of the [rootNode].
-  String _identifier;
+  String? _identifier;
   @JsonKey(name: 'name')
-  String get identifier => _identifier?.camelCase?.snakeCase ?? 'no_name_found';
+  String get identifier => _identifier?.camelCase.snakeCase ?? 'no_name_found';
 
   @override
   @JsonKey(ignore: true)
-  Comparator<Vertex<PBIntermediateNode>> get comparator => super.comparator;
+  Comparator<Vertex<PBIntermediateNode?>?>? get comparator => super.comparator;
 
   PBIntermediateTree({
-    String name,
+    String? name,
     this.context,
-    Map<PBIntermediateNode, Set<PBIntermediateNode>> edges,
-    Comparator<Vertex<PBIntermediateNode>> comparator,
-  }) : super(edges ?? {}, comparator: comparator) {
+    Map<PBIntermediateNode, Set<PBIntermediateNode>>? edges,
+    Comparator<Vertex<PBIntermediateNode?>?>? comparator,
+  }) : super(edges as Map<Vertex<PBIntermediateNode>?, List<Vertex<PBIntermediateNode>?>>? ?? {}, comparator: comparator) {
     _name = name;
     _dependentsOn = {};
     _UUID = Uuid().v4();
@@ -129,20 +129,20 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
   /// Finds a [PBIntermediateNode] that is a child of `parent` of `type` in the [PBIntermediateTree], containing `name`.
   ///
   /// Returns null if not found.
-  PBIntermediateNode findChild(
-      PBIntermediateNode parent, String name, Type type) {
+  PBIntermediateNode? findChild(
+      PBIntermediateNode? parent, String name, Type type) {
     /// In case Parent is a Instances we look up for the hinttext
     /// inside the overridable properties and recursively call the method
     if (parent is PBSharedInstanceIntermediateNode) {
-      for (var property in parent.sharedParamValues) {
-        if (property.overrideName.contains(name)) {
+      for (var property in parent.sharedParamValues!) {
+        if (property.overrideName!.contains(name)) {
           return findChild(property.value, name, type);
         }
       }
     }
 
     /// Check if the node is a match
-    if (parent.name.contains(name) && parent.runtimeType == type) {
+    if (parent!.name!.contains(name) && parent.runtimeType == type) {
       return parent;
     }
 
@@ -163,12 +163,12 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
     _childrenModObservers[UUID] = mods;
   }
 
-  List<PBIntermediateNode> childrenOf(PBIntermediateNode node) =>
+  List<PBIntermediateNode> childrenOf(PBIntermediateNode? node) =>
       edges(node).cast<PBIntermediateNode>();
 
   @override
-  void addEdges(Vertex<PBIntermediateNode> parent,
-      [List<Vertex<PBIntermediateNode>> children]) {
+  void addEdges(Vertex<PBIntermediateNode?> parent,
+      [List<Vertex<PBIntermediateNode?>?> children]) {
     if (children == null) {}
     // var children = childrenVertices.map((e) => e).toList();
 
@@ -178,11 +178,11 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
     /// nodes might just be allowed to have a single child, while others are can have more that
     /// one child.
     // ignore: omit_local_variable_types
-    ChildrenMod<PBIntermediateNode> addChildren =
-        (PBIntermediateNode parent, List<PBIntermediateNode> children) {
+    ChildrenMod<PBIntermediateNode?> addChildren =
+        (PBIntermediateNode? parent, List<PBIntermediateNode?> children) {
       children.forEach((child) {
-        child.parent = parent;
-        child.attributeName = parent.getAttributeNameOf(child);
+        child!.parent = parent;
+        child.attributeName = parent!.getAttributeNameOf(child);
 
         if (!_elementStorage.elementToTree.containsKey(child.UUID)) {
           _elementStorage.elementToTree[child.UUID] = _UUID;
@@ -192,15 +192,15 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
       if (parent is ChildrenObserver && context != null) {
         (parent as ChildrenObserver).childrenModified(children, context);
       }
-      return super.addEdges(parent, children);
+      return super.addEdges(parent!, children);
     };
     (parent as PBIntermediateNode).childrenStrategy.addChild(
         parent, children.cast<PBIntermediateNode>(), addChildren, this);
   }
 
   @override
-  void removeEdges(Vertex<PBIntermediateNode> parent,
-      [List<Vertex<PBIntermediateNode>> children]) {
+  void removeEdges(Vertex<PBIntermediateNode?> parent,
+      [List<Vertex<PBIntermediateNode?>>? children]) {
     if (parent is ChildrenObserver) {
       (parent as ChildrenObserver)
           .childrenModified(children?.cast<PBIntermediateNode>(), context);
@@ -213,9 +213,9 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
   /// Essentially [super.remove()], however, if [keepChildren] is `true`, its going
   /// to add the [edges(vertex)] into the [vertex.parent]; preventing the lost of the
   /// [edges(vertex)].
-  void remove(Vertex<PBIntermediateNode> vertex, {bool keepChildren = false}) {
+  void remove(Vertex<PBIntermediateNode?> vertex, {bool keepChildren = false}) {
     if (keepChildren && vertex is PBIntermediateNode) {
-      addEdges(vertex.parent, edges(vertex));
+      addEdges(vertex.parent!, edges(vertex));
     }
     super.remove(vertex);
   }
@@ -223,14 +223,14 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
   /// Adding [PBIntermediateTree] as a dependecy.
   ///
   /// The [dependent] or its [dependent.rootNode] can not be `null`
-  void addDependent(PBIntermediateTree dependent) {
+  void addDependent(PBIntermediateTree? dependent) {
     if (dependent != null && !lockData) {
       _dependentsOn.add(dependent);
     }
   }
 
   void replaceChildrenOf(
-      PBIntermediateNode parent, List<PBIntermediateNode> children) {
+      PBIntermediateNode parent, List<PBIntermediateNode?> children) {
     removeEdges(parent);
     addEdges(parent, children.toList());
   }
@@ -268,7 +268,7 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
       addEdges(replacement, children);
     }
 
-    addEdges(target.parent, [replacement]);
+    addEdges(target.parent!, [replacement]);
     return true;
   }
 
@@ -277,9 +277,9 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
   /// As a side effect, [insertee] will be the new parent of [child].
   /// Additionally, [insertee] will be the new child of [parent].
   void injectBetween(
-      {PBIntermediateNode parent,
-      PBIntermediateNode child,
-      PBIntermediateNode insertee}) {
+      {required PBIntermediateNode parent,
+      required PBIntermediateNode child,
+      required PBIntermediateNode insertee}) {
     assert(parent != null && child != null && insertee != null);
 
     addEdges(insertee, [child]);
@@ -296,13 +296,13 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode> {
   /// meaning that the [rootNode] is of type [InheritedScaffold]
   bool isScreen() => tree_type == TREE_TYPE.SCREEN;
 
-  bool isHomeScreen() => isScreen() && rootNode is InheritedScaffold
+  bool? isHomeScreen() => isScreen() && rootNode is InheritedScaffold
       ? (rootNode as InheritedScaffold).isHomeScreen
       : false;
 
   /// Finding the depth of the [node] in relation to the [rootNode].
   int depthOf(node) {
-    return dist(rootNode, node);
+    return dist(rootNode!, node);
   }
 
   /// Find the distance between [source] and [target], where the [source] is an
@@ -347,7 +347,7 @@ abstract class ChildrenObserver {
   ///
   /// [context] could be `null` when when the [PBIntermediateTree] is being initialized. [ChildrenObserver]
   /// can still modify the [children] but it would be unable to add/remove children.
-  void childrenModified(List<PBIntermediateNode> children, [PBContext context]);
+  void childrenModified(List<PBIntermediateNode?>? children, [PBContext? context]);
 }
 
 enum CHILDREN_MOD { CREATED, REMOVED, MODIFIED }

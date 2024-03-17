@@ -5,15 +5,15 @@ part 'intermediate_effect.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class PBEffect {
-  String type;
-  bool visible;
-  num radius;
-  PBColor color;
-  String blendMode;
-  Map offset;
-  bool showShadowBehindNode;
+  String? type;
+  bool? visible;
+  num? radius;
+  PBColor? color;
+  String? blendMode;
+  Map? offset;
+  bool? showShadowBehindNode;
 
-  var pbdlType = 'effect';
+  String? pbdlType = 'effect';
 
   PBEffect({
     this.type,

@@ -15,11 +15,11 @@ class IsolationPostGenTask implements PostGenTask {
   @override
   void execute() {
     var isolationCode = compIsoConfiguration.generateCode(
-        generationConfiguration.generationManager.importProcessor);
+        generationConfiguration.generationManager!.importProcessor);
     var fileName = compIsoConfiguration.fileName;
 
     /// TODO: WriteSymbolCommand was used as a workaround. We should generate a command that generically writes any file
-    generationConfiguration.fileStructureStrategy.commandCreated(
+    generationConfiguration.fileStructureStrategy!.commandCreated(
         WriteSymbolCommand(null, fileName, isolationCode, symbolPath: 'lib/'));
   }
 }

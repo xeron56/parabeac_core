@@ -13,7 +13,7 @@ class PBStateManagementHelper {
 
   factory PBStateManagementHelper() => _instance;
 
-  PBStateManagementLinker linker;
+  late PBStateManagementLinker linker;
 
   PBStateManagementHelper._internal() {
     linker = PBStateManagementLinker();
@@ -43,7 +43,7 @@ class PBStateManagementHelper {
   //     isValidStateNode(fullName) ? fullName.split('/')[1].split(',') : [];
 
   /// Returns true if `name` is a valid state management name
-  bool isValidStateNode(PBIntermediateNode node) {
+  bool isValidStateNode(PBIntermediateNode? node) {
     if (node is PBSharedMasterNode) {
       return node.sharedNodeSetID != null;
     } else if (node is PBSharedInstanceIntermediateNode) {
@@ -56,7 +56,7 @@ class PBStateManagementHelper {
   /// Returns the [DirectedStateGraph] of `node`.
   ///
   /// Returns `null` if `node` has no `DirectedStateGraph`
-  DirectedStateGraph getStateGraphOfNode(PBIntermediateNode node) {
+  DirectedStateGraph? getStateGraphOfNode(PBIntermediateNode? node) {
     if (isValidStateNode(node) &&
         (node is PBSharedMasterNode ||
             node is PBSharedInstanceIntermediateNode)) {

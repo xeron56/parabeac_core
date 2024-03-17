@@ -9,10 +9,10 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_project.dart';
 import 'dart:math';
 
 class PBContext {
-  final PBConfiguration configuration;
+  final PBConfiguration? configuration;
 
-  Rectangle3D _screenFrame;
-  Rectangle3D get screenFrame => _screenFrame;
+  Rectangle3D? _screenFrame;
+  Rectangle3D get screenFrame => _screenFrame!;
   set screenFrame(Rectangle3D frame) {
     canvasFrame ??= Rectangle3D.fromPoints(frame.topLeft, frame.bottomRight);
     _screenFrame = frame;
@@ -26,23 +26,23 @@ class PBContext {
   /// Some of the scenarios the focusAreaWould change:
   /// - When the appbar is used, it should shrink the canvas top point to make room for the appbar
   /// - When another stack is declared, its TLC becomes the new canvas TLC(same for BRC).
-  Rectangle3D canvasFrame;
+  Rectangle3D? canvasFrame;
 
   /// The [constextConstrains] represents the costraints that would be inherited by a section of the tree.
   ///
   /// For example, when there is a [InjectedPositioned] that contains [contextConstraints.fixedWidth], then
   /// all of the [InjectedPositioned.child] subtree should inherit that information.
-  PBIntermediateConstraints contextConstraints;
+  PBIntermediateConstraints? contextConstraints;
 
-  PBIntermediateTree tree;
-  PBProject project;
+  PBIntermediateTree? tree;
+  PBProject? project;
   SizingValueContext sizingContext = SizingValueContext.PointValue;
-  PBSharedMasterNode masterNode;
+  PBSharedMasterNode? masterNode;
 
   ///TODO: This is going to change to the [GenerationConfiguration].
-  PBGenerationManager generationManager;
+  PBGenerationManager? generationManager;
 
-  PBGenerationViewData get managerData => tree?.generationViewData;
+  PBGenerationViewData? get managerData => tree?.generationViewData;
 
   PBContext(this.configuration,
       {this.tree,
@@ -56,7 +56,7 @@ class PBContext {
 
   void addDependent(PBIntermediateTree dependent) {
     if (dependent != null) {
-      tree.addDependent(dependent);
+      tree!.addDependent(dependent);
     }
   }
 
@@ -65,35 +65,35 @@ class PBContext {
   ///
   /// [isHorizontal] (default value is `false`)
   /// represents if the ratio should be the Horizontal one or the Vertical one.
-  double getRatioPercentage(double size, {bool isHorizontal = false}) {
+  double? getRatioPercentage(double? size, {bool isHorizontal = false}) {
     if (size == 0) {
       return size;
     }
-    return isHorizontal ? size / screenFrame.width : size / screenFrame.height;
+    return isHorizontal ? size! / screenFrame.width : size! / screenFrame.height;
   }
 
   PBContext clone() {
     var context = PBContext(configuration,
         tree: tree,
-        contextConstraints: contextConstraints.copyWith(),
+        contextConstraints: contextConstraints!.copyWith(),
         masterNode: masterNode,
         project: project,
         canvasFrame: canvasFrame,
         generationManager: generationManager);
-    context.screenFrame = _screenFrame;
+    context.screenFrame = _screenFrame!;
     return context;
   }
 
   PBContext copyWith({
-    PBConfiguration configuration,
-    PBIntermediateTree tree,
-    PBIntermediateConstraints contextConstraints,
-    PBSharedMasterNode masterNode,
-    PBProject project,
-    Rectangle3D canvasFrame,
-    PBGenerationManager generationManager,
-    SizingValueContext sizingContext,
-    Rectangle3D screenFrame,
+    PBConfiguration? configuration,
+    PBIntermediateTree? tree,
+    PBIntermediateConstraints? contextConstraints,
+    PBSharedMasterNode? masterNode,
+    PBProject? project,
+    Rectangle3D? canvasFrame,
+    PBGenerationManager? generationManager,
+    SizingValueContext? sizingContext,
+    Rectangle3D? screenFrame,
   }) {
     return PBContext(
       configuration ?? this.configuration,

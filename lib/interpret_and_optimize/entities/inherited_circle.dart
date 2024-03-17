@@ -23,32 +23,32 @@ class InheritedCircle extends PBVisualIntermediateNode
   @override
   @JsonKey(
       fromJson: PrototypeNode.prototypeNodeFromJson, name: 'prototypeNodeUUID')
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @override
   @JsonKey()
-  String type = 'circle';
+  String? type = 'circle';
 
   @override
   @JsonKey(ignore: true)
-  Map<String, dynamic> originalRef;
+  Map<String, dynamic>? originalRef;
 
   InheritedCircle(
-    String UUID,
-    Rectangle3D frame, {
+    String? UUID,
+    Rectangle3D? frame, {
     this.originalRef,
-    String name,
-    Point alignX,
-    Point alignY,
+    String? name,
+    Point? alignX,
+    Point? alignY,
     this.prototypeNode,
-    PBIntermediateConstraints constraints,
+    PBIntermediateConstraints? constraints,
   }) : super(UUID, frame, name, constraints: constraints) {
     generator = PBBitmapGenerator();
     childrenStrategy = TempChildrenStrategy('child');
 
     // auxiliaryData.borderInfo = IntermediateBorderInfo();
     // auxiliaryData.borderInfo.shape = 'circle';
-    auxiliaryData.alignment = alignX != null && alignY != null
+    auxiliaryData!.alignment = alignX != null && alignY != null
         ? {'alignX': alignX, 'alignY': alignY}
         : null;
   }
@@ -58,6 +58,6 @@ class InheritedCircle extends PBVisualIntermediateNode
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-          PBIntermediateNode parent, PBIntermediateTree tree) =>
+          PBIntermediateNode? parent, PBIntermediateTree tree) =>
       InheritedCircle.fromJson(json);
 }

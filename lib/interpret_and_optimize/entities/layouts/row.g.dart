@@ -1,5 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+import 'package:collection/collection.dart' show IterableExtension;
 part of 'row.dart';
 
 // **************************************************************************
@@ -9,9 +10,9 @@ part of 'row.dart';
 PBIntermediateRowLayout _$PBIntermediateRowLayoutFromJson(
     Map<String, dynamic> json) {
   return PBIntermediateRowLayout(
-    name: json['name'] as String,
+    name: json['name'] as String?,
   )
-    ..subsemantic = json['subsemantic'] as String
+    ..subsemantic = json['subsemantic'] as String?
     ..constraints = json['constraints'] == null
         ? null
         : PBIntermediateConstraints.fromJson(
@@ -33,7 +34,7 @@ PBIntermediateRowLayout _$PBIntermediateRowLayoutFromJson(
         ? null
         : LayoutProperties.fromJson(
             json['autoLayoutOptions'] as Map<String, dynamic>)
-    ..type = json['type'] as String;
+    ..type = json['type'] as String?;
 }
 
 Map<String, dynamic> _$PBIntermediateRowLayoutToJson(
@@ -45,7 +46,7 @@ Map<String, dynamic> _$PBIntermediateRowLayoutToJson(
           _$ParentLayoutSizingEnumMap[instance.layoutMainAxisSizing],
       'layoutCrossAxisSizing':
           _$ParentLayoutSizingEnumMap[instance.layoutCrossAxisSizing],
-      'boundaryRectangle': Rectangle3D.toJson(instance.frame),
+      'boundaryRectangle': Rectangle3D.toJson(instance.frame!),
       'style': instance.auxiliaryData,
       'name': instance.name,
       'prototypeNode': instance.prototypeNode,
@@ -53,10 +54,10 @@ Map<String, dynamic> _$PBIntermediateRowLayoutToJson(
       'type': instance.type,
     };
 
-T _$enumDecode<T>(
+T? _$enumDecode<T>(
   Map<T, dynamic> enumValues,
   dynamic source, {
-  T unknownValue,
+  T? unknownValue,
 }) {
   if (source == null) {
     throw ArgumentError('A value must be provided. Supported values: '
@@ -64,7 +65,7 @@ T _$enumDecode<T>(
   }
 
   final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
+      .singleWhereOrNull((e) => e.value == source)
       ?.key;
 
   if (value == null && unknownValue == null) {
@@ -74,10 +75,10 @@ T _$enumDecode<T>(
   return value ?? unknownValue;
 }
 
-T _$enumDecodeNullable<T>(
+T? _$enumDecodeNullable<T>(
   Map<T, dynamic> enumValues,
   dynamic source, {
-  T unknownValue,
+  T? unknownValue,
 }) {
   if (source == null) {
     return null;

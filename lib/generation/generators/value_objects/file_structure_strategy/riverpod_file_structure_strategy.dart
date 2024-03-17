@@ -10,11 +10,11 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_project.dart';
 class RiverpodFileStructureStrategy extends FileStructureStrategy {
   final RELATIVE_PROVIDER_PATH = 'lib/riverpod/';
   final RELATIVE_MODEL_PATH = 'lib/models/';
-  var _providersPath;
-  var _modelsPath;
+  late var _providersPath;
+  late var _modelsPath;
 
   RiverpodFileStructureStrategy(String genProjectPath, PBPageWriter pageWriter,
-      PBProject pbProject, FileSystemAnalyzer fileSystemAnalyzer)
+      PBProject pbProject, FileSystemAnalyzer? fileSystemAnalyzer)
       : super(genProjectPath, pageWriter, pbProject, fileSystemAnalyzer) {
     _providersPath = p.join(genProjectPath, RELATIVE_PROVIDER_PATH);
     _modelsPath = p.join(genProjectPath, RELATIVE_MODEL_PATH);

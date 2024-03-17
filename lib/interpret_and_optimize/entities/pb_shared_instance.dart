@@ -23,16 +23,16 @@ part 'pb_shared_instance.g.dart';
 class PBSharedInstanceIntermediateNode extends PBVisualIntermediateNode
     implements PBInheritedIntermediate, IntermediateNodeFactory {
   @JsonKey(name: 'symbolID')
-  final String SYMBOL_ID;
+  final String? SYMBOL_ID;
 
   ///The parameters that are going to be overriden in the [PBSharedMasterNode].
 
   @JsonKey(name: 'overrideValues')
-  List<PBInstanceOverride> sharedParamValues;
+  List<PBInstanceOverride>? sharedParamValues;
 
   ///The name of the function call that the [PBSharedInstanceIntermediateNode] is
   ///going to use; the name of the [PBSharedMasterNode].
-  String functionCallName;
+  String? functionCallName;
 
   bool foundMaster = false;
   bool isMasterState = false;
@@ -40,32 +40,32 @@ class PBSharedInstanceIntermediateNode extends PBVisualIntermediateNode
   @override
   @JsonKey(
       fromJson: PrototypeNode.prototypeNodeFromJson, name: 'prototypeNodeUUID')
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @override
   @JsonKey()
-  String type = 'shared_instance';
+  String? type = 'shared_instance';
 
-  List<PBSymbolInstanceOverridableValue> overrideValues;
+  List<PBSymbolInstanceOverridableValue>? overrideValues;
   // quick lookup based on UUID_type
   Map<String, PBSymbolInstanceOverridableValue> overrideValuesMap = {};
 
   @override
   @JsonKey(ignore: true)
-  Map<String, dynamic> originalRef;
+  Map<String, dynamic>? originalRef;
 
   @JsonKey(ignore: false)
-  String sharedNodeSetID;
+  String? sharedNodeSetID;
 
   PBSharedInstanceIntermediateNode(
-    String UUID,
-    Rectangle3D frame, {
+    String? UUID,
+    Rectangle3D? frame, {
     this.originalRef,
     this.SYMBOL_ID,
     this.sharedParamValues,
     this.prototypeNode,
     this.overrideValues,
-    String name,
+    String? name,
     this.sharedNodeSetID,
   }) : super(
           UUID,
@@ -96,11 +96,11 @@ class PBSharedInstanceIntermediateNode extends PBVisualIntermediateNode
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-      PBIntermediateNode parent, PBIntermediateTree tree) {
+      PBIntermediateNode? parent, PBIntermediateTree tree) {
     var instance = PBSharedInstanceIntermediateNode.fromJson(json);
-    instance.name = PBInputFormatter.formatPageName(instance.name);
+    instance.name = PBInputFormatter.formatPageName(instance.name!);
     _formatOverrideVals(
-        (instance as PBSharedInstanceIntermediateNode).sharedParamValues, tree);
+        (instance as PBSharedInstanceIntermediateNode).sharedParamValues!, tree);
 
     return instance;
   }
@@ -112,36 +112,36 @@ class PBSharedInstanceIntermediateNode extends PBVisualIntermediateNode
         overrideValue.valueName =
             PBTextGen.cleanString(overrideValue.valueName);
       } else if (overrideValue.ovrType == 'image') {
-        overrideValue.valueName = 'assets/' + overrideValue.valueName;
+        overrideValue.valueName = 'assets/' + overrideValue.valueName!;
       }
       overrideValue.initialValue;
       overrideValue.value =
-          PBIntermediateNode.fromJson(overrideValue.initialValue, this, tree);
+          PBIntermediateNode.fromJson(overrideValue.initialValue as Map<String, dynamic>, this, tree);
     });
   }
 }
 
 @JsonSerializable()
 class PBInstanceOverride {
-  final String ovrType;
+  final String? ovrType;
 
   /// Initial value of [PBInstanceOverride]
   @JsonKey(name: 'value')
-  Map initialValue;
+  Map? initialValue;
 
   /// Current value of [PBInstanceOverride]
   ///
   /// This is useful when we need to do something to `initialValue`
   /// in order to correctly export the Override
   @JsonKey(ignore: true)
-  PBIntermediateNode value;
+  PBIntermediateNode? value;
 
-  final String UUID;
+  final String? UUID;
 
   @JsonKey(name: 'name')
-  String overrideName;
+  String? overrideName;
 
-  String valueName;
+  String? valueName;
 
   PBInstanceOverride(
     this.ovrType,

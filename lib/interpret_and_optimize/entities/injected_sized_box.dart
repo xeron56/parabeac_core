@@ -4,12 +4,12 @@ import 'package:parabeac_core/interpret_and_optimize/entities/subclasses/pb_visu
 import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 
 class IntermediateSizedBox extends PBVisualIntermediateNode {
-  num height, width;
+  num? height, width;
 
   IntermediateSizedBox({
-    String UUID,
-    Rectangle3D<num> frame,
-    String name,
+    String? UUID,
+    Rectangle3D<num>? frame,
+    String? name,
     this.width,
     this.height,
   }) : super(UUID, frame, name) {
@@ -19,21 +19,21 @@ class IntermediateSizedBox extends PBVisualIntermediateNode {
 
 class PBSizedBoxGenerator extends PBGenerator {
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     if (source is IntermediateSizedBox) {
       var buffer = StringBuffer();
 
       buffer.write('SizedBox(');
 
       if (source.height != null) {
-        if (source.height < 0) {
+        if (source.height! < 0) {
           buffer.write('height: 0.0');
         } else {
           buffer.write('height: ${source.height},');
         }
       }
       if (source.width != null) {
-        if (source.width < 0) {
+        if (source.width! < 0) {
           buffer.write('width: 0.0');
         } else {
           buffer.write('width: ${source.width},');

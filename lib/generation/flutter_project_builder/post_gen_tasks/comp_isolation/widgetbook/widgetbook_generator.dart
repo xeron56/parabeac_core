@@ -7,24 +7,24 @@ import 'package:parabeac_core/interpret_and_optimize/services/component_isolatio
 
 class WidgetbookGenerator implements ComponentIsolationGenerator {
   @override
-  String fileName = 'main_widgetbook.dart';
+  String? fileName = 'main_widgetbook.dart';
 
-  WidgetbookGenerator(this.projectData) {
-    projectData.addDependencies('widgetbook', '2.0.5-beta');
+  WidgetbookGenerator(PBGenerationProjectData this.projectData) {
+    projectData!.addDependencies('widgetbook', '2.0.5-beta');
   }
 
   @override
-  PBGenerationProjectData projectData;
+  PBGenerationProjectData? projectData;
 
   @override
-  String generateCode(ImportHelper helper) {
+  String generateCode(ImportHelper? helper) {
     var category = WidgetBookService.category;
     var treeIds = WidgetBookService.treeIds;
     var generatedCode = category.generate();
 
     var imports = treeIds
         .map(
-          (id) => helper
+          (id) => helper!
               .getFormattedImports(
                 id,
                 importMapper: (import) => FlutterImport(

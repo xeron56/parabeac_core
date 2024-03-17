@@ -29,16 +29,16 @@ abstract class PBLayoutIntermediateNode extends PBIntermediateNode
   List<LayoutException> get exceptions => List.from(_exceptions);
 
   @override
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   Map alignment = {};
 
   PBLayoutIntermediateNode(
-    String UUID,
-    Rectangle3D frame,
+    String? UUID,
+    Rectangle3D? frame,
     this._layoutRules,
     this._exceptions,
-    String name, {
+    String? name, {
     this.prototypeNode,
     constraints,
   }) : super(UUID ?? Uuid().v4(), frame, name, constraints: constraints) {
@@ -46,8 +46,8 @@ abstract class PBLayoutIntermediateNode extends PBIntermediateNode
   }
 
   @override
-  void childrenModified(List<PBIntermediateNode> children,
-      [PBContext context]) {
+  void childrenModified(List<PBIntermediateNode?>? children,
+      [PBContext? context]) {
     if (children != null && children.isNotEmpty) {
       if (context != null) {
         resize(context, children);
@@ -56,25 +56,25 @@ abstract class PBLayoutIntermediateNode extends PBIntermediateNode
     }
   }
 
-  void resize(PBContext context, [List<PBIntermediateNode> children]) {
-    children = children ?? context.tree.edges(this);
-    if (children.isEmpty) {
+  void resize(PBContext context, [List<PBIntermediateNode?>? children]) {
+    children = children ?? context.tree!.edges(this) as List<PBIntermediateNode?>?;
+    if (children!.isEmpty) {
       logger
           .warning('There should be children in the layout so it can resize.');
       return;
     }
-    children.forEach((child) => frame = frame.boundingBox(child.frame));
+    children.forEach((child) => frame = frame!.boundingBox(child!.frame!) as Rectangle3D<num>?);
   }
 
   ///Sort children
-  void sortChildren(List<PBIntermediateNode> children) => children.sort(
-      (child0, child1) => child0.frame.topLeft.compareTo(child1.frame.topLeft));
+  void sortChildren(List<PBIntermediateNode?> children) => children.sort(
+      (child0, child1) => child0!.frame!.topLeft.compareTo(child1!.frame!.topLeft));
 
   ///The [PBLayoutIntermediateNode] contains a series of rules that determines if the children is part of that layout. All the children
   ///are going to have to meet the rules that the [PBLayoutIntermediateNode] presents. This method presents a way of comparing two children [PBIntermediateNode]
   ///the method is returning a boolean value that demonstrates if the two nodes satisfies the rules of the [PBLayoutIntermediateNode]. If
   ///a list of children need to be compared, use `allSatisfiesRules()`.
-  bool satisfyRules(PBContext context, PBIntermediateNode currentNode,
+  bool? satisfyRules(PBContext context, PBIntermediateNode currentNode,
       PBIntermediateNode nextNode) {
     ///First check if there is an exception then check that is satisfies all the rules.
     for (var exception in _exceptions) {
@@ -91,6 +91,6 @@ abstract class PBLayoutIntermediateNode extends PBIntermediateNode
   }
 
   ///NOTE: make sure that the children that are going to be added satisfy the reles of the [PBLayoutIntermediateNode]
-  PBLayoutIntermediateNode generateLayout(
+  PBLayoutIntermediateNode? generateLayout(
       List<PBIntermediateNode> children, PBContext currentContext, String name);
 }

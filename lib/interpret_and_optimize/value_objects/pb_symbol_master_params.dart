@@ -18,7 +18,7 @@ class PBSymbolMasterParameter extends PBIntermediateNode
   final parameterDefinition;
   double topLeftX, topLeftY, bottomRightX, bottomRightY;
 
-  PBContext context;
+  PBContext? context;
 
   @override
   ChildrenStrategy childrenStrategy = NoChildStrategy();

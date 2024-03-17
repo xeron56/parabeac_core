@@ -11,7 +11,7 @@ class StatefulGenerationConfiguration extends GenerationConfiguration {
         pbProject.projectAbsPath, pageWriter, pbProject, fileSystemAnalyzer);
     registerMiddleware(StatefulMiddleware(generationManager, this));
     logger.info('Setting up the directories');
-    await fileStructureStrategy.setUpDirectories();
+    await fileStructureStrategy!.setUpDirectories();
     return super.setUpConfiguration(pbProject);
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:parabeac_core/interpret_and_optimize/entities/pb_shared_instance.dart';
 import 'package:parabeac_core/interpret_and_optimize/entities/pb_shared_master_node.dart';
 import 'package:parabeac_core/interpret_and_optimize/entities/subclasses/pb_intermediate_node.dart';
@@ -54,7 +55,7 @@ class PBSymbolStorage {
   }
 
   ///Getting the symbol instance that contains the specific
-  PBIntermediateNode getSymbolInstance(String id) {
+  PBIntermediateNode? getSymbolInstance(String id) {
     return _pbSharedInstanceNodes[id];
   }
 
@@ -64,16 +65,16 @@ class PBSymbolStorage {
   ///[_pbSharedMasterNodes], and [_pbSharedInstanceNodes].
   PBIntermediateNode getAllSymbolById(String id) {
     var node = getSymbol(id);
-    node ??= getSymbolInstance(id);
+    node ??= getSymbolInstance(id)!;
     return node;
   }
 
   ///Looks for the symbol in both the [_pbSharedMasterNodes] and
   ///the [pageSymbols] maps
   PBIntermediateNode getSymbol(String id) {
-    PBIntermediateNode node = getSharedInstaceNode(id);
+    PBIntermediateNode? node = getSharedInstaceNode(id);
     node ??= getSharedMasterNode(id);
-    return node;
+    return node!;
   }
 
   /// Removes the symbol with given [id].
@@ -86,26 +87,25 @@ class PBSymbolStorage {
 
   /// Returns the symbol with the given [id],
   /// or [null] if no such symbol exists.
-  PBSharedMasterNode getSharedMasterNode(String id) =>
+  PBSharedMasterNode? getSharedMasterNode(String id) =>
       _pbSharedMasterNodes['$id'];
 
-  PBSharedMasterNode getSharedMasterNodeBySymbolID(String symbolID) =>
-      _pbSharedMasterNodes.values.firstWhere(
-          (element) => element.SYMBOL_ID == symbolID,
-          orElse: () => null);
+  PBSharedMasterNode? getSharedMasterNodeBySymbolID(String? symbolID) =>
+      _pbSharedMasterNodes.values.firstWhereOrNull(
+          (element) => element.SYMBOL_ID == symbolID);
 
   List<PBSharedInstanceIntermediateNode> getSharedInstanceNodeBySymbolID(
-          String symbolID) =>
+          String? symbolID) =>
       _pbSharedInstanceNodes.values
           .where((element) => element.SYMBOL_ID == symbolID)
           .toList();
 
-  PBSharedInstanceIntermediateNode getSharedInstaceNode(String id) =>
+  PBSharedInstanceIntermediateNode? getSharedInstaceNode(String id) =>
       _pbSharedInstanceNodes['$id'];
 
-  String getNameOfSymbolWithID(String id) {
+  String? getNameOfSymbolWithID(String id) {
     return _pbSharedMasterNodes.containsKey(id)
-        ? _pbSharedMasterNodes[id].name
+        ? _pbSharedMasterNodes[id]!.name
         : null;
   }
 }

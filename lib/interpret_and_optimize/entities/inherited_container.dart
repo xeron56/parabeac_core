@@ -21,48 +21,48 @@ class InheritedContainer extends PBVisualIntermediateNode
   @override
   @JsonKey(
       fromJson: PrototypeNode.prototypeNodeFromJson, name: 'prototypeNodeUUID')
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @JsonKey(defaultValue: true)
   bool isBackgroundVisible = true;
 
   @override
   @JsonKey()
-  String type = 'rectangle';
+  String? type = 'rectangle';
 
   @override
   @JsonKey(ignore: true)
-  Map<String, dynamic> originalRef;
+  Map<String, dynamic>? originalRef;
 
   @override
   @JsonKey(ignore: true)
-  InjectedPadding padding;
+  InjectedPadding? padding;
 
   @override
   @JsonKey(ignore: true)
-  bool showWidth;
+  bool? showWidth;
   @JsonKey(ignore: true)
   @override
-  bool showHeight;
+  bool? showHeight;
 
   InheritedContainer(
-    String UUID,
-    Rectangle3D frame, {
+    String? UUID,
+    Rectangle3D? frame, {
     this.originalRef,
-    String name,
-    double alignX,
-    double alignY,
+    String? name,
+    double? alignX,
+    double? alignY,
     this.isBackgroundVisible = true,
     this.prototypeNode,
     this.showWidth = true,
     this.showHeight = true,
-    PBIntermediateConstraints constraints,
+    PBIntermediateConstraints? constraints,
   }) : super(UUID, frame, name, constraints: constraints) {
     generator = PBContainerGenerator();
     childrenStrategy = TempChildrenStrategy('child');
     //TODO switch alignment to Padding alignment
 
-    auxiliaryData.alignment = alignX != null && alignY != null
+    auxiliaryData!.alignment = alignX != null && alignY != null
         ? {'alignX': alignX, 'alignY': alignY}
         : null;
   }
@@ -75,7 +75,7 @@ class InheritedContainer extends PBVisualIntermediateNode
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-      PBIntermediateNode parent, PBIntermediateTree tree) {
+      PBIntermediateNode? parent, PBIntermediateTree tree) {
     return InheritedContainer.fromJson(json)..mapRawChildren(json, tree);
   }
 }

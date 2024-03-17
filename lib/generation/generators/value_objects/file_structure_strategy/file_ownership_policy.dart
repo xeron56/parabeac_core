@@ -10,13 +10,13 @@ import 'package:file/file.dart';
 /// accidental deletion of any of the users writing code in the central location.
 abstract class FileOwnershipPolicy {
   /// The extension the developer own [File]s are going to have.
-  FileOwnership fileOwnership;
+  FileOwnership? fileOwnership;
 
   /// Based on the [ownership], its going to return the proper [File] extension. This is
   /// done by modifying the [existingExtension] because its better to assume that the [File]
   /// extension is not going to be the same forever. Might be only `.dart` right now, but it
   /// could easily support `.json` tomorrow.
-  String getFileExtension(FileOwnership ownership, String existingExtension);
+  String getFileExtension(FileOwnership? ownership, String existingExtension);
 }
 
 /// The possible [FileOwnership] that could exist at once.
@@ -46,10 +46,10 @@ class FileWrongExtensionFormat extends IOException {
 /// while the Parabeac-Core own files with the `.g.dart` extension.
 class DotGFileOwnershipPolicy implements FileOwnershipPolicy {
   @override
-  FileOwnership fileOwnership;
+  FileOwnership? fileOwnership;
 
   @override
-  String getFileExtension(FileOwnership ownership, String existingExtension) {
+  String getFileExtension(FileOwnership? ownership, String existingExtension) {
     if (!existingExtension.startsWith('.')) {
       throw FileWrongExtensionFormat(
           'Wrong extension of $existingExtension given to $runtimeType, it only supports extensions starting with \'.\'');

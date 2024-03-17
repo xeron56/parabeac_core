@@ -1,5 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+import 'package:collection/collection.dart' show IterableExtension;
 part of 'column.dart';
 
 // **************************************************************************
@@ -10,9 +11,9 @@ PBIntermediateColumnLayout _$PBIntermediateColumnLayoutFromJson(
     Map<String, dynamic> json) {
   return PBIntermediateColumnLayout(
     Rectangle3D.fromJson(json['boundaryRectangle'] as Map<String, dynamic>),
-    name: json['name'] as String,
+    name: json['name'] as String?,
   )
-    ..subsemantic = json['subsemantic'] as String
+    ..subsemantic = json['subsemantic'] as String?
     ..constraints = json['constraints'] == null
         ? null
         : PBIntermediateConstraints.fromJson(
@@ -32,7 +33,7 @@ PBIntermediateColumnLayout _$PBIntermediateColumnLayoutFromJson(
         ? null
         : LayoutProperties.fromJson(
             json['autoLayoutOptions'] as Map<String, dynamic>)
-    ..type = json['type'] as String;
+    ..type = json['type'] as String?;
 }
 
 Map<String, dynamic> _$PBIntermediateColumnLayoutToJson(
@@ -44,7 +45,7 @@ Map<String, dynamic> _$PBIntermediateColumnLayoutToJson(
           _$ParentLayoutSizingEnumMap[instance.layoutMainAxisSizing],
       'layoutCrossAxisSizing':
           _$ParentLayoutSizingEnumMap[instance.layoutCrossAxisSizing],
-      'boundaryRectangle': Rectangle3D.toJson(instance.frame),
+      'boundaryRectangle': Rectangle3D.toJson(instance.frame!),
       'style': instance.auxiliaryData,
       'name': instance.name,
       'prototypeNode': instance.prototypeNode,
@@ -52,10 +53,10 @@ Map<String, dynamic> _$PBIntermediateColumnLayoutToJson(
       'type': instance.type,
     };
 
-T _$enumDecode<T>(
+T? _$enumDecode<T>(
   Map<T, dynamic> enumValues,
   dynamic source, {
-  T unknownValue,
+  T? unknownValue,
 }) {
   if (source == null) {
     throw ArgumentError('A value must be provided. Supported values: '
@@ -63,7 +64,7 @@ T _$enumDecode<T>(
   }
 
   final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
+      .singleWhereOrNull((e) => e.value == source)
       ?.key;
 
   if (value == null && unknownValue == null) {
@@ -73,10 +74,10 @@ T _$enumDecode<T>(
   return value ?? unknownValue;
 }
 
-T _$enumDecodeNullable<T>(
+T? _$enumDecodeNullable<T>(
   Map<T, dynamic> enumValues,
   dynamic source, {
-  T unknownValue,
+  T? unknownValue,
 }) {
   if (source == null) {
     return null;

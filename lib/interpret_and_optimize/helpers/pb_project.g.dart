@@ -8,8 +8,8 @@ part of 'pb_project.dart';
 
 PBProject _$PBProjectFromJson(Map<String, dynamic> json) {
   return PBProject(
-    json['name'] as String,
-    json['projectAbsPath'] as String,
+    json['name'] as String?,
+    json['projectAbsPath'] as String?,
   )..forest =
       PBProject.forestFromJson(json['pages'] as List<Map<String, dynamic>>);
 }
@@ -17,5 +17,5 @@ PBProject _$PBProjectFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PBProjectToJson(PBProject instance) => <String, dynamic>{
       'name': instance.projectName,
       'projectAbsPath': instance.projectAbsPath,
-      'pages': instance.forest?.map((e) => e?.toJson())?.toList(),
+      'pages': instance.forest?.map((e) => e?.toJson()).toList(),
     };

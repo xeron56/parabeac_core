@@ -33,12 +33,12 @@ class PBIntermediateRowLayout extends PBLayoutIntermediateNode
   ];
 
   @override
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @override
   AlignStrategy alignStrategy = AutoLayoutAlignStrategy();
 
-  PBIntermediateRowLayout({String name})
+  PBIntermediateRowLayout({String? name})
       : super(null, null, ROW_RULES, ROW_EXCEPTIONS, name) {
     generator = PBRowGenerator();
   }
@@ -53,22 +53,22 @@ class PBIntermediateRowLayout extends PBLayoutIntermediateNode
   }
 
   @JsonKey(name: 'autoLayoutOptions')
-  LayoutProperties layoutProperties;
+  LayoutProperties? layoutProperties;
 
   @override
-  String type = 'row';
+  String? type = 'row';
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-      PBIntermediateNode parent, PBIntermediateTree tree) {
+      PBIntermediateNode? parent, PBIntermediateTree tree) {
     var tempRow = _$PBIntermediateRowLayoutFromJson(json)
       ..mapRawChildren(json, tree);
     return tempRow;
   }
 
   @override
-  void sortChildren(List<PBIntermediateNode> children) {
+  void sortChildren(List<PBIntermediateNode?> children) {
     children.sort((child0, child1) =>
-        child0.frame.topLeft.x.compareTo(child1.frame.topLeft.x));
+        child0!.frame!.topLeft.x.compareTo(child1!.frame!.topLeft.x));
   }
 }

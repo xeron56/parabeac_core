@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:parabeac_core/controllers/main_info.dart';
 import 'package:parabeac_core/generation/generators/import_generator.dart';
 import 'package:parabeac_core/generation/generators/pb_generator.dart';
@@ -19,7 +20,7 @@ import 'package:uuid/uuid.dart';
 
 class InjectedTabBar extends PBTag implements PBInjectedIntermediate {
   @override
-  String semanticName = '<tabbar>';
+  String? semanticName = '<tabbar>';
 
   static final TAB_ATTR_NAME = 'tabs';
   static final BACKGROUND_ATTR_NAME = 'background';
@@ -33,18 +34,18 @@ class InjectedTabBar extends PBTag implements PBInjectedIntermediate {
   AlignStrategy alignStrategy = NoAlignment();
 
   InjectedTabBar(
-    String UUID,
-    Rectangle3D frame,
-    String name,
+    String? UUID,
+    Rectangle3D? frame,
+    String? name,
   ) : super(UUID, frame, name) {
     generator = PBTabBarGenerator();
     childrenStrategy = MultipleChildStrategy('children');
   }
 
   @override
-  String getAttributeNameOf(PBIntermediateNode node) {
+  String? getAttributeNameOf(PBIntermediateNode? node) {
     var matchingKey = nameToAttr.keys
-        .firstWhere((key) => node.name.contains(key), orElse: () => null);
+        .firstWhereOrNull((key) => node!.name!.contains(key));
 
     if (matchingKey != null) {
       return nameToAttr[matchingKey];
@@ -62,7 +63,7 @@ class InjectedTabBar extends PBTag implements PBInjectedIntermediate {
   void extractInformation(PBIntermediateNode incomingNode) {}
 
   @override
-  PBTag generatePluginNode(Rectangle3D frame, PBIntermediateNode originalRef,
+  PBTag generatePluginNode(Rectangle3D? frame, PBIntermediateNode originalRef,
       PBIntermediateTree tree) {
     var tabbar = InjectedTabBar(
       originalRef.UUID,
@@ -79,11 +80,10 @@ class InjectedTabBar extends PBTag implements PBInjectedIntermediate {
 
   @override
   void handleChildren(PBContext context) {
-    var children = context.tree.childrenOf(this);
+    var children = context.tree!.childrenOf(this);
 
-    var background = children.firstWhere(
-        (element) => element.attributeName == BACKGROUND_ATTR_NAME,
-        orElse: () => null);
+    var background = children.firstWhereOrNull(
+        (element) => element.attributeName == BACKGROUND_ATTR_NAME);
 
     var tabs = children
         .where((child) => child.attributeName == TAB_ATTR_NAME)
@@ -96,10 +96,10 @@ class InjectedTabBar extends PBTag implements PBInjectedIntermediate {
         null,
         child.frame,
         name: child.name,
-        constraints: child.constraints.copyWith(),
+        constraints: child.constraints!.copyWith(),
       )..attributeName = child.attributeName;
-      context.tree.removeEdges(child.parent, [child]);
-      context.tree.addEdges(container, [child]);
+      context.tree!.removeEdges(child.parent!, [child]);
+      context.tree!.addEdges(container, [child]);
       validChildren.add(container);
     }
 
@@ -108,7 +108,7 @@ class InjectedTabBar extends PBTag implements PBInjectedIntermediate {
     }
 
     // Ensure only nodes with `tab` remain
-    context.tree.replaceChildrenOf(this, validChildren);
+    context.tree!.replaceChildrenOf(this, validChildren);
   }
 }
 
@@ -116,18 +116,17 @@ class PBTabBarGenerator extends PBGenerator {
   PBTabBarGenerator() : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     // generatorContext.sizingContext = SizingValueContext.PointValue;
     if (source is InjectedTabBar) {
       // var tabs = source.tabs;
       var tabs = source.getAllAtrributeNamed(
-          context.tree, InjectedTabBar.TAB_ATTR_NAME);
-      var background = context.tree.childrenOf(source).firstWhere(
-          (child) => child.attributeName == InjectedTabBar.BACKGROUND_ATTR_NAME,
-          orElse: () => null);
+          context!.tree!, InjectedTabBar.TAB_ATTR_NAME);
+      var background = context.tree!.childrenOf(source).firstWhereOrNull(
+          (child) => child.attributeName == InjectedTabBar.BACKGROUND_ATTR_NAME);
 
       // Sort tabs from Left to Right
-      tabs.sort((a, b) => a.frame.left.compareTo(b.frame.left));
+      tabs.sort((a, b) => a.frame!.left.compareTo(b.frame!.left));
 
       var buffer = StringBuffer();
       buffer.write('BottomNavigationBar(');
@@ -143,7 +142,7 @@ class PBTabBarGenerator extends PBGenerator {
         buffer.write('items:[');
         for (var tab in tabs) {
           buffer.write('BottomNavigationBarItem(');
-          var res = context.generationManager.generate(tab, context);
+          var res = context.generationManager!.generate(tab, context);
           buffer.write('icon: $res,');
           buffer.write('label: "",');
           buffer.write('),');
@@ -156,21 +155,21 @@ class PBTabBarGenerator extends PBGenerator {
       buffer.write(')');
 
       var className =
-          PBInputFormatter.formatLabel(source.parent.name, isTitle: true) +
+          PBInputFormatter.formatLabel(source.parent!.name!, isTitle: true) +
               'Tabbar';
 
       // TODO: correct import
-      context.managerData.addImport(FlutterImport(
+      context.managerData!.addImport(FlutterImport(
         'controller/${className.snakeCase}.dart',
         MainInfo().projectName,
       ));
 
-      context.configuration.generationConfiguration.fileStructureStrategy
+      context.configuration!.generationConfiguration!.fileStructureStrategy!
           .commandCreated(WriteSymbolCommand(
         Uuid().v4(),
         className.snakeCase,
         tabBarBody(
-            className, buffer.toString(), context.managerData.importsList),
+            className, buffer.toString(), context.managerData!.importsList),
         symbolPath: 'lib',
         ownership: FileOwnership.DEV,
       ));

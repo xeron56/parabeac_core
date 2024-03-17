@@ -8,10 +8,10 @@ part of 'pb_color.dart';
 
 PBColor _$PBColorFromJson(Map<String, dynamic> json) {
   return PBColor(
-    json['a'] as num,
-    json['r'] as num,
-    json['g'] as num,
-    json['b'] as num,
+    json['a'] as num?,
+    json['r'] as num?,
+    json['g'] as num?,
+    json['b'] as num?,
   );
 }
 

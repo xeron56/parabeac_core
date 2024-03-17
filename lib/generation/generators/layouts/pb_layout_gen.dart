@@ -9,11 +9,11 @@ abstract class PBLayoutGenerator extends PBGenerator {
   PBLayoutGenerator() : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext generatorContext);
+  String generate(PBIntermediateNode? source, PBContext? generatorContext);
 
   String layoutTemplate(source, String type, PBContext context) {
     var buffer = StringBuffer();
-    var children = context.tree.childrenOf(source);
+    var children = context.tree!.childrenOf(source);
     // Write the type of Layout, Column or Row
     buffer.write('$type(');
     if (children.isNotEmpty) {
@@ -29,7 +29,7 @@ abstract class PBLayoutGenerator extends PBGenerator {
       buffer.write(')');
     }
     // Add number of auto layouts to analytics
-    if (!context.tree.lockData) {
+    if (!context.tree!.lockData) {
       GetIt.I.get<AmplitudeService>().addToAnalytics('Number of auto layouts');
     }
     return buffer.toString();
@@ -42,7 +42,7 @@ abstract class PBLayoutGenerator extends PBGenerator {
     // and generate them
     for (var index = 0; index < children.length; index++) {
       var element =
-          children[index].generator.generate(children[index], context);
+          children[index].generator!.generate(children[index], context);
       buffer.write(element);
       var endingChar = element != null && element.isEmpty ? '' : ',';
       buffer.write(endingChar);
@@ -52,7 +52,7 @@ abstract class PBLayoutGenerator extends PBGenerator {
     return buffer.toString();
   }
 
-  String getAlignments(LayoutProperties layoutProperties) {
+  String getAlignments(LayoutProperties? layoutProperties) {
     var buffer = StringBuffer();
     if (layoutProperties != null) {
       // Write main axis alignment if need it
@@ -75,7 +75,7 @@ abstract class PBLayoutGenerator extends PBGenerator {
   }
 
   /// Gets the string form of [alignment]
-  String getAlignmentString(IntermediateAxisAlignment alignment) {
+  String getAlignmentString(IntermediateAxisAlignment? alignment) {
     switch (alignment) {
       case IntermediateAxisAlignment.SPACE_BETWEEN:
         return 'spaceBetween';

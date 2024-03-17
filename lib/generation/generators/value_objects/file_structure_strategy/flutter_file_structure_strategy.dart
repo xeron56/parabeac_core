@@ -5,6 +5,6 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_project.dart';
 
 class FlutterFileStructureStrategy extends FileStructureStrategy {
   FlutterFileStructureStrategy(
-      String genProjectPath, PBPageWriter pageWriter, PBProject pbProject, FileSystemAnalyzer fileSystemAnalyzer)
+      String? genProjectPath, PBPageWriter pageWriter, PBProject pbProject, FileSystemAnalyzer? fileSystemAnalyzer)
       : super(genProjectPath, pageWriter, pbProject, fileSystemAnalyzer);
 }

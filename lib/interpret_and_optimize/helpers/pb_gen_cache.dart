@@ -10,19 +10,19 @@ class PBGenCache {
 
   /// Cache where the key is the doObjectId and the value is the paths associated
   /// to the doObjectId
-  final Map<String, Set<String>> _cache = {};
+  final Map<String?, Set<String>> _cache = {};
 
   /// Associates `path` to `doObjectId` in this cache.
-  void setPathToCache(String doObjectId, String path) {
+  void setPathToCache(String? doObjectId, String path) {
     _cache[doObjectId] = {path};
   }
 
   /// Appends a `path` to `doObjectId` in the cache.
-  void appendToCache(String doObjectId, String path) {
+  void appendToCache(String? doObjectId, String path) {
     if (!_cache.containsKey(doObjectId)) {
       setPathToCache(doObjectId, path);
     } else {
-      _cache[doObjectId].add(path);
+      _cache[doObjectId]!.add(path);
     }
   }
 
@@ -35,7 +35,7 @@ class PBGenCache {
 
   /// Returns the relative paths to get from [filePath] to the path of [doObjectId].
   /// Note: [filePath] must be an absolute path
-  Set<String> getRelativePath(String filePath, String doObjectId) {
+  Set<String>? getRelativePath(String filePath, String doObjectId) {
     var targetPaths = _cache[doObjectId];
     var paths = <String>{};
     if (targetPaths == null || targetPaths.isEmpty) {

@@ -6,11 +6,11 @@ import 'package:parabeac_core/interpret_and_optimize/state_management/intermedia
 /// Superclass: PBIntermediateNode
 abstract class PBVisualIntermediateNode extends PBIntermediateNode {
   PBVisualIntermediateNode(
-    String UUID,
-    Rectangle3D rectangle3d,
-    String name, {
-    PBIntermediateConstraints constraints,
-    IntermediateAuxiliaryData auxiliaryData,
+    String? UUID,
+    Rectangle3D? rectangle3d,
+    String? name, {
+    PBIntermediateConstraints? constraints,
+    IntermediateAuxiliaryData? auxiliaryData,
   }) : super(
           UUID,
           rectangle3d,

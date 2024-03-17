@@ -16,11 +16,11 @@ import 'package:path/path.dart';
 /// once the destination [PBIntermediateNode] is found.
 class PBPrototypeAggregationService {
   /// Storage of registered [PrototypeNode]
-  PBPrototypeStorage _storage;
+  late PBPrototypeStorage _storage;
 
   /// List representing [PrototypeNodes] that have not found their
   /// destination [PBIntermediateNodes]
-  List<PrototypeEnable> _unregNodes;
+  late List<PrototypeEnable> _unregNodes;
 
   PBPrototypeAggregationService._internal() {
     _storage = PBPrototypeStorage();
@@ -46,7 +46,7 @@ class PBPrototypeAggregationService {
       iterateUnregisterNodes(node);
     } else if (node is PrototypeEnable) {
       var page = _storage.getPageNodeById(
-          (node as PrototypeEnable).prototypeNode.destinationUUID);
+          (node as PrototypeEnable).prototypeNode!.destinationUUID);
       if (page == null) {
         _unregNodes.add(node as PrototypeEnable);
       } else {
@@ -54,7 +54,7 @@ class PBPrototypeAggregationService {
       }
     }
     _unregNodes.removeWhere(
-        (pNode) => pNode.prototypeNode.destinationUUID == node.UUID);
+        (pNode) => pNode.prototypeNode!.destinationUUID == node.UUID);
   }
 
   void _addDependent(PBIntermediateNode target, PBIntermediateNode dependent) {
@@ -84,7 +84,7 @@ class PBPrototypeAggregationService {
       )..name = 'Dest_${iNode.name}';
       // Save parent pointer of `iNode`
       destHolder.parent = iNode.parent;
-      context.tree.addEdges(destHolder, [iNode]);
+      context.tree!.addEdges(destHolder, [iNode]);
       return destHolder;
     }
 
@@ -139,8 +139,8 @@ class PBPrototypeAggregationService {
 
   void iterateUnregisterNodes(PBIntermediateNode node) {
     for (var _pNode in _unregNodes) {
-      if (_pNode.prototypeNode.destinationUUID == node.UUID) {
-        _pNode.prototypeNode.destinationName = node.name;
+      if (_pNode.prototypeNode!.destinationUUID == node.UUID) {
+        _pNode.prototypeNode!.destinationName = node.name;
         _addDependent(node, _pNode as PBIntermediateNode);
       }
     }

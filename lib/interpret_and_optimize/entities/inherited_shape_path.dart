@@ -29,24 +29,24 @@ class InheritedShapePath extends PBVisualIntermediateNode
   @override
   @JsonKey(
       fromJson: PrototypeNode.prototypeNodeFromJson, name: 'prototypeNodeUUID')
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @override
   @JsonKey()
-  String type = 'image';
+  String? type = 'image';
 
   @override
   @JsonKey(ignore: true)
-  Map<String, dynamic> originalRef;
+  Map<String, dynamic>? originalRef;
 
   InheritedShapePath(
-    String UUID,
-    Rectangle3D frame, {
+    String? UUID,
+    Rectangle3D? frame, {
     this.originalRef,
-    String name,
-    Uint8List image,
+    String? name,
+    Uint8List? image,
     this.prototypeNode,
-    PBIntermediateConstraints constraints,
+    PBIntermediateConstraints? constraints,
   }) : super(UUID, frame, name, constraints: constraints) {
     generator = PBBitmapGenerator();
     childrenStrategy = NoChildStrategy();
@@ -105,6 +105,6 @@ class InheritedShapePath extends PBVisualIntermediateNode
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-          PBIntermediateNode parent, PBIntermediateTree tree) =>
+          PBIntermediateNode? parent, PBIntermediateTree tree) =>
       InheritedShapePath.fromJson(json);
 }

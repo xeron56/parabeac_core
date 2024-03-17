@@ -27,15 +27,15 @@ class PBTextGen extends PBGenerator with PBTextStyleGen {
   };
 
   /// Applies the replacement list to text
-  static String cleanString(String text) {
+  static String cleanString(String? text) {
     var newText = text;
     _replaceMap.forEach((target, replacement) {
-      newText = newText.replaceAll(target, replacement);
+      newText = newText!.replaceAll(target, replacement);
     });
     return newText ?? '';
   }
 
-  static String getDecoration(String decoration) {
+  static String? getDecoration(String? decoration) {
     if (_decorationMap.containsKey(decoration)) {
       return _decorationMap[decoration];
     }
@@ -43,18 +43,18 @@ class PBTextGen extends PBGenerator with PBTextStyleGen {
   }
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     if (source is InheritedText) {
-      var textStyle = source.auxiliaryData.intermediateTextStyle;
+      var textStyle = source.auxiliaryData!.intermediateTextStyle!;
       var cleanText = cleanString(source.text);
 
-      context.project.genProjectData.addDependencies('auto_size_text', '3.0.0');
+      context!.project!.genProjectData!.addDependencies('auto_size_text', '3.0.0');
 
-      context.managerData
+      context.managerData!
           .addImport(FlutterImport('auto_size_text.dart', 'auto_size_text'));
       var buffer = StringBuffer();
       buffer.write('AutoSizeText(\n');
-      var isTextParameter = source.isTextParameter;
+      var isTextParameter = source.isTextParameter!;
       if (isTextParameter) {
         var text = source.text;
         buffer.write('$text, \n');
@@ -76,7 +76,7 @@ class PBTextGen extends PBGenerator with PBTextStyleGen {
 
       if (textStyle.textAlignHorizontal != null) {
         buffer.write(
-            'textAlign: TextAlign.${textStyle.textAlignHorizontal.toLowerCase()},\n');
+            'textAlign: TextAlign.${textStyle.textAlignHorizontal!.toLowerCase()},\n');
       }
       buffer.write('\n)');
 

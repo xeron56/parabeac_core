@@ -14,8 +14,8 @@ part 'pb_project.g.dart';
 @JsonSerializable(explicitToJson: true)
 class PBProject {
   @JsonKey(name: 'name')
-  final String projectName;
-  String projectAbsPath;
+  final String? projectName;
+  String? projectAbsPath;
 
   /// This flag makes the data in the [PBProject] unmodifiable. Therefore,
   /// if a change is made and [lockData] is `true`, the change is going to be ignored.
@@ -32,14 +32,14 @@ class PBProject {
   bool get lockData => _lockData;
   set lockData(lock) {
     _lockData = lock;
-    _forest.forEach((tree) => tree.lockData = lock);
+    _forest!.forEach((tree) => tree.lockData = lock);
   }
 
-  List<PBIntermediateTree> _forest;
+  List<PBIntermediateTree>? _forest;
   @JsonKey(fromJson: PBProject.forestFromJson, name: 'pages')
-  List<PBIntermediateTree> get forest => _forest;
+  List<PBIntermediateTree>? get forest => _forest;
   @JsonKey(fromJson: PBProject.forestFromJson, name: 'pages')
-  set forest(List<PBIntermediateTree> forest) {
+  set forest(List<PBIntermediateTree>? forest) {
     if (!lockData) {
       _forest = forest;
     }
@@ -47,29 +47,29 @@ class PBProject {
 
   @Deprecated(
       'Use the fileStructureStrategy within the GenerationConfiguration')
-  FileStructureStrategy _fileStructureStrategy;
-  PBGenerationProjectData _genProjectData;
+  FileStructureStrategy? _fileStructureStrategy;
+  PBGenerationProjectData? _genProjectData;
 
-  set genProjectData(PBGenerationProjectData projectData) =>
+  set genProjectData(PBGenerationProjectData? projectData) =>
       _genProjectData = projectData;
   @JsonKey(ignore: true)
-  PBGenerationProjectData get genProjectData => _genProjectData;
+  PBGenerationProjectData? get genProjectData => _genProjectData;
 
   @Deprecated(
       'Use the fileStructureStrategy within the GenerationConfiguration')
-  set fileStructureStrategy(FileStructureStrategy strategy) =>
+  set fileStructureStrategy(FileStructureStrategy? strategy) =>
       _fileStructureStrategy = strategy;
 
   @Deprecated(
       'Use the fileStructureStrategy within the GenerationConfiguration')
   @JsonKey(ignore: true)
-  FileStructureStrategy get fileStructureStrategy => _fileStructureStrategy;
+  FileStructureStrategy? get fileStructureStrategy => _fileStructureStrategy;
 
   @JsonKey(ignore: true)
   static Logger log = Logger('PBProject');
 
   PBProject(this.projectName, this.projectAbsPath,
-      {FileStructureStrategy fileStructureStrategy}) {
+      {FileStructureStrategy? fileStructureStrategy}) {
     _forest = [];
     _genProjectData = PBGenerationProjectData();
     _fileStructureStrategy = fileStructureStrategy;

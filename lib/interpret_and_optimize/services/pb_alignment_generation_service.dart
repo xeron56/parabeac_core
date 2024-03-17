@@ -12,7 +12,7 @@ class PBAlignGenerationService extends AITHandler {
   PBAlignGenerationService();
 
   /// Should find all layout nodes
-  Future<PBIntermediateTree> addAlignmentToLayouts(
+  Future<PBIntermediateTree>? addAlignmentToLayouts(
       PBIntermediateTree tree, PBContext context) {
     if (tree.rootNode == null) {
       logger.warning(
@@ -20,13 +20,13 @@ class PBAlignGenerationService extends AITHandler {
       return null;
     }
 
-    tree.rootNode.align(context);
+    tree.rootNode!.align(context);
 
     return Future.value(tree);
   }
 
   @override
-  Future<PBIntermediateTree> handleTree(
+  Future<PBIntermediateTree>? handleTree(
       PBContext context, PBIntermediateTree tree) {
     return addAlignmentToLayouts(tree, context);
   }

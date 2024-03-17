@@ -48,20 +48,20 @@ class GlobalStylingAggregator {
 
     // Add theme styling count
     GetIt.I.get<AmplitudeService>().directAdd(
-        'Number of theme text styles', globalStyles.themeTextStyles.length);
+        'Number of theme text styles', globalStyles.themeTextStyles!.length);
 
     // Add theme color count
     GetIt.I
         .get<AmplitudeService>()
-        .directAdd('Number of theme colors', globalStyles.themeColors.length);
+        .directAdd('Number of theme colors', globalStyles.themeColors!.length);
 
     /// Check whether there are theme or global colors
-    if ((globalStyles.colors != null && globalStyles.colors.isNotEmpty) ||
+    if ((globalStyles.colors != null && globalStyles.colors!.isNotEmpty) ||
         (globalStyles.themeColors != null &&
-            globalStyles.themeColors.isNotEmpty)) {
+            globalStyles.themeColors!.isNotEmpty)) {
       /// Aggregate all colors
       final globalColors = globalStyles.colors
-        ..addAll(globalStyles.themeColors);
+        ..addAll(globalStyles.themeColors!);
       builder.postGenTasks.add(
         ColorsPostGenTask(
           builder.generationConfiguration,
@@ -72,11 +72,11 @@ class GlobalStylingAggregator {
 
     /// Check whether there are theme or global textstyles
     if ((globalStyles.textStyles != null &&
-            globalStyles.textStyles.isNotEmpty) ||
+            globalStyles.textStyles!.isNotEmpty) ||
         (globalStyles.themeTextStyles != null &&
-            globalStyles.themeTextStyles.isNotEmpty)) {
+            globalStyles.themeTextStyles!.isNotEmpty)) {
       final globalTextStyles = globalStyles.textStyles
-        ..addAll(globalStyles.themeTextStyles);
+        ..addAll(globalStyles.themeTextStyles!);
       builder.postGenTasks.add(
         TextStylesPostGenTask(
           builder.generationConfiguration,
@@ -85,8 +85,8 @@ class GlobalStylingAggregator {
       );
     }
 
-    if (globalStyles.themeTextStyles.isNotEmpty ||
-        globalStyles.themeColors.isNotEmpty) {
+    if (globalStyles.themeTextStyles!.isNotEmpty ||
+        globalStyles.themeColors!.isNotEmpty) {
       /// Add Theme Styles to the Theme task
       builder.postGenTasks.add(
         ThemingPostGenTask(

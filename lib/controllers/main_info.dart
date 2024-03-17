@@ -15,41 +15,41 @@ class MainInfo {
   /// into the flutter directory. Otherwise, the code is going to be generated within the directory
   /// specified in the [outputPath].
   String get genProjectPath {
-    return p.join(configuration.outputPath, configuration.projectName ?? '');
+    return p.join(configuration!.outputPath!, configuration!.projectName ?? '');
   }
 
   /// User's platform
-  String platform;
+  String? platform;
 
   /// Current working directory; contains the path from where the script was called
-  Directory cwd;
+  Directory? cwd;
 
   /// Specific [configuration] items specified by the user, or attributes that
   /// are derived straight from the configuration items that the user provided.
   ///
   /// For example, some of the configuration that are derived is the [GenerationConfiguration],
   /// based on the JSON file the user used for configuration.
-  PBConfiguration configuration;
+  PBConfiguration? configuration;
 
   /// Unique ID for the device running parabeac-core
-  String deviceId;
+  String? deviceId;
 
-  Map pbdl;
+  Map? pbdl;
 
   /// Type of [DesignType] that is being processed by the current process of
   /// Parabeac Core.
-  DesignType designType;
+  DesignType? designType;
 
   /// Where the assets are going to be generating through the process.
-  String _pngPath;
-  String get pngPath => _pngPath;
-  set pngPath(String path) => _pngPath = _validatePath(path ?? _defaultPNGPath);
+  String? _pngPath;
+  String? get pngPath => _pngPath;
+  set pngPath(String? path) => _pngPath = _validatePath(path ?? _defaultPNGPath);
 
-  String get projectName => configuration.projectName;
+  String? get projectName => configuration!.projectName;
 
-  String get _defaultPNGPath => p.join(configuration.outputPath ?? cwd, 'pngs');
+  String get _defaultPNGPath => p.join(configuration!.outputPath ?? cwd as String, 'pngs');
 
-  String get outputPath => configuration.outputPath;
+  String? get outputPath => configuration!.outputPath;
 
   /// Checks if the [path] is `null`, if its not, it will [p.absolute] and finally,
   /// run [p.normalize] on the [path].
@@ -77,9 +77,9 @@ class MainInfo {
       }
     }
 
-    configuration.mergeWithArgs(arguments);
+    configuration!.mergeWithArgs(arguments);
 
-    configuration.outputPath ??= p.dirname(Directory.current.path);
+    configuration!.outputPath ??= p.dirname(Directory.current.path);
 
     /// Detect platform
     platform = Platform.operatingSystem;
@@ -90,7 +90,7 @@ class MainInfo {
     /// At the moment we are only generating in the flutter project.
     pngPath = p.join(genProjectPath, 'lib/assets/images');
 
-    configuration.validate();
+    configuration!.validate();
   }
 
   /// Generating the [PBConfiguration] based in the configuration file in [path]
@@ -116,11 +116,11 @@ class MainInfo {
   /// is [DesignType.PBDL].Finally, if none of the [DesignType] applies, its going to default
   /// to [DesignType.UNKNOWN].
   DesignType _determineDesignTypeFromConfig() {
-    if ((configuration.figmaKey != null ||
-            configuration.figmaOauthToken != null) &&
-        configuration.figmaProjectID != null) {
+    if ((configuration!.figmaKey != null ||
+            configuration!.figmaOauthToken != null) &&
+        configuration!.figmaProjectID != null) {
       return DesignType.FIGMA;
-    } else if (configuration.pbdlPath != null) {
+    } else if (configuration!.pbdlPath != null) {
       return DesignType.PBDL;
     }
     return DesignType.UNKNOWN;

@@ -11,7 +11,7 @@ class WriteSymbolCommand extends NodeFileStructureCommand {
       GetIt.I.get<PathService>().widgetsRelativePath;
 
   String symbolPath;
-  String fileName;
+  String? fileName;
 
   /// The [symbolPath] has the relative path within
   ///
@@ -19,9 +19,9 @@ class WriteSymbolCommand extends NodeFileStructureCommand {
   /// then the [symbolPath] would be `lib/widgets/some_element/`
 
   WriteSymbolCommand(
-    String UUID,
+    String? UUID,
     this.fileName,
-    String code, {
+    String? code, {
     this.symbolPath = '',
     FileOwnership ownership = FileOwnership.PBC,
   }) : super(UUID, code, ownership);
@@ -30,11 +30,11 @@ class WriteSymbolCommand extends NodeFileStructureCommand {
   ///
   /// Returns path to the file that was created.
   @override
-  Future<String> write(FileStructureStrategy strategy) {
+  Future<String> write(FileStructureStrategy? strategy) {
     symbolPath = symbolPath.isEmpty ? DEFAULT_SYMBOL_PATH : symbolPath;
-    var absPath = p.join(strategy.GENERATED_PROJECT_PATH, symbolPath);
+    var absPath = p.join(strategy!.GENERATED_PROJECT_PATH!, symbolPath);
 
-    strategy.writeDataToFile(code, absPath, fileName,
+    strategy.writeDataToFile(code, absPath, fileName!,
         UUID: UUID, ownership: ownership);
     return Future.value(p.join(absPath, fileName));
   }

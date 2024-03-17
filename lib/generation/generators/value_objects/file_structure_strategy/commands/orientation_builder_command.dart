@@ -12,10 +12,10 @@ class OrientationBuilderCommand extends FileStructureCommand {
   static final NAME_TO_ORIENTAION_BUILDER =
       'responsive_orientation_builder.dart';
 
-  OrientationBuilderCommand(String UUID) : super(UUID);
+  OrientationBuilderCommand(String? UUID) : super(UUID);
 
   @override
-  Future write(FileStructureStrategy strategy) {
+  Future write(FileStructureStrategy? strategy) {
     var template = ''' 
       import 'package:flutter/material.dart';
 
@@ -58,9 +58,9 @@ class OrientationBuilderCommand extends FileStructureCommand {
 
     ''';
 
-    strategy.writeDataToFile(
+    strategy!.writeDataToFile(
       template,
-      p.join(strategy.GENERATED_PROJECT_PATH, DIR_TO_ORIENTATION_BUILDER),
+      p.join(strategy.GENERATED_PROJECT_PATH!, DIR_TO_ORIENTATION_BUILDER),
       NAME_TO_ORIENTAION_BUILDER,
       UUID: UUID,
       ownership: FileOwnership.DEV,

@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:directed_graph/directed_graph.dart';
 import 'package:parabeac_core/generation/generators/pb_generator.dart';
 import 'package:parabeac_core/interpret_and_optimize/entities/layouts/group/frame_group.dart';
@@ -25,29 +26,29 @@ part 'pb_intermediate_node.g.dart';
 @JsonSerializable(
     explicitToJson: true, createFactory: false, ignoreUnannotated: true)
 abstract class PBIntermediateNode
-    extends Vertex<PBIntermediateNode> //extends Iterable<PBIntermediateNode>
+    extends Vertex<PBIntermediateNode?> //extends Iterable<PBIntermediateNode>
 {
   @JsonKey(ignore: true)
-  Logger logger;
+  late Logger logger;
 
   @JsonKey(ignore: true)
-  String attributeName;
+  String? attributeName;
 
   /// A subsemantic is contextual info to be analyzed in or in-between the visual generation & layout generation services.
-  String subsemantic;
+  String? subsemantic;
 
   @JsonKey(ignore: true)
-  PBGenerator generator;
+  PBGenerator? generator;
 
   @JsonKey()
-  String get UUID => _UUID;
-  String _UUID;
+  String? get UUID => _UUID;
+  String? _UUID;
 
   @JsonKey(ignore: false)
-  PBIntermediateConstraints constraints;
+  PBIntermediateConstraints? constraints;
 
   @JsonKey(ignore: true)
-  PBIntermediateNode parent;
+  PBIntermediateNode? parent;
 
   @JsonKey(ignore: true)
   ChildrenStrategy childrenStrategy = OneChildStrategy('child');
@@ -56,27 +57,27 @@ abstract class PBIntermediateNode
   AlignStrategy alignStrategy = NoAlignment();
 
   @JsonKey(ignore: false)
-  ParentLayoutSizing layoutMainAxisSizing;
+  ParentLayoutSizing? layoutMainAxisSizing;
   @JsonKey(ignore: false)
-  ParentLayoutSizing layoutCrossAxisSizing;
+  ParentLayoutSizing? layoutCrossAxisSizing;
 
   @JsonKey(
       ignore: false,
       name: 'boundaryRectangle',
       fromJson: Rectangle3D.fromJson,
       toJson: Rectangle3D.toJson)
-  Rectangle3D frame;
+  Rectangle3D? frame;
 
   // @JsonKey(ignore: true)
   // PBGenerationViewData get managerData => currentContext.tree;
 
   /// Auxillary Data of the node. Contains properties such as BorderInfo, Alignment, Color & a directed graph of states relating to this element.
   @JsonKey(name: 'style')
-  IntermediateAuxiliaryData auxiliaryData;
+  IntermediateAuxiliaryData? auxiliaryData;
 
   /// Name of the element if available.
   @JsonKey(ignore: false)
-  String name;
+  String? name;
 
   PBIntermediateNode(
     this._UUID,
@@ -106,11 +107,10 @@ abstract class PBIntermediateNode
 
   /// Returns the [PBAttribute] named `attributeName`. Returns
   /// null if the [PBAttribute] does not exist.
-  PBIntermediateNode getAttributeNamed(
+  PBIntermediateNode? getAttributeNamed(
       PBIntermediateTree tree, String attributeName) {
-    return tree.edges(this).cast<PBIntermediateNode>().firstWhere(
-        (child) => child.attributeName == attributeName,
-        orElse: () => null);
+    return tree.edges(this).cast<PBIntermediateNode>().firstWhereOrNull(
+        (child) => child.attributeName == attributeName);
   }
 
   List<PBIntermediateNode> getAllAtrributeNamed(
@@ -132,8 +132,8 @@ abstract class PBIntermediateNode
               ? tree
                   .edges(this)
                   .cast<PBIntermediateNode>()
-                  .map((child) => child.attributeName = attributeName)
-              : tree.edges(this).first);
+                  .map((child) => child.attributeName = attributeName) as List<Vertex<PBIntermediateNode?>>?
+              : tree.edges(this).first as List<Vertex<PBIntermediateNode?>>?);
       tree.addEdges(this, [node]);
     }
   }
@@ -147,7 +147,7 @@ abstract class PBIntermediateNode
         .any((child) => child.attributeName == attributeName);
   }
 
-  String getAttributeNameOf(PBIntermediateNode node) =>
+  String? getAttributeNameOf(PBIntermediateNode? node) =>
       childrenStrategy.attributeName;
 
   @override
@@ -176,24 +176,24 @@ abstract class PBIntermediateNode
     // alignStrategy.setConstraints(context, this);
     alignStrategy.align(context.clone(), this);
 
-    for (var currChild in context.tree.childrenOf(this) ?? []) {
+    for (var currChild in context.tree!.childrenOf(this) ?? []) {
       currChild?.align(context.clone());
     }
   }
 
   @override
   String toString() {
-    return name ?? runtimeType;
+    return name ?? runtimeType as String;
   }
 
   factory PBIntermediateNode.fromJson(Map<String, dynamic> json,
-          PBIntermediateNode parent, PBIntermediateTree tree) =>
+          PBIntermediateNode? parent, PBIntermediateTree tree) =>
       AbstractIntermediateNodeFactory.getIntermediateNode(json, parent, tree);
 
   Map<String, dynamic> toJson() => _$PBIntermediateNodeToJson(this);
 
   void mapRawChildren(Map<String, dynamic> json, PBIntermediateTree tree) {
-    var rawChildren = json['children'] as List;
+    var rawChildren = json['children'] as List?;
     rawChildren?.forEach((rawChild) {
       if (rawChild != null) {
         PBIntermediateNode.fromJson(rawChild, this, tree);
@@ -231,15 +231,15 @@ class Rectangle3D<T extends num> extends Rectangle<T> {
   ///For now we are unable to make any comparison in the z-axis, this
   ///is primarly for sorting elements in [PBStackIntermediateLayout] to
   ///place to correct [PBIntermediateNode]s on top.
-  num z;
+  num? z;
   Rectangle3D(num left, num top, num width, num height, this.z)
-      : super(left, top, width, height);
+      : super(left as T*, top as T*, width as T*, height as T*);
 
   @override
   Rectangle<T> boundingBox(Rectangle<T> frame) {
     var z = 0;
     if (frame is Rectangle3D) {
-      z = max(z, (frame as Rectangle3D).z.toInt());
+      z = max(z, (frame as Rectangle3D).z!.toInt());
     }
     return Rectangle3D.from2DRectangle(super.boundingBox(frame), z: z);
   }
@@ -253,7 +253,7 @@ class Rectangle3D<T extends num> extends Rectangle<T> {
         json['x'], json['y'], json['width'], json['height'], json['z'] ?? 0);
   }
 
-  factory Rectangle3D.fromPoints(Point<T> a, Point<T> b, {T z}) {
+  factory Rectangle3D.fromPoints(Point<T> a, Point<T> b, {T? z}) {
     var left = min(a.x, b.x);
     var width = (max(a.x, b.x) - left) as T;
     var top = min(a.y, b.y);
@@ -270,11 +270,11 @@ class Rectangle3D<T extends num> extends Rectangle<T> {
       };
 
   Rectangle3D copyWith({
-    num left,
-    num top,
-    num width,
-    num height,
-    num z,
+    num? left,
+    num? top,
+    num? width,
+    num? height,
+    num? z,
   }) {
     return Rectangle3D(
       left ?? this.left,

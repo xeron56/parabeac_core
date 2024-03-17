@@ -15,32 +15,32 @@ class MiddlewareUtils {
 
     if (node is PBSharedMasterNode &&
         (node.overridableProperties?.isNotEmpty ?? false)) {
-      node.overridableProperties.forEach((prop) {
-        overrideVars += 'final ${prop.propertyName};';
+      node.overridableProperties!.forEach((prop) {
+        overrideVars += 'final ${prop!.propertyName};';
         overrideAttr += 'this.${prop.propertyName}, ';
       });
       stateBuffer.write(MiddlewareUtils.generateEmptyVariable(node));
       stateInitializers.write(
-          '${node.name.camelCase} = ${MiddlewareUtils.generateVariableBody(node, context)}');
+          '${node.name!.camelCase} = ${MiddlewareUtils.generateVariableBody(node, context)}');
     } else {
       stateBuffer.write(MiddlewareUtils.generateVariable(node, context));
     }
 
     var stmgHelper = PBStateManagementHelper();
 
-    stmgHelper.getStateGraphOfNode(node).states?.forEach((state) {
-      context.tree.generationViewData = context.managerData;
+    stmgHelper.getStateGraphOfNode(node)!.states?.forEach((state) {
+      context.tree!.generationViewData = context.managerData;
 
       if (state is PBSharedMasterNode &&
           (state.overridableProperties?.isNotEmpty ?? false)) {
-        state.overridableProperties.forEach((prop) {
-          var friendlyName = prop.propertyName;
+        state.overridableProperties!.forEach((prop) {
+          var friendlyName = prop!.propertyName;
           overrideVars += 'final $friendlyName;';
           overrideAttr += 'this.$friendlyName, ';
         });
         stateBuffer.write(MiddlewareUtils.generateEmptyVariable(state));
         stateInitializers.write(
-            '${state.name.camelCase} = ${MiddlewareUtils.generateVariableBody(state, context)}');
+            '${state.name!.camelCase} = ${MiddlewareUtils.generateVariableBody(state, context)}');
       } else {
         stateBuffer.writeln(MiddlewareUtils.generateVariable(state, context));
       }
@@ -57,17 +57,17 @@ class MiddlewareUtils {
 
         $stateInitializers
 
-        defaultWidget = ${node.name.camelCase};
+        defaultWidget = ${node.name!.camelCase};
       }
       }
       ''';
   }
 
   static String generateModelChangeNotifier(String defaultStateName,
-      PBGenerationManager manager, PBIntermediateNode node, PBContext context) {
+      PBGenerationManager manager, PBIntermediateNode? node, PBContext context) {
     // Pass down manager data to states
     PBStateManagementHelper()
-        .getStateGraphOfNode(node)
+        .getStateGraphOfNode(node)!
         .states
         ?.forEach((state) {
       // context.tree = node.managerData;
@@ -92,17 +92,17 @@ class MiddlewareUtils {
 
   static String generateVariable(PBIntermediateNode node, PBContext context,
       {String type = 'var'}) {
-    return '$type ${node.name.camelCase} = ${generateVariableBody(node, context)};';
+    return '$type ${node.name!.camelCase} = ${generateVariableBody(node, context)};';
   }
 
   static String generateEmptyVariable(PBIntermediateNode node,
           {String type = 'var'}) =>
-      '$type ${node.name.camelCase};';
+      '$type ${node.name!.camelCase};';
 
   static String generateVariableBody(
-      PBIntermediateNode node, PBContext context) {
+      PBIntermediateNode? node, PBContext context) {
     context.sizingContext = SizingValueContext.PointValue;
-    return (node?.generator?.generate(node ?? '', context) ?? '');
+    return (node?.generator?.generate(node ?? '' as PBIntermediateNode?, context) ?? '');
   }
 
   static String wrapOnLayout(String className) {

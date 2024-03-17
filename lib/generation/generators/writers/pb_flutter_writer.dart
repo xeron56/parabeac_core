@@ -36,7 +36,7 @@ class PBFlutterWriter implements PBPageWriter {
 
   /// Function that allows the rewriting of the main() method inside main.dart
   void rewriteMainFunction(String pathToMain, String code,
-      {Set<FlutterImport> imports}) {
+      {required Set<FlutterImport> imports}) {
     var mainRead = File(pathToMain).readAsStringSync();
     var newMain = imports.join() +
         mainRead.replaceFirst(
@@ -83,12 +83,12 @@ class MyApp extends StatelessWidget {
 
     /// Add new dependencies to pubspec.yaml
     if (dependencies.isNotEmpty && modifiableyaml.containsKey('dependencies')) {
-      var yamlDeps = modifiableyaml['dependencies'] as Map;
+      var yamlDeps = modifiableyaml['dependencies'] as Map?;
 
       /// Check if dependency already exists.
       /// Add dependency if it does not exist already.
       dependencies.forEach((name, version) {
-        if (!yamlDeps.containsKey(name)) {
+        if (!yamlDeps!.containsKey(name)) {
           yamlDeps[name] = version;
         }
       });
@@ -102,9 +102,9 @@ class MyApp extends StatelessWidget {
       /// Add only elements that are not already in the yaml
       if (modifiableyaml['flutter'].containsKey('assets') &&
           modifiableyaml['flutter']['assets'] != null) {
-        var existingAssets = (modifiableyaml['flutter']['assets'] as List);
+        var existingAssets = (modifiableyaml['flutter']['assets'] as List?);
         assets.forEach((asset) {
-          if (!existingAssets.any((e) => e.endsWith('/$asset'))) {
+          if (!existingAssets!.any((e) => e.endsWith('/$asset'))) {
             existingAssets
                 .add('packages/${MainInfo().projectName}/assets/images/$asset');
           }

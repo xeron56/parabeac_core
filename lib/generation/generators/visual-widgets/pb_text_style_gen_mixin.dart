@@ -4,8 +4,8 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 import 'package:parabeac_core/interpret_and_optimize/state_management/auxilary_data_helpers/intermediate_effect.dart';
 
 mixin PBTextStyleGen {
-  String getStyle(InheritedText source, PBContext context) {
-    var textStyle = source.auxiliaryData.intermediateTextStyle;
+  String getStyle(InheritedText source, PBContext? context) {
+    var textStyle = source.auxiliaryData!.intermediateTextStyle!;
     var buffer = StringBuffer();
     buffer.write('TextStyle(\n');
     if (textStyle.fontFamily != null) {
@@ -25,12 +25,12 @@ mixin PBTextStyleGen {
     if (textStyle.letterSpacing != null) {
       buffer.write('letterSpacing: ${textStyle.letterSpacing},\n');
     }
-    if (source.auxiliaryData.color != null) {
+    if (source.auxiliaryData!.color != null) {
       buffer.write(PBColorGenHelper().generate(source, context));
     }
 
-    if (source.auxiliaryData.effects != null) {
-      buffer.write(_getEffects(source.auxiliaryData.effects));
+    if (source.auxiliaryData!.effects != null) {
+      buffer.write(_getEffects(source.auxiliaryData!.effects!));
     }
 
     buffer.write(')');
@@ -41,11 +41,11 @@ mixin PBTextStyleGen {
   String _getEffects(List<PBEffect> effects) {
     var shadows = '';
     effects.forEach((effect) {
-      if (effect.visible && effect.type.toLowerCase().contains('shadow')) {
+      if (effect.visible! && effect.type!.toLowerCase().contains('shadow')) {
         shadows += '''
         Shadow(
           ${PBColorGenHelper().getHexColor(effect.color)}
-          offset: Offset(${effect.offset['x']}, ${effect.offset['y']}),
+          offset: Offset(${effect.offset!['x']}, ${effect.offset!['y']}),
           blurRadius: ${effect.radius},
         ),
         ''';

@@ -29,24 +29,24 @@ class InheritedPolygon extends PBVisualIntermediateNode
   @override
   @JsonKey(
       fromJson: PrototypeNode.prototypeNodeFromJson, name: 'prototypeNodeUUID')
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @override
   @JsonKey()
-  String type = 'polygon';
+  String? type = 'polygon';
 
   @override
   @JsonKey(ignore: true)
-  Map<String, dynamic> originalRef;
+  Map<String, dynamic>? originalRef;
 
   InheritedPolygon(
-    String UUID,
-    Rectangle3D frame, {
+    String? UUID,
+    Rectangle3D? frame, {
     this.originalRef,
     name,
-    Uint8List image,
+    Uint8List? image,
     this.prototypeNode,
-    PBIntermediateConstraints constraints,
+    PBIntermediateConstraints? constraints,
   }) : super(UUID, frame, name, constraints: constraints) {
     generator = PBBitmapGenerator();
     childrenStrategy = NoChildStrategy();
@@ -62,6 +62,6 @@ class InheritedPolygon extends PBVisualIntermediateNode
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-          PBIntermediateNode parent, PBIntermediateTree tree) =>
+          PBIntermediateNode? parent, PBIntermediateTree tree) =>
       InheritedPolygon.fromJson(json);
 }

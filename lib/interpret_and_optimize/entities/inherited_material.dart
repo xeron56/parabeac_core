@@ -21,22 +21,22 @@ class InheritedMaterial extends PBVisualIntermediateNode
   @override
   @JsonKey(
       fromJson: PrototypeNode.prototypeNodeFromJson, name: 'prototypeNodeUUID')
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @JsonKey(defaultValue: false, name: 'isFlowHome')
-  bool isHomeScreen = false;
+  bool? isHomeScreen = false;
 
   @override
   @JsonKey()
-  String type = 'artboard';
+  String? type = 'artboard';
 
   @override
-  Map<String, dynamic> originalRef;
+  Map<String, dynamic>? originalRef;
 
   InheritedMaterial(
-    String UUID,
-    Rectangle3D<num> frame,
-    String name,
+    String? UUID,
+    Rectangle3D<num>? frame,
+    String? name,
     this.originalRef, {
     this.isHomeScreen,
     this.prototypeNode,
@@ -48,17 +48,17 @@ class InheritedMaterial extends PBVisualIntermediateNode
 
   @override
   void handleChildren(PBContext context) {
-    var children = getAllAtrributeNamed(context.tree, 'child');
+    var children = getAllAtrributeNamed(context.tree!, 'child');
 
     // Top-most stack should have scaffold's frame to align children properly
     var groupAtt = FrameGroup(null, frame)
       ..name = '$name-Group'
       ..attributeName = 'child'
       ..parent = this;
-    context.tree.addEdges(groupAtt, children.map((child) => child).toList());
+    context.tree!.addEdges(groupAtt, children.map((child) => child).toList());
 
-    context.tree.replaceChildrenOf(
-        this, [groupAtt]..removeWhere((element) => element == null));
+    context.tree!.replaceChildrenOf(
+        this, [groupAtt]..removeWhere(((element) => element == null) as bool Function(PBIntermediateNode?)));
   }
 
   List<PBIntermediateNode> layoutInstruction(List<PBIntermediateNode> layer) {
@@ -72,6 +72,6 @@ class InheritedMaterial extends PBVisualIntermediateNode
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-          PBIntermediateNode parent, PBIntermediateTree tree) =>
+          PBIntermediateNode? parent, PBIntermediateTree tree) =>
       InheritedMaterial.fromJson(json)..mapRawChildren(json, tree);
 }

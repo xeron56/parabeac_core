@@ -17,34 +17,34 @@ import 'package:path/path.dart' as p;
 /// Class that generates BLoC boilerplate when generating a custom tag.
 class CustomTagBlocGenerator extends CustomTagGenerator {
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
-    var children = context.tree.childrenOf(source);
+  String generate(PBIntermediateNode? source, PBContext? context) {
+    var children = context!.tree!.childrenOf(source);
     var titleName = PBInputFormatter.formatLabel(
-      source.name,
+      source!.name!,
       isTitle: true,
       destroySpecialSym: true,
     );
-    var cleanName = PBInputFormatter.formatLabel(source.name.snakeCase);
-    var packageName = MainInfo().projectName;
+    var cleanName = PBInputFormatter.formatLabel(source.name!.snakeCase);
+    var packageName = MainInfo().projectName!;
 
     var blocRelativePath =
         p.join(WriteSymbolCommand.DEFAULT_SYMBOL_PATH, 'bloc', '$cleanName');
 
     // TODO: correct import
-    context.managerData.addImport(FlutterImport(
+    context.managerData!.addImport(FlutterImport(
       '${CustomTagGenerator.DIRECTORY_GEN}/$cleanName.dart',
       packageName,
     ));
 
     var fss =
-        context.configuration.generationConfiguration.fileStructureStrategy;
+        context.configuration!.generationConfiguration!.fileStructureStrategy!;
 
     /// If [PBTag] is [PBSharedInstanceIntermediateNode] or [PBSharedInstanceIntermediateNode],
     /// we can extract its overrides and list them in the initial state
-    var initialStates = <PBMasterOverride>[];
-    var firstChild = context.tree.childrenOf(source).first;
+    var initialStates = <PBMasterOverride?>[];
+    var firstChild = context.tree!.childrenOf(source).first;
     if (firstChild is PBSharedInstanceIntermediateNode) {
-      firstChild.sharedParamValues.forEach((value) {
+      firstChild.sharedParamValues!.forEach((value) {
         var prop = OverrideHelper.getProperty(value.UUID, value.ovrType);
 
         if (prop != null) {
@@ -53,7 +53,7 @@ class CustomTagBlocGenerator extends CustomTagGenerator {
       });
     } else if (source.parent is PBSharedMasterNode) {
       (source.parent as PBSharedMasterNode)
-          .overridableProperties
+          .overridableProperties!
           .forEach(initialStates.add);
     }
 
@@ -103,7 +103,7 @@ class CustomTagBlocGenerator extends CustomTagGenerator {
     if (source is CustomTag) {
       return '''
         $titleName(
-          child: ${children[0].generator.generate(children[0], context)}
+          child: ${children[0].generator!.generate(children[0], context)}
         )
       ''';
     }
@@ -151,13 +151,13 @@ class CustomTagBlocGenerator extends CustomTagGenerator {
   }
 
   String _generateStateBoilerplate(String className,
-      [List<PBMasterOverride> initialStates = const []]) {
+      [List<PBMasterOverride?> initialStates = const []]) {
     var thisVars = StringBuffer();
     var classVars = StringBuffer();
     var defaultValues = StringBuffer();
 
     initialStates.forEach((state) {
-      classVars.write('var ${state.propertyName};');
+      classVars.write('var ${state!.propertyName};');
       thisVars.write('this.${state.propertyName},');
       if (state.ovrType == 'stringValue' && state.value is InheritedText) {
         defaultValues.write(

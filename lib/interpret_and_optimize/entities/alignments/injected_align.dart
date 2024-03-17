@@ -10,8 +10,8 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 
 class InjectedAlign extends PBVisualIntermediateNode
     implements PBInjectedIntermediate {
-  double alignX;
-  double alignY;
+  late double alignX;
+  late double alignY;
 
   InjectedAlign(String UUID, Rectangle3D frame, String name)
       : super(UUID, frame, name) {
@@ -53,5 +53,5 @@ class InjectedAlign extends PBVisualIntermediateNode
   }
 
   @override
-  PBIntermediateNode fromJson(Map<String, dynamic> json) => null;
+  PBIntermediateNode? fromJson(Map<String, dynamic> json) => null;
 }

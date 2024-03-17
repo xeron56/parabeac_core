@@ -4,5 +4,5 @@ abstract class FileWriterObserver {
   ///
   ///`filePath`: the path of where the file was created at.
   ///`fileUUID`: the unique identifier of the file.
-  void fileCreated(String filePath, String fileUUID);
+  void fileCreated(String filePath, String? fileUUID);
 }

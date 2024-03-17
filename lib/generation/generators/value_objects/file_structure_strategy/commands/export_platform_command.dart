@@ -8,21 +8,21 @@ import 'package:parabeac_core/interpret_and_optimize/services/pb_platform_orient
 
 /// Command to export `code` under a specific `platform`
 class ExportPlatformCommand extends NodeFileStructureCommand {
-  PLATFORM platform;
+  PLATFORM? platform;
   String fileName;
   String folderName;
   static final String WIDGET_PATH =
       GetIt.I.get<PathService>().viewsRelativePath;
 
   ExportPlatformCommand(
-      String UUID, this.platform, this.folderName, this.fileName, String code,
+      String? UUID, this.platform, this.folderName, this.fileName, String? code,
       {FileOwnership ownership = FileOwnership.PBC})
       : super(UUID, code, ownership);
 
   @override
-  Future write(FileStructureStrategy strategy) async {
+  Future write(FileStructureStrategy? strategy) async {
     var path = p.join(
-      strategy.GENERATED_PROJECT_PATH,
+      strategy!.GENERATED_PROJECT_PATH!,
       WIDGET_PATH,
       folderName,
       platform.toString().toLowerCase().replaceAll('platform.', ''),

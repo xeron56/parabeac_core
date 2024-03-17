@@ -7,7 +7,7 @@ class StringGeneratorAdapter extends PBGenerator {
   final String overridenString;
   StringGeneratorAdapter(this.overridenString);
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     return overridenString;
   }
 }

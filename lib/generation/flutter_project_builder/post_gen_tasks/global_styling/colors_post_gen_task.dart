@@ -13,7 +13,7 @@ import 'package:uuid/uuid.dart';
 class ColorsPostGenTask extends PostGenTask {
   GenerationConfiguration generationConfiguration;
 
-  List<PBDLGlobalColor> colors;
+  List<PBDLGlobalColor>? colors;
 
   ColorsPostGenTask(
     this.generationConfiguration,
@@ -25,21 +25,21 @@ class ColorsPostGenTask extends PostGenTask {
     var mainInfo = MainInfo();
 
     /// Format colors to be added to constants file
-    colors.forEach((color) {
+    colors!.forEach((color) {
       constColors.add(ConstantHolder(
         'Color',
-        color.name.camelCase,
-        'Color(${color.color.toHex()})',
+        color.name!.camelCase,
+        'Color(${color.color!.toHex()})',
         description: color.description,
       ));
     });
 
     /// Write colors to constants file in `colors.g.dart`
-    generationConfiguration.fileStructureStrategy.commandCreated(
+    generationConfiguration.fileStructureStrategy!.commandCreated(
       WriteConstantsCommand(
         Uuid().v4(),
         constColors,
-        filename: '${mainInfo.projectName.snakeCase}_colors',
+        filename: '${mainInfo.projectName!.snakeCase}_colors',
         ownershipPolicy: FileOwnership.PBC,
         imports: 'import \'package:flutter/material.dart\';',
         relativePath: GetIt.I.get<PathService>().themingRelativePath,

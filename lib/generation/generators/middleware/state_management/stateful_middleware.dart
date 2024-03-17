@@ -17,25 +17,25 @@ import 'package:path/path.dart' as p;
 import '../../import_generator.dart';
 
 class StatefulMiddleware extends StateManagementMiddleware {
-  StatefulMiddleware(PBGenerationManager generationManager,
+  StatefulMiddleware(PBGenerationManager? generationManager,
       GenerationConfiguration configuration)
       : super(generationManager, configuration);
 
   String getImportPath(PBSharedInstanceIntermediateNode node,
       FileStructureStrategy fileStrategy) {
     var symbolMaster =
-        PBSymbolStorage().getSharedMasterNodeBySymbolID(node.SYMBOL_ID);
+        PBSymbolStorage().getSharedMasterNodeBySymbolID(node.SYMBOL_ID)!;
     var path = p.join(
-        fileStrategy.GENERATED_PROJECT_PATH,
+        fileStrategy.GENERATED_PROJECT_PATH!,
         FileStructureStrategy.RELATIVE_WIDGET_PATH,
-        ImportHelper.getName(symbolMaster.name).snakeCase,
-        node.functionCallName.snakeCase);
+        ImportHelper.getName(symbolMaster.name!).snakeCase,
+        node.functionCallName!.snakeCase);
     return path;
   }
 
   @override
   Future<PBIntermediateNode> handleStatefulNode(
-      PBIntermediateNode node, PBContext context) {
+      PBIntermediateNode? node, PBContext context) {
     var fileStrategy = configuration.fileStructureStrategy;
     var elementStorage = ElementStorage();
 
@@ -44,35 +44,35 @@ class StatefulMiddleware extends StateManagementMiddleware {
       ///
       /// This ensures we have the correct model imports when generating the tree.
       var defaultNodeTreeUUID = elementStorage
-          .elementToTree[stmgHelper.getStateGraphOfNode(node).defaultNode.UUID];
+          .elementToTree[stmgHelper.getStateGraphOfNode(node)!.defaultNode.UUID];
       var defaultNodeTree = elementStorage.treeUUIDs[defaultNodeTreeUUID];
 
-      context.tree.addDependent(defaultNodeTree);
+      context.tree!.addDependent(defaultNodeTree);
       return Future.value(node);
     }
 
-    fileStrategy.commandCreated(WriteSymbolCommand(context.tree.UUID,
-        node.name.snakeCase, generationManager.generate(node, context)));
+    fileStrategy!.commandCreated(WriteSymbolCommand(context.tree!.UUID,
+        node!.name!.snakeCase, generationManager!.generate(node, context)));
 
     // Generate node's states' view pages
     //TODO: Find a way to abstract the process below in order to be used by any middleware
     var nodeStateGraph = stmgHelper.getStateGraphOfNode(node);
     nodeStateGraph?.states?.forEach((state) {
       var treeUUID = elementStorage.elementToTree[state.UUID];
-      var tree = elementStorage.treeUUIDs[treeUUID];
+      var tree = elementStorage.treeUUIDs[treeUUID]!;
       // generate imports for state view
       var data = PBGenerationViewData()
         ..addImport(FlutterImport('material.dart', 'flutter'));
-      tree.generationViewData.importsList.forEach(data.addImport);
-      tree.context.generationManager =
+      tree.generationViewData!.importsList.forEach(data.addImport);
+      tree.context!.generationManager =
           PBFlutterGenerator(ImportHelper(), data: data);
 
       fileStrategy.commandCreated(WriteSymbolCommand(
         tree.UUID,
-        state.name.snakeCase,
-        tree.context.generationManager.generate(state, tree.context),
+        state.name!.snakeCase,
+        tree.context!.generationManager!.generate(state, tree.context),
         symbolPath: WriteSymbolCommand.DEFAULT_SYMBOL_PATH +
-            ImportHelper.getName(node.name).snakeCase,
+            ImportHelper.getName(node.name!).snakeCase,
       ));
     });
 

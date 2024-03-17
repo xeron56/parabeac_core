@@ -25,7 +25,7 @@ class ProviderMiddleware extends StateManagementMiddleware {
   final PACKAGE_NAME = 'provider';
   final PACKAGE_VERSION = '^4.3.2+3';
 
-  ProviderMiddleware(PBGenerationManager generationManager,
+  ProviderMiddleware(PBGenerationManager? generationManager,
       ProviderGenerationConfiguration configuration)
       : super(generationManager, configuration);
 
@@ -37,43 +37,43 @@ class ProviderMiddleware extends StateManagementMiddleware {
 
     var import = generateModelPath
         ? p.join(fileStrategy.RELATIVE_MODEL_PATH,
-            ImportHelper.getName(symbolMaster.name).snakeCase)
+            ImportHelper.getName(symbolMaster!.name!).snakeCase)
         : p.join(
             FileStructureStrategy.RELATIVE_WIDGET_PATH,
-            ImportHelper.getName(symbolMaster.name).snakeCase,
-            node.functionCallName.snakeCase);
-    return p.join(fileStrategy.GENERATED_PROJECT_PATH, import);
+            ImportHelper.getName(symbolMaster!.name!).snakeCase,
+            node.functionCallName!.snakeCase);
+    return p.join(fileStrategy.GENERATED_PROJECT_PATH!, import);
   }
 
   @override
   Future<PBIntermediateNode> handleStatefulNode(
-      PBIntermediateNode node, PBContext context) {
+      PBIntermediateNode? node, PBContext context) {
     String watcherName;
     var managerData = context.managerData;
     var fileStrategy =
-        configuration.fileStructureStrategy as ProviderFileStructureStrategy;
+        configuration.fileStructureStrategy as ProviderFileStructureStrategy?;
     var elementStorage = ElementStorage();
 
     if (node is PBSharedInstanceIntermediateNode) {
-      context.project.genProjectData
+      context.project!.genProjectData!
           .addDependencies(PACKAGE_NAME, PACKAGE_VERSION);
-      managerData.addImport(FlutterImport('provider.dart', 'provider'));
-      watcherName = getVariableName(node.name.snakeCase + '_notifier');
+      managerData!.addImport(FlutterImport('provider.dart', 'provider'));
+      watcherName = getVariableName(node.name!.snakeCase + '_notifier');
 
       /// Get the default node's tree in order to add to dependent of the current tree.
       ///
       /// This ensures we have the correct model imports when generating the tree.
       var defaultNodeTreeUUID = elementStorage
-          .elementToTree[stmgHelper.getStateGraphOfNode(node).defaultNode.UUID];
+          .elementToTree[stmgHelper.getStateGraphOfNode(node)!.defaultNode.UUID];
       var defaultNodeTree = elementStorage.treeUUIDs[defaultNodeTreeUUID];
 
-      context.tree.addDependent(defaultNodeTree);
+      context.tree!.addDependent(defaultNodeTree);
 
       PBGenCache().appendToCache(node.SYMBOL_ID,
-          getImportPath(node, fileStrategy, generateModelPath: false));
+          getImportPath(node, fileStrategy!, generateModelPath: false));
 
       if (node.generator is! StringGeneratorAdapter) {
-        var modelName = ImportHelper.getName(node.functionCallName).pascalCase;
+        var modelName = ImportHelper.getName(node.functionCallName!).pascalCase;
         var providerWidget = '''
         ChangeNotifierProvider(
           create: (context) =>
@@ -103,10 +103,10 @@ class ProviderMiddleware extends StateManagementMiddleware {
 
       return Future.value(node);
     }
-    watcherName = getNameOfNode(node);
+    watcherName = getNameOfNode(node!);
 
     var parentDirectory = WriteSymbolCommand.DEFAULT_SYMBOL_PATH +
-        ImportHelper.getName(node.name).snakeCase;
+        ImportHelper.getName(node.name!).snakeCase;
 
     // Generate model's imports
     var modelGenerator = PBFlutterGenerator(ImportHelper(),
@@ -119,17 +119,17 @@ class ProviderMiddleware extends StateManagementMiddleware {
     [
       /// This generated the `changeNotifier` that goes under the [fileStrategy.RELATIVE_MODEL_PATH]
       WriteSymbolCommand(
-        context.tree.UUID,
+        context.tree!.UUID,
         parentDirectory,
         code,
-        symbolPath: fileStrategy.RELATIVE_MODEL_PATH,
+        symbolPath: fileStrategy!.RELATIVE_MODEL_PATH,
         ownership: FileOwnership.DEV,
       ),
       // Generate default node's view page
       WriteSymbolCommand(
-        context.tree.UUID,
-        node.name.snakeCase,
-        generationManager.generate(node, context),
+        context.tree!.UUID,
+        node.name!.snakeCase,
+        generationManager!.generate(node, context),
         symbolPath: parentDirectory,
       ),
     ].forEach(fileStrategy.commandCreated);
@@ -142,18 +142,18 @@ class ProviderMiddleware extends StateManagementMiddleware {
     var nodeStateGraph = stmgHelper.getStateGraphOfNode(node);
     nodeStateGraph?.states?.forEach((state) {
       var treeUUID = elementStorage.elementToTree[state.UUID];
-      var tree = elementStorage.treeUUIDs[treeUUID];
+      var tree = elementStorage.treeUUIDs[treeUUID]!;
       // generate imports for state view
       var data = PBGenerationViewData()
         ..addImport(FlutterImport('material.dart', 'flutter'));
-      tree.generationViewData.importsList.forEach(data.addImport);
-      tree.context.generationManager =
+      tree.generationViewData!.importsList.forEach(data.addImport);
+      tree.context!.generationManager =
           PBFlutterGenerator(ImportHelper(), data: data);
 
       fileStrategy.commandCreated(WriteSymbolCommand(
         tree.UUID,
-        state.name.snakeCase,
-        tree.context.generationManager.generate(state, tree.context),
+        state.name!.snakeCase,
+        tree.context!.generationManager!.generate(state, tree.context),
         symbolPath: parentDirectory,
       ));
     });

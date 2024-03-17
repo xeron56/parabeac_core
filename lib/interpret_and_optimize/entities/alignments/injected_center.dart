@@ -9,7 +9,7 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/child_strategy.dart
 class InjectedCenter extends PBIntermediateNode
     implements PBInjectedIntermediate {
   InjectedCenter(
-    String UUID,
+    String? UUID,
     Rectangle3D<num> frame,
     String name, {
     constraints,

@@ -9,12 +9,12 @@ part of 'pb_intermediate_constraints.dart';
 PBIntermediateConstraints _$PBIntermediateConstraintsFromJson(
     Map<String, dynamic> json) {
   return PBIntermediateConstraints(
-    pinLeft: json['pinLeft'] as bool,
-    pinRight: json['pinRight'] as bool,
-    pinTop: json['pinTop'] as bool,
-    pinBottom: json['pinBottom'] as bool,
-    fixedHeight: json['fixedHeight'] as bool,
-    fixedWidth: json['fixedWidth'] as bool,
+    pinLeft: json['pinLeft'] as bool?,
+    pinRight: json['pinRight'] as bool?,
+    pinTop: json['pinTop'] as bool?,
+    pinBottom: json['pinBottom'] as bool?,
+    fixedHeight: json['fixedHeight'] as bool?,
+    fixedWidth: json['fixedWidth'] as bool?,
   );
 }
 

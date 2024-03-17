@@ -7,16 +7,16 @@ part 'pb_intermediate_constraints.g.dart';
 /// TODO: Use https://pub.dev/packages/meta to make these named parameters required.
 @JsonSerializable()
 class PBIntermediateConstraints {
-  bool pinLeft;
-  bool pinRight;
-  bool pinTop;
-  bool pinBottom;
+  bool? pinLeft;
+  bool? pinRight;
+  bool? pinTop;
+  bool? pinBottom;
 
   /// If value is null, then the height is not fixed.
-  bool fixedHeight;
+  bool? fixedHeight;
 
   /// If value is null, then the width is not fixed.
-  bool fixedWidth;
+  bool? fixedWidth;
   PBIntermediateConstraints(
       {this.pinLeft = false,
       this.pinRight = false,
@@ -52,12 +52,12 @@ class PBIntermediateConstraints {
   Map<String, dynamic> toJson() => _$PBIntermediateConstraintsToJson(this);
 
   PBIntermediateConstraints copyWith({
-    bool pinBottom,
-    bool pinTop,
-    bool pinRight,
-    bool pinLeft,
-    bool fixedHeight,
-    bool fixedWidth,
+    bool? pinBottom,
+    bool? pinTop,
+    bool? pinRight,
+    bool? pinLeft,
+    bool? fixedHeight,
+    bool? fixedWidth,
   }) {
     return PBIntermediateConstraints(
       pinBottom: pinBottom ?? this.pinBottom,
@@ -72,12 +72,12 @@ class PBIntermediateConstraints {
   factory PBIntermediateConstraints.mergeFromContraints(
       PBIntermediateConstraints first, PBIntermediateConstraints second) {
     return PBIntermediateConstraints(
-        pinTop: first.pinTop || second.pinTop,
-        pinLeft: (first.pinLeft || second.pinLeft),
-        pinRight: (first.pinRight || second.pinRight),
-        pinBottom: (first.pinBottom || second.pinBottom),
-        fixedHeight: first.fixedHeight || second.fixedHeight,
-        fixedWidth: first.fixedWidth || second.fixedWidth);
+        pinTop: first.pinTop! || second.pinTop!,
+        pinLeft: (first.pinLeft! || second.pinLeft!),
+        pinRight: (first.pinRight! || second.pinRight!),
+        pinBottom: (first.pinBottom! || second.pinBottom!),
+        fixedHeight: first.fixedHeight! || second.fixedHeight!,
+        fixedWidth: first.fixedWidth! || second.fixedWidth!);
     // pinTop = (first.pinTop || second.pinTop) ? true : false;
     // pinLeft = (first.pinLeft || second.pinLeft) ? true : false;
     // pinRight = (first.pinRight || second.pinRight) ? true : false;

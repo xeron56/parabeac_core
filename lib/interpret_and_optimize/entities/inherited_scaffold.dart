@@ -22,37 +22,37 @@ class InheritedScaffold extends PBVisualIntermediateNode
   @override
   @JsonKey(
       fromJson: PrototypeNode.prototypeNodeFromJson, name: 'prototypeNodeUUID')
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @JsonKey(defaultValue: false, name: 'isFlowHome')
-  bool isHomeScreen = false;
+  bool? isHomeScreen = false;
 
   @override
   @JsonKey()
-  String type = 'artboard';
+  String? type = 'artboard';
 
   // PBIntermediateNode get navbar => getAttributeNamed('appBar');
 
   // PBIntermediateNode get tabbar => getAttributeNamed('bottomNavigationBar');
 
   @override
-  Map<String, dynamic> originalRef;
+  Map<String, dynamic>? originalRef;
 
   InheritedScaffold(
-    String UUID,
-    Rectangle3D<num> frame,
-    String name,
+    String? UUID,
+    Rectangle3D<num>? frame,
+    String? name,
     this.originalRef, {
     this.isHomeScreen,
     this.prototypeNode,
-    PBIntermediateConstraints constraints,
+    PBIntermediateConstraints? constraints,
   }) : super(UUID, frame, name, constraints: constraints) {
     generator = PBScaffoldGenerator();
     childrenStrategy = MultipleChildStrategy('body');
   }
 
   @override
-  String getAttributeNameOf(PBIntermediateNode node) {
+  String? getAttributeNameOf(PBIntermediateNode? node) {
     if (node is InjectedAppbar) {
       return 'appBar';
     } else if (node is InjectedTabBar) {
@@ -63,26 +63,26 @@ class InheritedScaffold extends PBVisualIntermediateNode
 
   @override
   void handleChildren(PBContext context) {
-    var children = getAllAtrributeNamed(context.tree, 'body');
+    var children = getAllAtrributeNamed(context.tree!, 'body');
 
-    var appBar = getAttributeNamed(context.tree, 'appBar');
+    var appBar = getAttributeNamed(context.tree!, 'appBar');
     if (appBar != null) {
       context.canvasFrame = Rectangle3D(
-        context.canvasFrame.left,
-        appBar.frame.bottomRight.y,
-        context.canvasFrame.width,
-        context.canvasFrame.height - appBar.frame.height,
+        context.canvasFrame!.left,
+        appBar.frame!.bottomRight.y,
+        context.canvasFrame!.width,
+        context.canvasFrame!.height - appBar.frame!.height,
         0,
       );
       frame = context.canvasFrame;
     }
-    var tabBar = getAttributeNamed(context.tree, 'bottomNavigationBar');
+    var tabBar = getAttributeNamed(context.tree!, 'bottomNavigationBar');
     if (tabBar != null) {
       context.canvasFrame = Rectangle3D(
-        context.canvasFrame.left,
-        context.canvasFrame.top,
-        context.canvasFrame.width,
-        context.canvasFrame.height - tabBar.frame.height,
+        context.canvasFrame!.left,
+        context.canvasFrame!.top,
+        context.canvasFrame!.width,
+        context.canvasFrame!.height - tabBar.frame!.height,
         0,
       );
       frame = context.canvasFrame;
@@ -93,9 +93,9 @@ class InheritedScaffold extends PBVisualIntermediateNode
       ..name = '$name-Group'
       ..attributeName = 'body'
       ..parent = this;
-    context.tree.addEdges(groupAtt, children.map((child) => child).toList());
+    context.tree!.addEdges(groupAtt, children.map((child) => child).toList());
 
-    context.tree.replaceChildrenOf(this,
+    context.tree!.replaceChildrenOf(this,
         [groupAtt, appBar, tabBar]..removeWhere((element) => element == null));
   }
 
@@ -113,7 +113,7 @@ class InheritedScaffold extends PBVisualIntermediateNode
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-          PBIntermediateNode parent, PBIntermediateTree tree) =>
+          PBIntermediateNode? parent, PBIntermediateTree tree) =>
       InheritedScaffold.fromJson(json)..mapRawChildren(json, tree);
 
   // @override

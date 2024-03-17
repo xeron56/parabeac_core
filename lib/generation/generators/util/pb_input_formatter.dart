@@ -54,7 +54,7 @@ class PBInputFormatter {
 
   /// Method that splits `target` according to `delimeter`
   /// and returns the last entry in the list.
-  static String findLastOf(String target, String delimeter) {
+  static String findLastOf(String? target, String delimeter) {
     if (target == null || delimeter == null) {
       return '';
     }

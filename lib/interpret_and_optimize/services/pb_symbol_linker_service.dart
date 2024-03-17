@@ -10,8 +10,8 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_symbol_storage.d
 import 'package:parabeac_core/interpret_and_optimize/services/pb_shared_aggregation_service.dart';
 
 class PBSymbolLinkerService extends AITHandler {
-  PBSymbolStorage _symbolStorage;
-  PBSharedInterAggregationService _aggregationService;
+  late PBSymbolStorage _symbolStorage;
+  late PBSharedInterAggregationService _aggregationService;
 
   PBSymbolLinkerService() {
     _symbolStorage = PBSymbolStorage();
@@ -32,7 +32,7 @@ class PBSymbolLinkerService extends AITHandler {
       if (node is PBSharedMasterNode) {
         await _symbolStorage.addSharedMasterNode(node);
         _aggregationService.gatherSharedParameters(
-            node, context.tree.childrenOf(node).first, context);
+            node, context.tree!.childrenOf(node).first, context);
       } else if (node is PBSharedInstanceIntermediateNode) {
         await _symbolStorage.addSharedInstance(node);
         _aggregationService.gatherSharedValues(node);

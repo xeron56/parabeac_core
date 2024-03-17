@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableNullableExtension;
 import 'package:parabeac_core/controllers/interpret.dart';
 import 'package:parabeac_core/interpret_and_optimize/entities/inherited_text.dart';
 import 'package:parabeac_core/interpret_and_optimize/entities/injected_container.dart';
@@ -22,11 +23,11 @@ class PBConstraintGenerationService extends AITHandler {
     }
 
     for (var node
-        in tree.where((element) => element != null).toList().reversed) {
+        in tree.whereNotNull().toList().reversed) {
       var children = tree.childrenOf(node);
       var child = children.isEmpty ? null : children.first;
       if (node.constraints == null) {
-        if (child.constraints == null) {
+        if (child!.constraints == null) {
           node.constraints = PBIntermediateConstraints(
               pinBottom: false, pinLeft: false, pinRight: false, pinTop: false);
         } else {

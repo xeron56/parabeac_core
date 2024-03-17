@@ -10,22 +10,22 @@ import 'package:parabeac_core/interpret_and_optimize/entities/subclasses/pb_inte
 /// imports, dependencies, etc.
 abstract class PBGenerationManager {
   ///* Keep track of the current page body
-  StringBuffer body;
+  StringBuffer? body;
 
-  Type rootType;
+  Type? rootType;
 
   /// In charge of processing all the imports of the files that are being written in the file sytem
-  ImportHelper importProcessor;
+  ImportHelper? importProcessor;
 
-  PBGenerationViewData _data;
-  PBGenerationViewData get data => _data;
-  set data(PBGenerationViewData data) => _data = data;
+  PBGenerationViewData? _data;
+  PBGenerationViewData? get data => _data;
+  set data(PBGenerationViewData? data) => _data = data;
 
   PBGenerationManager(this.importProcessor, {data}) {
     _data = data;
   }
 
-  String generate(PBIntermediateNode rootNode, PBContext context);
+  String? generate(PBIntermediateNode? rootNode, PBContext? context);
 
   Set<String> getPaths(String uuid) => PBGenCache().getPaths(uuid);
 

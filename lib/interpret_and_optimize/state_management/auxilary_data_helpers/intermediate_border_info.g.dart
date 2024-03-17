@@ -9,12 +9,12 @@ part of 'intermediate_border_info.dart';
 IntermediateBorderInfo _$IntermediateBorderInfoFromJson(
     Map<String, dynamic> json) {
   return IntermediateBorderInfo(
-    border: IntermediateBorderInfo._borderFromJson(json['borders'] as List),
-    thickness: json['strokeWeight'] as num,
-    strokeAlign: json['strokeAlign'] as String,
-    strokeJoin: json['strokeJoin'] as String,
-    strokeDashes: json['strokeDashes'] as List,
-    borderRadius: json['cornerRadius'] as num,
+    border: IntermediateBorderInfo._borderFromJson(json['borders'] as List?),
+    thickness: json['strokeWeight'] as num?,
+    strokeAlign: json['strokeAlign'] as String?,
+    strokeJoin: json['strokeJoin'] as String?,
+    strokeDashes: json['strokeDashes'] as List?,
+    borderRadius: json['cornerRadius'] as num?,
   );
 }
 

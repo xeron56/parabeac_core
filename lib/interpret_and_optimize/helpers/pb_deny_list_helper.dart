@@ -21,7 +21,7 @@ class PBDenyListHelper {
     return false;
   }
 
-  PBDenyListNode returnDenyListNodeIfExist(PBIntermediateNode node) {
+  PBDenyListNode? returnDenyListNodeIfExist(PBIntermediateNode node) {
     if (isInDenyListDirect(node)) {
       return PBDenyListNode(null, node.frame);
     } else {

@@ -24,35 +24,35 @@ class PBPlatformOrientationLinkerService extends AITHandler {
   final Map<String, int> _mapCounter = {};
 
   /// Set of all platforms in the project
-  final SplayTreeSet<PLATFORM> _platforms =
-      SplayTreeSet((a, b) => a.index.compareTo(b.index));
+  final SplayTreeSet<PLATFORM?> _platforms =
+      SplayTreeSet((a, b) => a!.index.compareTo(b!.index));
 
   /// Set of all orientations in the project
-  final Set<ORIENTATION> _orientations = {};
+  final Set<ORIENTATION?> _orientations = {};
 
   /// Populates [tree]'s platform and orientation information
   /// and adds [tree] to storage.
   void addOrientationPlatformInformation(
       PBIntermediateTree tree, PBContext context) {
-    tree.generationViewData.platform = _extractPlatform(tree.platformName);
-    tree.generationViewData.orientation = _extractOrientation(
-      tree.rootNode.frame.bottomRight,
-      tree.rootNode.frame.topLeft,
+    tree.generationViewData!.platform = _extractPlatform(tree.platformName);
+    tree.generationViewData!.orientation = _extractOrientation(
+      tree.rootNode!.frame!.bottomRight,
+      tree.rootNode!.frame!.topLeft,
     );
 
-    _platforms.add(tree.generationViewData.platform);
-    _orientations.add(tree.generationViewData.orientation);
+    _platforms.add(tree.generationViewData!.platform);
+    _orientations.add(tree.generationViewData!.orientation);
 
     // Add orientation builder template to the project
     // if there are more than 1 orientation on the project
     if (hasMultipleOrientations()) {
-      context.configuration.generationConfiguration.commandQueue
+      context.configuration!.generationConfiguration!.commandQueue
           .add(OrientationBuilderCommand(tree.UUID));
     }
     // Add responsive layout builder template to the project
     // if there are more than 1 plataform on the project
     if (hasMultiplePlatforms()) {
-      context.configuration.generationConfiguration.commandQueue
+      context.configuration!.generationConfiguration!.commandQueue
           .add(ResponsiveLayoutBuilderCommand(tree.UUID));
       _addBreakpoints(tree, context);
     }
@@ -65,23 +65,23 @@ class PBPlatformOrientationLinkerService extends AITHandler {
     var key = tree.identifier;
     if (_map.containsKey(key)) {
       // Check if we have exact trees (same orientation and platform)
-      var trees = _map[key];
+      var trees = _map[key]!;
       for (var currTree in trees) {
         // Ensure we're comparing the same string by converting to snakecase
         var treeName = key.snakeCase;
-        var iterTreeName = currTree.rootNode.name.snakeCase;
+        var iterTreeName = currTree.rootNode!.name!.snakeCase;
         if (treeName == iterTreeName &&
-            tree.generationViewData.orientation ==
-                currTree.generationViewData.orientation &&
-            tree.generationViewData.platform ==
-                currTree.generationViewData.platform) {
+            tree.generationViewData!.orientation ==
+                currTree.generationViewData!.orientation &&
+            tree.generationViewData!.platform ==
+                currTree.generationViewData!.platform) {
           // Rename the tree if both trees have the same orientation and platform
-          tree.rootNode.name = treeName + '_${_mapCounter[iterTreeName]}';
+          tree.rootNode!.name = treeName + '_${_mapCounter[iterTreeName]}';
           _mapCounter[treeName]++;
         }
       }
 
-      _map[key].add(tree);
+      _map[key]!.add(tree);
       if (!_mapCounter.containsKey(key)) {
         _mapCounter[key] = 1;
       }
@@ -92,7 +92,7 @@ class PBPlatformOrientationLinkerService extends AITHandler {
   }
 
   /// Returns the list of [PBIntermediateTree] with matching [name].
-  List<PBIntermediateTree> getScreensWithName(String name) {
+  List<PBIntermediateTree>? getScreensWithName(String name) {
     if (_map.containsKey(name)) {
       return _map[name];
     }
@@ -111,22 +111,22 @@ class PBPlatformOrientationLinkerService extends AITHandler {
   ///     ORIENTATION.HORIZONTAL: PBINTERMEDIATETREE,
   ///   }
   /// }
-  Map<PLATFORM, Map<ORIENTATION, PBIntermediateTree>>
+  Map<PLATFORM?, Map<ORIENTATION?, PBIntermediateTree>>
       getPlatformOrientationData(String name) {
-    var result = <PLATFORM, Map<ORIENTATION, PBIntermediateTree>>{};
+    var result = <PLATFORM?, Map<ORIENTATION?, PBIntermediateTree>>{};
     if (_map.containsKey(name)) {
-      var screens = _map[name];
+      var screens = _map[name]!;
 
       for (var screen in screens) {
         // Add orientation to a platform
-        if (result.containsKey(screen.generationViewData.platform)) {
-          result[screen.generationViewData.platform]
-              [screen.generationViewData.orientation] = screen;
+        if (result.containsKey(screen.generationViewData!.platform)) {
+          result[screen.generationViewData!.platform]!
+              [screen.generationViewData!.orientation] = screen;
         }
         // Create entry for current platform-orientation pair
         else {
-          result[screen.generationViewData.platform] = {
-            screen.generationViewData.orientation: screen,
+          result[screen.generationViewData!.platform] = {
+            screen.generationViewData!.orientation: screen,
           };
         }
       }
@@ -143,22 +143,22 @@ class PBPlatformOrientationLinkerService extends AITHandler {
   bool hasMultipleOrientations() => _orientations.length > 1;
 
   /// Returns platforms of the project
-  Set<PLATFORM> get platforms => _platforms;
+  Set<PLATFORM?> get platforms => _platforms;
 
   /// Returns orientations of the project
-  Set<ORIENTATION> get orientations => _orientations;
+  Set<ORIENTATION?> get orientations => _orientations;
 
   /// Returns `true` if screen with `name` has more than one platform.
   /// Returns `false` otherwise.
-  bool screenHasMultiplePlatforms(String name) =>
-      _map.containsKey(name) && _map[name].length > 1;
+  bool screenHasMultiplePlatforms(String? name) =>
+      _map.containsKey(name) && _map[name]!.length > 1;
 
   /// Removes the `PLATFORM.` prefix from `platform` and returns the stripped platform.
-  String stripPlatform(PLATFORM platform) =>
+  String stripPlatform(PLATFORM? platform) =>
       platform.toString().toLowerCase().replaceFirst('platform.', '');
 
   /// Removes the `ORIENTATION.` prefix from `orientation` and returns the stripped orientation.
-  String stripOrientation(ORIENTATION orientation) =>
+  String stripOrientation(ORIENTATION? orientation) =>
       orientation.toString().toLowerCase().replaceFirst('orientation.', '');
 
   Map<String, Map<String, List<String>>> getWhoNeedsAbstractInstance() {
@@ -175,13 +175,13 @@ class PBPlatformOrientationLinkerService extends AITHandler {
       List<PBIntermediateTree> list) {
     var result = <String, List<String>>{};
     list.forEach((value) {
-      var platform = stripPlatform(value.generationViewData.platform);
-      var orientation = stripOrientation(value.generationViewData.orientation);
+      var platform = stripPlatform(value.generationViewData!.platform);
+      var orientation = stripOrientation(value.generationViewData!.orientation);
       if (result.containsKey(platform)) {
-        result[platform].add(orientation);
+        result[platform]!.add(orientation);
       } else {
         result[platform] = [];
-        result[platform].add(orientation);
+        result[platform]!.add(orientation);
       }
     });
     return result;
@@ -190,8 +190,8 @@ class PBPlatformOrientationLinkerService extends AITHandler {
   /// Extracts and returns platform of the screen.
   ///
   /// Defaults to PLATFORM.MOBILE if no platform is given.
-  PLATFORM _extractPlatform(String name) {
-    var platform = name?.split('/')?.last?.toLowerCase()?.trim() ?? '';
+  PLATFORM _extractPlatform(String? name) {
+    var platform = name?.split('/').last.toLowerCase().trim() ?? '';
     switch (platform) {
       case 'desktop':
         return PLATFORM.DESKTOP;
@@ -215,8 +215,8 @@ class PBPlatformOrientationLinkerService extends AITHandler {
   }
 
   void _addBreakpoints(PBIntermediateTree tree, PBContext context) {
-    if (MainInfo().configuration.breakpoints != null) {
-      var bp = MainInfo().configuration.breakpoints.cast<String, num>();
+    if (MainInfo().configuration!.breakpoints != null) {
+      var bp = MainInfo().configuration!.breakpoints!.cast<String, num>();
       var constants = <ConstantHolder>[];
       bp.forEach((key, value) {
         constants.add(ConstantHolder(
@@ -226,7 +226,7 @@ class PBPlatformOrientationLinkerService extends AITHandler {
         ));
       });
       var cmd = WriteConstantsCommand(tree.UUID, constants);
-      context.configuration.generationConfiguration.commandQueue.add(cmd);
+      context.configuration!.generationConfiguration!.commandQueue.add(cmd);
     }
   }
 

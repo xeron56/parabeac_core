@@ -29,7 +29,7 @@ class FlutterProjectBuilder {
   PBProject project;
 
   /// Logger that prints consoles informatio
-  static Logger log;
+  static late Logger log;
 
   // PBPageWriter pageWriter;
 
@@ -38,7 +38,7 @@ class FlutterProjectBuilder {
   ///This is going to be defaulted to [GenerationConfiguration] if nothing else is specified.
   GenerationConfiguration generationConfiguration;
 
-  FileSystemAnalyzer fileSystemAnalyzer;
+  FileSystemAnalyzer? fileSystemAnalyzer;
 
   bool _configured = false;
 
@@ -48,11 +48,11 @@ class FlutterProjectBuilder {
   FlutterProjectBuilder(
     this.generationConfiguration,
     this.fileSystemAnalyzer, {
-    this.project,
+    required this.project,
     // this.pageWriter,
   }) {
     log = Logger(runtimeType.toString());
-    fileSystemAnalyzer ??= FileSystemAnalyzer(project.projectAbsPath);
+    fileSystemAnalyzer ??= FileSystemAnalyzer(project.projectAbsPath!);
 
     generationConfiguration.pageWriter = PBFlutterWriter();
     generationConfiguration.fileSystemAnalyzer = fileSystemAnalyzer;
@@ -67,7 +67,7 @@ class FlutterProjectBuilder {
   /// on the [ProcessResult.exitCode]. If the [createAssetsDir] is `true`, its going to create
   /// the [assetsDir] within the flutter project.
   static Future<Tuple2> createFlutterProject(String flutterProjectName,
-      {String projectDir,
+      {required String projectDir,
       bool createAssetsDir = true,
       String assetsDir = 'lib/assets/images/'}) async {
     try {
@@ -95,7 +95,7 @@ class FlutterProjectBuilder {
   /// `[projectPath]lib/*`, and `[projectPath]test/*` by using `dart format`.
   /// There is an option to set to set the current working directory of as [projectDir],
   static Future<dynamic> formatProject(String projectPath,
-      {String projectDir}) {
+      {String? projectDir}) {
     return Process.run(
             'dart',
             [
@@ -120,7 +120,7 @@ class FlutterProjectBuilder {
       Process.run('rm', ['-rf', '.dart_tool/build'],
           runInShell: true,
           environment: Platform.environment,
-          workingDirectory: MainInfo().configuration.outputPath),
+          workingDirectory: MainInfo().configuration!.outputPath),
       generationConfiguration.generateProject(project)
     ]);
 
@@ -142,13 +142,13 @@ class FlutterProjectBuilder {
     await generationConfiguration.generateTree(
         tree, project, context, isDryRun);
     generationConfiguration.generatePlatformAndOrientationInstance(project);
-    await formatProject(project.projectAbsPath,
-        projectDir: MainInfo().configuration.outputPath);
+    await formatProject(project.projectAbsPath!,
+        projectDir: MainInfo().configuration!.outputPath);
   }
 
   void runCommandQueue() {
     generationConfiguration.commandQueue
-        .forEach(generationConfiguration.fileStructureStrategy.commandCreated);
+        .forEach(generationConfiguration.fileStructureStrategy!.commandCreated);
   }
 }
 

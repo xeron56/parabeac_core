@@ -12,8 +12,8 @@ class PBGenerationViewData {
   bool _isDataLocked = false;
   bool hasParams = false;
 
-  PLATFORM platform;
-  ORIENTATION orientation;
+  PLATFORM? platform;
+  ORIENTATION? orientation;
 
   PBGenerationViewData();
 

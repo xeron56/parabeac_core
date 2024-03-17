@@ -6,10 +6,10 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 import 'dart:math';
 
 class PBDestHolder extends PBIntermediateNode {
-  PrototypeNode pNode;
+  PrototypeNode? pNode;
 
   PBDestHolder(
-      String UUID, Rectangle3D frame, this.pNode)
+      String? UUID, Rectangle3D? frame, this.pNode)
       : super(UUID, frame, '') {
     generator = PBPrototypeGenerator(pNode);
     childrenStrategy = OneChildStrategy('child');

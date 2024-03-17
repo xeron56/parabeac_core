@@ -6,10 +6,10 @@ part 'pb_color.g.dart';
 
 @JsonSerializable()
 class PBColor {
-  num a;
-  num r;
-  num g;
-  num b;
+  num? a;
+  num? r;
+  num? g;
+  num? b;
 
   PBColor(
     this.a,
@@ -41,7 +41,7 @@ class ColorUtils {
     }
   }
 
-  static String findDefaultColor(String hex) {
+  static String? findDefaultColor(String hex) {
     switch (hex) {
       case '0xffffffff':
         return 'Colors.white';
@@ -54,7 +54,7 @@ class ColorUtils {
   }
 
   /// Returns a json representation of color assuming we receive a PBDL `style` in json format
-  static PBColor pbColorFromJsonFills(List<Map<String, dynamic>> json) {
+  static PBColor? pbColorFromJsonFills(List<Map<String, dynamic>> json) {
     var fills = IndexWalker(json).value;
 
     if (fills != null && fills.isNotEmpty) {

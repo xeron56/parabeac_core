@@ -14,7 +14,7 @@ Map<String, dynamic> _$PBIntermediateNodeToJson(PBIntermediateNode instance) =>
           _$ParentLayoutSizingEnumMap[instance.layoutMainAxisSizing],
       'layoutCrossAxisSizing':
           _$ParentLayoutSizingEnumMap[instance.layoutCrossAxisSizing],
-      'boundaryRectangle': Rectangle3D.toJson(instance.frame),
+      'boundaryRectangle': Rectangle3D.toJson(instance.frame!),
       'style': instance.auxiliaryData?.toJson(),
       'name': instance.name,
     };

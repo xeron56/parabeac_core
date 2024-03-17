@@ -14,7 +14,7 @@ import 'package:uuid/uuid.dart';
 /// Class that generates all global [TextStyles] and exports them to a file
 class TextStylesPostGenTask extends PostGenTask {
   GenerationConfiguration generationConfiguration;
-  List<PBDLGlobalTextStyle> textStyles;
+  List<PBDLGlobalTextStyle>? textStyles;
 
   TextStylesPostGenTask(this.generationConfiguration, this.textStyles);
 
@@ -24,20 +24,20 @@ class TextStylesPostGenTask extends PostGenTask {
     var mainInfo = MainInfo();
 
     /// Format text styles to be added to constants file
-    textStyles.forEach((globalTextStyle) {
+    textStyles!.forEach((globalTextStyle) {
       constTextStyles.add(ConstantHolder(
         'TextStyle',
-        globalTextStyle.name.camelCase,
-        _textStyleStr(globalTextStyle.textStyle),
+        globalTextStyle.name!.camelCase,
+        _textStyleStr(globalTextStyle.textStyle!),
         description: globalTextStyle.description,
       ));
     });
 
-    generationConfiguration.fileStructureStrategy.commandCreated(
+    generationConfiguration.fileStructureStrategy!.commandCreated(
       WriteConstantsCommand(
         Uuid().v4(),
         constTextStyles,
-        filename: '${mainInfo.projectName.snakeCase}_text_styles',
+        filename: '${mainInfo.projectName!.snakeCase}_text_styles',
         ownershipPolicy: FileOwnership.PBC,
         imports: 'import \'package:flutter/material.dart\';',
         relativePath: GetIt.I.get<PathService>().themingRelativePath,

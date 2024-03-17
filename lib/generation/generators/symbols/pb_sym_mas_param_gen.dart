@@ -7,7 +7,7 @@ class PBSymbolMasterParamGen extends PBGenerator {
   PBSymbolMasterParamGen() : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext generatorContext) {
+  String generate(PBIntermediateNode? source, PBContext? generatorContext) {
     //TODO: is PBParam correct here?
     var name = (source as PBVariable).variableName;
 

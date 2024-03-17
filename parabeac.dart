@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:args/args.dart';
 
-ArgResults argResults;
+late ArgResults argResults;
 
 // ignore: always_declare_return_types
 main(List<String> args) async {

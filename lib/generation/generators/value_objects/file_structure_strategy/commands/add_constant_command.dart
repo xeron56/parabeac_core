@@ -10,7 +10,7 @@ import 'package:recase/recase.dart';
 /// Command used to write constants to the project's constants file
 class WriteConstantsCommand extends FileStructureCommand {
   /// Optional filename to export the constant to
-  String filename;
+  String? filename;
 
   /// Optional imports to be appended to the file
   String imports;
@@ -18,10 +18,10 @@ class WriteConstantsCommand extends FileStructureCommand {
   /// Optional [FileOwnership] of the file to be written.
   ///
   /// Will be [FileOwnership.DEV] by default.
-  FileOwnership ownershipPolicy;
+  FileOwnership? ownershipPolicy;
 
   /// Optional path to export the constants.
-  String relativePath;
+  String? relativePath;
 
   List<ConstantHolder> constants;
   final String CONST_DIR_PATH =
@@ -29,7 +29,7 @@ class WriteConstantsCommand extends FileStructureCommand {
   final String CONST_FILE_NAME = 'constants.dart';
 
   WriteConstantsCommand(
-    String UUID,
+    String? UUID,
     this.constants, {
     this.filename,
     this.imports = '',
@@ -41,17 +41,17 @@ class WriteConstantsCommand extends FileStructureCommand {
 
   /// Writes constants containing `type`, `name` and `value` to `constants.dart` file
   @override
-  Future<void> write(FileStructureStrategy strategy) async {
+  Future<void> write(FileStructureStrategy? strategy) async {
     var constBuffer = StringBuffer()..writeln(imports);
 
-    var className = filename.pascalCase;
+    var className = filename!.pascalCase;
 
     /// Write class declaration
     constBuffer.writeln('class $className {');
 
     /// Write constants
     constants.forEach((constant) {
-      var description = constant.description.isNotEmpty
+      var description = constant.description!.isNotEmpty
           ? '/** ${constant.description} **/'
           : '';
       var constStr =
@@ -63,10 +63,10 @@ class WriteConstantsCommand extends FileStructureCommand {
     constBuffer.writeln('}');
 
     /// Write file
-    strategy.writeDataToFile(
+    strategy!.writeDataToFile(
       constBuffer.toString(),
       p.join(
-        strategy.GENERATED_PROJECT_PATH,
+        strategy.GENERATED_PROJECT_PATH!,
         relativePath,
       ),
       filename ?? CONST_FILE_NAME,
@@ -77,7 +77,7 @@ class WriteConstantsCommand extends FileStructureCommand {
 
 class ConstantHolder {
   /// Name of the constant to be added
-  String name;
+  String? name;
 
   /// Type of the constant to be added
   String type;
@@ -86,7 +86,7 @@ class ConstantHolder {
   String value;
 
   /// Optional description to put as comment above the constant
-  String description;
+  String? description;
 
   /// Whether [this] should have "const" written in it.
   bool isconst; //TODO: Temporary bool in order to write theming file.

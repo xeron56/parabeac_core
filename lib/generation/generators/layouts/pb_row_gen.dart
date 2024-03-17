@@ -7,10 +7,10 @@ class PBRowGenerator extends PBLayoutGenerator {
   PBRowGenerator() : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     if (source is PBIntermediateRowLayout) {
       // Generate layout with the template
-      return layoutTemplate(source, 'Row', context);
+      return layoutTemplate(source, 'Row', context!);
     }
     return '';
   }

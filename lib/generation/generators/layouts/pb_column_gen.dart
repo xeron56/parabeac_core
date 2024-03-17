@@ -8,10 +8,10 @@ class PBColumnGenerator extends PBLayoutGenerator {
   PBColumnGenerator() : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     if (source is PBIntermediateColumnLayout) {
       // Generate layout with the template
-      return layoutTemplate(source, 'Column', context);
+      return layoutTemplate(source, 'Column', context!);
     }
     return '';
   }

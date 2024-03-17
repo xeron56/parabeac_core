@@ -8,27 +8,27 @@ part of 'intermediate_fill.dart';
 
 PBFill _$PBFillFromJson(Map<String, dynamic> json) {
   return PBFill(
-    opacity: json['opacity'] as num ?? 100,
-    blendMode: json['blendMode'] as String,
-    type: json['type'] as String,
-    isEnabled: json['isEnabled'] as bool ?? true,
+    opacity: json['opacity'] as num? ?? 100,
+    blendMode: json['blendMode'] as String?,
+    type: json['type'] as String?,
+    isEnabled: json['isEnabled'] as bool? ?? true,
     color: json['color'] == null
         ? null
         : PBColor.fromJson(json['color'] as Map<String, dynamic>),
-    imageRef: json['imageRef'] as String,
+    imageRef: json['imageRef'] as String?,
   )
-    ..gradientStops = (json['gradientStops'] as List)
+    ..gradientStops = (json['gradientStops'] as List?)
         ?.map((e) => e == null
             ? null
             : PBGradientStop.fromJson(e as Map<String, dynamic>))
-        ?.toList()
+        .toList()
     ..gradientHandlePositions =
         PBFill._pointsFromJson(json['gradientHandlePositions'] as List);
 }
 
 Map<String, dynamic> _$PBFillToJson(PBFill instance) => <String, dynamic>{
       'gradientStops':
-          instance.gradientStops?.map((e) => e?.toJson())?.toList(),
+          instance.gradientStops?.map((e) => e?.toJson()).toList(),
       'gradientHandlePositions':
           PBFill._pointsToJson(instance.gradientHandlePositions),
       'imageRef': instance.imageRef,
@@ -44,7 +44,7 @@ PBGradientStop _$PBGradientStopFromJson(Map<String, dynamic> json) {
     color: json['color'] == null
         ? null
         : PBColor.fromJson(json['color'] as Map<String, dynamic>),
-    position: json['position'] as num,
+    position: json['position'] as num?,
   );
 }
 

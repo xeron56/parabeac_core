@@ -14,24 +14,24 @@ abstract class PBGenerator {
   static String MEDIAQUERY_VERTICAL_BOILERPLATE =
       'MediaQuery.of(context).size.height';
 
-  Logger logger;
+  late Logger logger;
 
   /// Chain of responsability restructure
 
-  PBGenerator next;
+  PBGenerator? next;
 
   ///The [TemplateStrategy] that is going to be used to generate the boilerplate code around the node.
   ///
   ///The `default` [TemplateStrategy] is going to be [InlineTemplateStrategy]
-  TemplateStrategy templateStrategy;
+  TemplateStrategy? templateStrategy;
 
-  PBGenerator({TemplateStrategy strategy, this.next}) {
+  PBGenerator({TemplateStrategy? strategy, this.next}) {
     templateStrategy = strategy;
     templateStrategy ??= InlineTemplateStrategy();
     logger = Logger(runtimeType.toString());
   }
 
-  String generate(PBIntermediateNode source, PBContext context);
+  String generate(PBIntermediateNode? source, PBContext? context);
 
   /// Method that wraps `this` with a `Container`.
   ///
@@ -40,13 +40,13 @@ abstract class PBGenerator {
   String containerWrapper(
     String body,
     PBIntermediateNode source,
-    PBContext context, {
+    PBContext? context, {
     bool includeSize = true,
   }) {
     var decoration = PBBoxDecorationHelper().generate(source, context);
     return '''
       Container(
-        ${includeSize ? 'width: ${source.frame.width}, height: ${source.frame.height},' : ''}
+        ${includeSize ? 'width: ${source.frame!.width}, height: ${source.frame!.height},' : ''}
         ${decoration.isEmpty || decoration.contains('BoxDecoration()') ? '' : '$decoration'}
         child: $body,
       )

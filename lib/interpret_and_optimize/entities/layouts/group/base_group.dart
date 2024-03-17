@@ -22,12 +22,12 @@ part 'base_group.g.dart';
 class BaseGroup extends Group
     implements PBInheritedIntermediate, IntermediateNodeFactory {
   BaseGroup(
-    String UUID,
-    Rectangle3D frame, {
-    Map<String, dynamic> originalRef,
-    String name,
-    PrototypeNode prototypeNode,
-    PBIntermediateConstraints constraints,
+    String? UUID,
+    Rectangle3D? frame, {
+    Map<String, dynamic>? originalRef,
+    String? name,
+    PrototypeNode? prototypeNode,
+    PBIntermediateConstraints? constraints,
   }) : super(
           UUID,
           frame,
@@ -39,7 +39,7 @@ class BaseGroup extends Group
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-          PBIntermediateNode parent, PBIntermediateTree tree) =>
+          PBIntermediateNode? parent, PBIntermediateTree tree) =>
       _$BaseGroupFromJson(json)
         ..mapRawChildren(json, tree)
         ..originalRef = json;

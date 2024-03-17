@@ -7,6 +7,6 @@ class BLoCFileStructureStrategy extends FileStructureStrategy {
   final RELATIVE_BLOC_PATH = 'lib/blocs';
 
   BLoCFileStructureStrategy(
-      String genProjectPath, PBPageWriter pageWriter, PBProject pbProject, FileSystemAnalyzer fileSystemAnalyzer)
+      String? genProjectPath, PBPageWriter pageWriter, PBProject pbProject, FileSystemAnalyzer? fileSystemAnalyzer)
       : super(genProjectPath, pageWriter, pbProject, fileSystemAnalyzer);
 }

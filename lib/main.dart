@@ -37,7 +37,7 @@ final designToPBDLServices = <DesignToPBDLService>[
   JsonToPBDLService(),
   FigmaToPBDLService(),
 ];
-FileSystemAnalyzer fileSystemAnalyzer;
+FileSystemAnalyzer? fileSystemAnalyzer;
 Interpret interpretService = Interpret();
 
 ///sets up parser
@@ -152,7 +152,7 @@ ${parser.usage}
   /// Register the PathService singleton
   /// for PBC to know in the future the type of architecture
   GetIt.I.registerSingleton<PathService>(PathService.fromConfiguration(
-      MainInfo().configuration.folderArchitecture));
+      MainInfo().configuration!.folderArchitecture!));
 
   /// Register the AmplitudeService singleton
   /// too keep track of the analytics through PBC
@@ -163,15 +163,15 @@ ${parser.usage}
     throw UnsupportedError('We have yet to support this DesignType! ');
   }
 
-  Future indexFileFuture;
+  Future? indexFileFuture;
   fileSystemAnalyzer = FileSystemAnalyzer(processInfo.genProjectPath);
-  fileSystemAnalyzer.addFileExtension('.dart');
+  fileSystemAnalyzer!.addFileExtension('.dart');
 
-  if (!(await fileSystemAnalyzer.projectExist())) {
-    await FlutterProjectBuilder.createFlutterProject(processInfo.projectName,
-        projectDir: processInfo.outputPath);
+  if (!(await fileSystemAnalyzer!.projectExist())) {
+    await FlutterProjectBuilder.createFlutterProject(processInfo.projectName!,
+        projectDir: processInfo.outputPath!);
   } else {
-    indexFileFuture = fileSystemAnalyzer.indexProjectFiles();
+    indexFileFuture = fileSystemAnalyzer!.indexProjectFiles();
   }
 
   var pbdlService = designToPBDLServices.firstWhere(
@@ -182,10 +182,10 @@ ${parser.usage}
   /// Add to map the quantity of total material design
   /// to compare with the one used by the user
   GetIt.I.get<AmplitudeService>().directAdd(
-      'Total of material design', pbdl.designSystem.totalDesignCount);
+      'Total of material design', pbdl.designSystem!.totalDesignCount);
 
   // Exit if only generating PBDL
-  if (MainInfo().configuration.exportPBDL) {
+  if (MainInfo().configuration!.exportPBDL!) {
     exitCode = 0;
     await SentryService.finishTransaction(RUN_PARABEAC);
     return;
@@ -193,7 +193,7 @@ ${parser.usage}
 
   var pbProject = PBProject.fromJson(pbdl.toJson());
   pbProject.projectAbsPath =
-      p.join(processInfo.outputPath, processInfo.projectName);
+      p.join(processInfo.outputPath!, processInfo.projectName);
 
   /// Scan the forest to detect any MasterNode inside a tree
   /// if that's the case, extract that Master
@@ -201,7 +201,7 @@ ${parser.usage}
 
   var tempForest = <PBIntermediateTree>[];
 
-  for (var tree in pbProject.forest) {
+  for (var tree in pbProject.forest!) {
     var manyTrees = await treeHasMaster(tree);
 
     tree = manyTrees.removeAt(0);
@@ -211,15 +211,15 @@ ${parser.usage}
     }
   }
 
-  pbProject.forest.addAll(tempForest);
+  pbProject.forest!.addAll(tempForest);
 
   var fpb = FlutterProjectBuilder(
-      MainInfo().configuration.generationConfiguration, fileSystemAnalyzer,
+      MainInfo().configuration!.generationConfiguration!, fileSystemAnalyzer,
       project: pbProject);
 
   /// Check whether there are any global styles to be generated.
   if (pbdl.globalStyles != null) {
-    GlobalStylingAggregator.addPostGenTasks(fpb, pbdl.globalStyles);
+    GlobalStylingAggregator.addPostGenTasks(fpb, pbdl.globalStyles!);
   }
 
   SentryService.startChildTransactionFrom(
@@ -232,9 +232,9 @@ ${parser.usage}
 
   /// Get ComponentIsolationService (if any), and add it to the list of services
   var isolationConfiguration = ComponentIsolationConfiguration.getConfiguration(
-    MainInfo().configuration.componentIsolation,
+    MainInfo().configuration!.componentIsolation,
     pbProject.genProjectData,
-    MainInfo().configuration.integrationLevel,
+    MainInfo().configuration!.integrationLevel,
   );
   if (isolationConfiguration != null) {
     interpretService.aitHandlers.add(isolationConfiguration.service);
@@ -252,13 +252,13 @@ ${parser.usage}
         'Runs services that interpret and optimize PBIntermediateNodes.',
   );
 
-  for (var tree in pbProject.forest) {
+  for (var tree in pbProject.forest!) {
     var context = PBContext(processInfo.configuration);
     context.project = pbProject;
 
     /// Assuming that the [tree.rootNode] has the dimensions of the screen.
     context.screenFrame = Rectangle3D.fromPoints(
-        tree.rootNode.frame.topLeft, tree.rootNode.frame.bottomRight);
+        tree.rootNode!.frame!.topLeft, tree.rootNode!.frame!.bottomRight);
 
     context.tree = tree;
     tree.context = context;
@@ -314,7 +314,7 @@ ${parser.usage}
     description: 'Dry run to gather necessary information from trees.',
   );
   for (var tree in trees) {
-    await fpb.genAITree(tree, tree.context, true);
+    await fpb.genAITree(tree, tree.context!, true);
   }
   await SentryService.finishTransaction(GEN_DRY_RUN);
 
@@ -324,7 +324,7 @@ ${parser.usage}
     description: 'Generates the code inside each tree.',
   );
   for (var tree in trees) {
-    await fpb.genAITree(tree, tree.context, false);
+    await fpb.genAITree(tree, tree.context!, false);
   }
   await SentryService.finishTransaction(GEN_AIT);
   await SentryService.finishTransaction(GENERATION);
@@ -348,7 +348,7 @@ Future<List<PBIntermediateTree>> treeHasMaster(PBIntermediateTree tree) async {
   var forest = [tree];
   for (var element in tree) {
     if (element is PBSharedMasterNode && element.parent != null) {
-      var elementConstraints = element.constraints.copyWith();
+      var elementConstraints = element.constraints!.copyWith();
 
       /// Since this is now a [PBSharedMasterNode], we need to remove the constraints
       /// and pass them on to the instance.
@@ -401,7 +401,7 @@ Future<void> checkConfigFile() async {
 
   // Do not get metrics if user has envvar PB_METRICS set to false
   if (envvars['PB_METRICS'] != null &&
-      envvars['PB_METRICS'].toLowerCase().contains('false')) {
+      envvars['PB_METRICS']!.toLowerCase().contains('false')) {
     return;
   }
 
@@ -416,7 +416,7 @@ Future<void> checkConfigFile() async {
 }
 
 /// Gets the homepath of the user according to their OS
-String getHomePath() {
+String? getHomePath() {
   var envvars = Platform.environment;
 
   if (Platform.isWindows) {

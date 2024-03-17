@@ -24,31 +24,31 @@ class InjectedContainer extends PBVisualIntermediateNode
         PBContainer {
   @override
   @JsonKey(fromJson: PrototypeNode.prototypeNodeFromJson)
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @override
   @JsonKey()
-  String type = 'injected_container';
+  String? type = 'injected_container';
 
   @override
-  bool showWidth;
+  bool? showWidth;
   @override
-  bool showHeight;
+  bool? showHeight;
 
   @override
   @JsonKey(ignore: true)
-  InjectedPadding padding;
+  InjectedPadding? padding;
 
   InjectedContainer(
     UUID,
-    Rectangle3D frame, {
-    String name,
-    double alignX,
-    double alignY,
-    String color,
+    Rectangle3D? frame, {
+    String? name,
+    double? alignX,
+    double? alignY,
+    String? color,
     this.prototypeNode,
     this.type,
-    PBIntermediateConstraints constraints,
+    PBIntermediateConstraints? constraints,
     this.showWidth = true,
     this.showHeight = true,
     this.padding,
@@ -67,13 +67,13 @@ class InjectedContainer extends PBVisualIntermediateNode
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-          PBIntermediateNode parent, PBIntermediateTree tree) =>
+          PBIntermediateNode? parent, PBIntermediateTree tree) =>
       InjectedContainer.fromJson(json);
 }
 
 // Class for injected container to inject padding
 class InjectedPadding {
-  num left, right, top, bottom;
+  num? left, right, top, bottom;
   InjectedPadding({
     this.left,
     this.right,

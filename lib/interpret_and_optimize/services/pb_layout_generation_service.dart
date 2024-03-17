@@ -36,7 +36,7 @@ class PBLayoutGenerationService extends AITHandler {
 
   ///Going to replace the [Group]s by [PBLayoutIntermediateNode]s
   ///The default [PBLayoutIntermediateNode]
-  PBLayoutIntermediateNode _defaultLayout;
+  PBLayoutIntermediateNode? _defaultLayout;
 
   PBLayoutGenerationService() {
     _defaultLayout = PBIntermediateStackLayout();
@@ -57,7 +57,7 @@ class PBLayoutGenerationService extends AITHandler {
 
       _wrapLayout(tree, context);
       if (tree.rootNode is PBSharedMasterNode) {
-        _applyComponentRules(tree, tree.rootNode);
+        _applyComponentRules(tree, tree.rootNode as PBSharedMasterNode?);
       }
       return Future.value(tree);
     } catch (e, stackTrace) {
@@ -73,7 +73,7 @@ class PBLayoutGenerationService extends AITHandler {
   /// Namely, when a [PBSharedMasterNode] has only one child, we need to inject
   /// a stack to ensure alignment.
   void _applyComponentRules(
-      PBIntermediateTree tree, PBSharedMasterNode component) {
+      PBIntermediateTree tree, PBSharedMasterNode? component) {
     /// Check that children is not an empty list
     var children = tree.childrenOf(component);
     var firstChild = children.isNotEmpty ? children.first : null;
@@ -85,7 +85,7 @@ class PBLayoutGenerationService extends AITHandler {
 
       _addStack(tree, firstChild, grandChild);
     } else if (tree.childrenOf(component).length == 1 && firstChild is! Group) {
-      _addStack(tree, component, firstChild);
+      _addStack(tree, component!, firstChild!);
     }
   }
 
@@ -97,10 +97,10 @@ class PBLayoutGenerationService extends AITHandler {
     /// TODO: Improve the way we create Stacks
     var stack = PBIntermediateStackLayout(
       name: parent.name,
-      constraints: parent.constraints.copyWith(),
+      constraints: parent.constraints!.copyWith(),
     )
       ..auxiliaryData = parent.auxiliaryData
-      ..frame = parent.frame.copyWith()
+      ..frame = parent.frame!.copyWith()
       ..layoutCrossAxisSizing = parent.layoutCrossAxisSizing
       ..layoutMainAxisSizing = parent.layoutMainAxisSizing;
 
@@ -115,7 +115,7 @@ class PBLayoutGenerationService extends AITHandler {
       // We will get only Columns and Rows
       if (tempGroup is! PBIntermediateStackLayout) {
         // Let tempLayout be Column or Row
-        var tempLayout;
+        late var tempLayout;
         var isVertical = true;
         if (tempGroup is PBIntermediateColumnLayout) {
           tempLayout = tempGroup;
@@ -127,7 +127,7 @@ class PBLayoutGenerationService extends AITHandler {
           // Create the injected container to wrap the layout
           var wrapper = InjectedContainer(
             null,
-            tempGroup.frame.copyWith(),
+            tempGroup.frame!.copyWith(),
             name: tempGroup.name,
             // Add padding
             padding: InjectedPadding(
@@ -155,11 +155,11 @@ class PBLayoutGenerationService extends AITHandler {
   }
 
   bool _shouldBeShown(dynamic node, bool isHeight, bool isVertical) {
-    PBIntermediateConstraints constraints = node.constraints;
+    PBIntermediateConstraints? constraints = node.constraints;
     // TODO: Expand cases
-    if (isHeight && constraints.pinBottom && constraints.pinTop) {
+    if (isHeight && constraints!.pinBottom! && constraints.pinTop!) {
       return false;
-    } else if (!isHeight && constraints.pinRight && constraints.pinLeft) {
+    } else if (!isHeight && constraints!.pinRight! && constraints.pinLeft!) {
       return false;
     } else {
       if (isVertical) {
@@ -183,12 +183,12 @@ class PBLayoutGenerationService extends AITHandler {
     tree.whereType<Group>().forEach((tempGroup) {
       var newStack = PBIntermediateStackLayout(
         name: tempGroup.name,
-        constraints: tempGroup.constraints.copyWith(),
+        constraints: tempGroup.constraints!.copyWith(),
         layoutCrossAxisSizing: tempGroup.layoutCrossAxisSizing,
         layoutMainAxisSizing: tempGroup.layoutMainAxisSizing,
       )
         ..auxiliaryData = tempGroup.auxiliaryData
-        ..frame = tempGroup.frame.copyWith();
+        ..frame = tempGroup.frame!.copyWith();
 
       tree.replaceNode(
         tempGroup,
@@ -196,15 +196,15 @@ class PBLayoutGenerationService extends AITHandler {
         acceptChildren: true,
       );
 
-      if (tempGroup.auxiliaryData.colors != null) {
+      if (tempGroup.auxiliaryData!.colors != null) {
         var isVertical = true;
         if (tempGroup is PBIntermediateRowLayout) {
           isVertical = false;
         }
         var tempContainer = InjectedContainer(
           null,
-          tempGroup.frame.copyWith(),
-          constraints: tempGroup.constraints.copyWith(),
+          tempGroup.frame!.copyWith(),
+          constraints: tempGroup.constraints!.copyWith(),
           name: tempGroup.name,
           showHeight: isVertical
               ? tempGroup.layoutMainAxisSizing == ParentLayoutSizing.INHERIT
@@ -225,7 +225,7 @@ class PBLayoutGenerationService extends AITHandler {
   void _layoutTransformation(PBIntermediateTree tree, PBContext context) {
     for (var parent in tree) {
       var children = tree.childrenOf(parent);
-      children.sort((n0, n1) => n0.frame.topLeft.compareTo(n1.frame.topLeft));
+      children.sort((n0, n1) => n0.frame!.topLeft.compareTo(n1.frame!.topLeft));
 
       var childPointer = 0;
       var reCheck = false;
@@ -248,7 +248,7 @@ class PBLayoutGenerationService extends AITHandler {
               parent is PBIntermediateRowLayout) {
             break;
           }
-          if (layout.satisfyRules(context, currentNode, nextNode) &&
+          if (layout.satisfyRules(context, currentNode, nextNode)! &&
               layout.runtimeType != parent.runtimeType) {
             ///If either `currentNode` or `nextNode` is of the same `runtimeType` as the satified [PBLayoutIntermediateNode],
             ///then its going to use either one instead of creating a new [PBLayoutIntermediateNode].
@@ -308,16 +308,16 @@ class PBLayoutGenerationService extends AITHandler {
   }
 
   ///Applying [PostConditionRule]s at the end of the [PBLayoutIntermediateNode]
-  PBIntermediateNode _applyPostConditionRules(
-      PBIntermediateNode node, PBContext context) {
+  PBIntermediateNode? _applyPostConditionRules(
+      PBIntermediateNode? node, PBContext context) {
     if (node == null) {
       return node;
     }
-    var tree = context.tree;
+    var tree = context.tree!;
     var nodeChildren = tree.childrenOf(node);
     if (node is PBLayoutIntermediateNode && nodeChildren.isNotEmpty) {
       tree.replaceChildrenOf(
-          node, nodeChildren.map((e) => _applyPostConditionRules(e, context)));
+          node, nodeChildren.map((e) => _applyPostConditionRules(e, context)) as List<PBIntermediateNode?>);
     } else if (node is PBVisualIntermediateNode) {
       nodeChildren.map((e) => _applyPostConditionRules(e, context));
     }

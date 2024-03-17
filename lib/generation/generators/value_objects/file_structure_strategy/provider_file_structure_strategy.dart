@@ -9,10 +9,10 @@ import 'package:path/path.dart' as p;
 
 class ProviderFileStructureStrategy extends FileStructureStrategy {
   final RELATIVE_MODEL_PATH = 'lib/models/';
-  var _modelsPath;
+  late var _modelsPath;
 
   ProviderFileStructureStrategy(
-      String genProjectPath, PBPageWriter pageWriter, PBProject pbProject, FileSystemAnalyzer fileSystemAnalyzer)
+      String genProjectPath, PBPageWriter pageWriter, PBProject pbProject, FileSystemAnalyzer? fileSystemAnalyzer)
       : super(genProjectPath, pageWriter, pbProject, fileSystemAnalyzer) {
     _modelsPath = p.join(genProjectPath, RELATIVE_MODEL_PATH);
   }

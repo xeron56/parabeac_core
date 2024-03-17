@@ -12,26 +12,26 @@ abstract class Middleware {
 
   /// Using chain of reponsibility to handle the incoming nodes in the generation phase, [nextMiddleware]
   /// will be responsible of handling the incoming node or passing it to the next node.
-  Middleware nextMiddleware;
+  Middleware? nextMiddleware;
 
-  PBGenerationManager generationManager;
+  PBGenerationManager? generationManager;
   GenerationConfiguration configuration;
 
   Middleware(this.generationManager, this.configuration, {this.nextMiddleware});
 
   String getNameOfNode(PBIntermediateNode node) =>
-      ImportHelper.getName(node.name);
+      ImportHelper.getName(node.name!);
 
   /// Applying the [Middleware] logic to the [node]; modifying it or even eliminating it by returning `null`.
   Future<PBIntermediateTree> applyMiddleware(
-          PBIntermediateTree tree, PBContext context) =>
+          PBIntermediateTree? tree, PBContext context) =>
       handleTree(tree, context);
 
   Future<PBIntermediateTree> handleTree(
-      PBIntermediateTree tree, PBContext context) {
+      PBIntermediateTree? tree, PBContext context) {
     return nextMiddleware == null
         ? Future.value(tree)
-        : nextMiddleware.applyMiddleware(tree, context);
+        : nextMiddleware!.applyMiddleware(tree, context);
   }
 
   void addImportToCache(String id, String path) {

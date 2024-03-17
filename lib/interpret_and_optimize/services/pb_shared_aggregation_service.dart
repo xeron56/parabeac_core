@@ -11,7 +11,7 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 import 'intermediate_node_searcher_service.dart';
 
 class PBSharedInterAggregationService {
-  PBSymbolStorage _symbolStorage;
+  late PBSymbolStorage _symbolStorage;
 
   var log = Logger('PBSharedInterAggregationService');
 
@@ -20,9 +20,9 @@ class PBSharedInterAggregationService {
 
   ///These are [PBSharedInstanceIntermediateNode] that have not found their [PBSharedMasterNode]; they are
   ///waiting to see their [PBSharedMasterNode] in order to populate their attributes.
-  List<PBSharedInstanceIntermediateNode> _unregSymQueue;
+  List<PBSharedInstanceIntermediateNode>? _unregSymQueue;
 
-  Iterable<PBSharedInstanceIntermediateNode> get unregSymQueue =>
+  Iterable<PBSharedInstanceIntermediateNode>? get unregSymQueue =>
       _unregSymQueue;
 
   factory PBSharedInterAggregationService() => _singleInstance;
@@ -41,7 +41,7 @@ class PBSharedInterAggregationService {
     if (master != null) {
       populateSharedInstanceNode(master, sharedIntermediateNode);
     } else {
-      _unregSymQueue.add(sharedIntermediateNode);
+      _unregSymQueue!.add(sharedIntermediateNode);
     }
   }
 
@@ -50,9 +50,9 @@ class PBSharedInterAggregationService {
   ///are going to look for its [PBInstanceOverride] if it does not have one.
   void gatherSharedParameters(PBSharedMasterNode sharedMasterNode,
       PBIntermediateNode rootChildNode, PBContext context) {
-    for (var prop in sharedMasterNode.overridableProperties) {
+    for (var prop in sharedMasterNode.overridableProperties!) {
       var targetUUID = PBInputFormatter.findLastOf(prop?.UUID, '/');
-      prop.value = PBIntermediateNodeSearcherService.searchNodeByUUID(
+      prop!.value = PBIntermediateNodeSearcherService.searchNodeByUUID(
           rootChildNode, targetUUID, context.tree);
       if (prop.value == null) {
         // add Designer Warning here, not even sure if this is the designers fault or not
@@ -63,11 +63,11 @@ class PBSharedInterAggregationService {
 
         ///if the [PBSharedMasterNode] contains [PBSharedInstanceIntermediateNode] as parameters
         ///then its going gather the information of its [PBSharedMasterNode].
-        gatherSharedValues(prop.value);
+        gatherSharedValues(prop.value as PBSharedInstanceIntermediateNode);
       }
     }
 
-    sharedMasterNode.overridableProperties
+    sharedMasterNode.overridableProperties!
         .removeWhere((prop) => prop == null || prop.value == null);
   }
 
@@ -75,10 +75,10 @@ class PBSharedInterAggregationService {
   ///the [PBSymbolStorage]. To see if we can find the [PBSharedMasterNode] that belongs to the [PBSharedInstanceIntermediateNode]
   ///that do not have their values solved.
   void analyzeSharedNode(dynamic node) {
-    if (_unregSymQueue.isEmpty) {
+    if (_unregSymQueue!.isEmpty) {
       return;
     }
-    var iterator = _unregSymQueue.iterator;
+    var iterator = _unregSymQueue!.iterator;
     if (node is PBSharedMasterNode) {
       while (iterator.moveNext()) {
         if (node is PBInheritedIntermediate &&
@@ -86,13 +86,13 @@ class PBSharedInterAggregationService {
           populateSharedInstanceNode(node, iterator.current);
         }
       }
-      _unregSymQueue.removeWhere((sym) => sym.SYMBOL_ID == node.SYMBOL_ID);
+      _unregSymQueue!.removeWhere((sym) => sym.SYMBOL_ID == node.SYMBOL_ID);
     }
   }
 
   ///Getting the information necessary from the [PBSharedMasterNode] to the [PBSharedInstanceIntermediateNode]
-  void populateSharedInstanceNode(PBSharedMasterNode masterNode,
-      PBSharedInstanceIntermediateNode instanceIntermediateNode) {
+  void populateSharedInstanceNode(PBSharedMasterNode? masterNode,
+      PBSharedInstanceIntermediateNode? instanceIntermediateNode) {
     if (masterNode == null || instanceIntermediateNode == null) {
       return;
     }
@@ -103,7 +103,7 @@ class PBSharedInterAggregationService {
       var tree = elementStorage.treeUUIDs[
           elementStorage.elementToTree[instanceIntermediateNode.UUID]];
       if (masterTree != tree) {
-        tree.addDependent(masterTree);
+        tree!.addDependent(masterTree);
       }
 
       ///Get the attributes of the [masterNode] to the [instanceIntermediateNode] here ([instanceIntermediateNode] attributes)
@@ -112,6 +112,6 @@ class PBSharedInterAggregationService {
     }
   }
 
-  PBSharedMasterNode _searchMasterNode(String masterUUID) =>
+  PBSharedMasterNode? _searchMasterNode(String? masterUUID) =>
       _symbolStorage.getSharedMasterNodeBySymbolID(masterUUID);
 }

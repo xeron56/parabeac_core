@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:parabeac_core/interpret_and_optimize/entities/layouts/group/frame_group.dart';
 import 'package:parabeac_core/interpret_and_optimize/entities/layouts/group/group.dart';
 import 'package:parabeac_core/interpret_and_optimize/entities/subclasses/pb_intermediate_node.dart';
@@ -6,14 +7,14 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_intermediate_nod
 import 'package:quick_log/quick_log.dart';
 
 abstract class ChildrenStrategy {
-  Logger logger;
+  late Logger logger;
   final String attributeName;
-  final bool overwridable;
+  final bool? overwridable;
   ChildrenStrategy(this.attributeName, this.overwridable) {
     logger = Logger(runtimeType.toString());
   }
   void addChild(PBIntermediateNode target, dynamic children,
-      ChildrenMod<PBIntermediateNode> addChild, PBIntermediateTree tree);
+      ChildrenMod<PBIntermediateNode?> addChild, PBIntermediateTree tree);
 }
 
 class OneChildStrategy extends ChildrenStrategy {
@@ -62,7 +63,7 @@ class OneChildStrategy extends ChildrenStrategy {
 }
 
 class MultipleChildStrategy extends ChildrenStrategy {
-  MultipleChildStrategy(String attributeName, [bool overridable])
+  MultipleChildStrategy(String attributeName, [bool? overridable])
       : super(attributeName, overridable);
 
   @override
@@ -77,7 +78,7 @@ class MultipleChildStrategy extends ChildrenStrategy {
 }
 
 class NoChildStrategy extends ChildrenStrategy {
-  NoChildStrategy([bool overridable]) : super('N/A', overridable);
+  NoChildStrategy([bool? overridable]) : super('N/A', overridable);
 
   @override
   void addChild(PBIntermediateNode target, children,
@@ -88,36 +89,35 @@ class NoChildStrategy extends ChildrenStrategy {
 }
 
 class TempChildrenStrategy extends ChildrenStrategy {
-  TempChildrenStrategy(String attributeName, [bool overwridable])
+  TempChildrenStrategy(String attributeName, [bool? overwridable])
       : super(attributeName, overwridable);
 
   /// Rezising the [target.frame] basedon on the total [children.frame] area.
-  void _resizeFrameBasedOn(var children, PBIntermediateNode target) {
+  void _resizeFrameBasedOn(var children, PBIntermediateNode? target) {
     assert(children != null);
     if (children is List<PBIntermediateNode>) {
-      target.frame ??= children.first.frame;
+      target!.frame ??= children.first.frame;
       children.forEach(
-          (child) => target.frame = target.frame.boundingBox(child.frame));
+          (child) => target.frame = target.frame!.boundingBox(child.frame!) as Rectangle3D<num>?);
     } else if (children is PBIntermediateNode) {
-      target.frame = target.frame.boundingBox(children.frame);
+      target!.frame = target.frame!.boundingBox(children.frame!) as Rectangle3D<num>?;
     }
   }
 
   bool _containsSingleGroup(
-          PBIntermediateNode group, List<PBIntermediateNode> children) =>
+          PBIntermediateNode? group, List<PBIntermediateNode> children) =>
       group is Group && children.length == 1;
 
   @override
   void addChild(PBIntermediateNode target, children,
-      ChildrenMod<PBIntermediateNode> addChild, tree) {
+      ChildrenMod<PBIntermediateNode?> addChild, tree) {
     var targetChildren = tree.childrenOf(target);
-    var group = targetChildren.firstWhere(
-        (element) => element is PBLayoutIntermediateNode,
-        orElse: () => null);
+    var group = targetChildren.firstWhereOrNull(
+        (element) => element is PBLayoutIntermediateNode);
     children = children is List ? children : [children];
 
     // TempGroup is the only child inside `target`
-    if (_containsSingleGroup(group, children)) {
+    if (_containsSingleGroup(group, children as List<PBIntermediateNode>)) {
       // Calculate new frame based on incoming child
       _resizeFrameBasedOn(children, group);
       addChild(group, children);
@@ -130,7 +130,7 @@ class TempChildrenStrategy extends ChildrenStrategy {
         null,
         target.frame,
         name: '${target.name}Group',
-        constraints: target.constraints.copyWith(),
+        constraints: target.constraints!.copyWith(),
       );
       addChild(temp, children);
 

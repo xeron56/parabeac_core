@@ -13,10 +13,10 @@ class ResponsiveLayoutBuilderCommand extends FileStructureCommand {
       GetIt.I.get<PathService>().widgetsRelativePath;
   static final NAME_TO_RESPONSIVE_LAYOUT = 'responsive_layout_builder.dart';
 
-  ResponsiveLayoutBuilderCommand(String UUID) : super(UUID);
+  ResponsiveLayoutBuilderCommand(String? UUID) : super(UUID);
 
   @override
-  Future write(FileStructureStrategy strategy) async {
+  Future write(FileStructureStrategy? strategy) async {
     var platforms = PBPlatformOrientationLinkerService()
         .platforms
         .map((platform) => platform.toString().split('.').last.toLowerCase())
@@ -50,9 +50,9 @@ class ResponsiveLayoutBuilderCommand extends FileStructureCommand {
     }
     ''';
 
-    strategy.writeDataToFile(
+    strategy!.writeDataToFile(
       template,
-      p.join(strategy.GENERATED_PROJECT_PATH, DIR_TO_RESPONSIVE_LAYOUT),
+      p.join(strategy.GENERATED_PROJECT_PATH!, DIR_TO_RESPONSIVE_LAYOUT),
       NAME_TO_RESPONSIVE_LAYOUT,
       UUID: UUID,
       ownership: FileOwnership.DEV,
@@ -77,7 +77,7 @@ class ResponsiveLayoutBuilderCommand extends FileStructureCommand {
       return 'if(${platforms[0]} != null){return ${platforms[0]}Widget!;}';
     }
     // Get breakpoints from configurations and sort by value
-    var breakpoints = MainInfo().configuration.breakpoints;
+    var breakpoints = MainInfo().configuration!.breakpoints;
     if (breakpoints == null) {
       breakpoints = {};
       breakpoints['mobile'] = 300;

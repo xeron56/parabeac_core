@@ -3,7 +3,7 @@ import 'package:parabeac_core/interpret_and_optimize/entities/subclasses/pb_inte
 
 /// [DirectedStateGraph] is used to represent the states of a
 /// `default state management node`.
-class DirectedStateGraph extends DirectedGraph<PBIntermediateNode> {
+class DirectedStateGraph extends DirectedGraph<PBIntermediateNode?> {
   /// `defaultNode` is considered to be the starting point for this graph.
   ///
   /// Any other [PBIntermediateNode] that is pointed to by `defaultNode` is considered to be
@@ -12,7 +12,7 @@ class DirectedStateGraph extends DirectedGraph<PBIntermediateNode> {
 
   DirectedStateGraph(
     this.defaultNode, {
-    Map<Vertex<PBIntermediateNode>, List<Vertex<PBIntermediateNode>>> edges,
+    Map<Vertex<PBIntermediateNode>, List<Vertex<PBIntermediateNode>>>? edges,
   }) : super(edges);
 
   
@@ -25,7 +25,7 @@ class DirectedStateGraph extends DirectedGraph<PBIntermediateNode> {
   // void addVariation(PBIntermediateNode variation) =>
   //     super.addEdges(defaultNode, {variation});
 
-  void addVariation(PBIntermediateNode variation) =>
+  void addVariation(PBIntermediateNode? variation) =>
     super.addEdges(defaultNode, [Vertex(variation)]);
 
   /// Retrieves the states of `defaultNode`

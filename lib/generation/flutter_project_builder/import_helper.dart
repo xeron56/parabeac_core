@@ -44,17 +44,17 @@ class ImportHelper implements FileWriterObserver {
   //   return currentImports;
   // }
 
-  List<String> getImport(String UUID) {
+  List<String>? getImport(String? UUID) {
     if (imports.containsKey(UUID)) {
-      return imports[UUID].toList();
+      return imports[UUID]!.toList();
     }
     return null;
   }
 
-  List getFormattedImports(String UUID,
-      {dynamic Function(String import) importMapper}) {
+  List getFormattedImports(String? UUID,
+      {dynamic Function(String import)? importMapper}) {
     importMapper ??= (String path) => path;
-    return getImport(UUID)?.map(importMapper)?.toList() ?? [];
+    return getImport(UUID)?.map(importMapper).toList() ?? [];
   }
 
   /// Returns whether a file with the same [basename] as `import`, but with different [path] exists.
@@ -77,20 +77,20 @@ class ImportHelper implements FileWriterObserver {
   ////// unique across all [imports], if its not, its not going to be added to the [imports]. For example,
   ////// when we [addImport] `<path>/example.dart`, then `<another-path>/example.dart`, only
   ////// the `<path>/example.dart` is going to be recorded in [imports].
-  void addImport(String import, String UUID) {
+  void addImport(String import, String? UUID) {
     if (conflictsWithExistingImport(import)) {
       _logger.warning(
           'A different file with the basename `${p.basename(import)}` has already been added. This will cause import conflicts in certain cases. Make sure your elements are uniquely named and correctly referenced.');
     }
     if (import != null && UUID != null) {
       imports[UUID] ??= {};
-      imports[UUID].add(import);
+      imports[UUID]!.add(import);
       _importBaseNames.add(import);
     }
   }
 
   @override
-  void fileCreated(String filePath, String fileUUID) =>
+  void fileCreated(String filePath, String? fileUUID) =>
       addImport(filePath, fileUUID);
 
   static String getName(String name) {

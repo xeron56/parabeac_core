@@ -6,18 +6,18 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/child_strategy.dart
 
 class InjectedPositioned extends PBIntermediateNode
     implements PBInjectedIntermediate {
-  final PositionedValueHolder valueHolder;
+  final PositionedValueHolder? valueHolder;
 
   @override
   ChildrenStrategy childrenStrategy = OneChildStrategy('child');
 
   @override
-  String name;
+  String? name;
 
   InjectedPositioned(
     this.name,
-    String UUID,
-    Rectangle3D frame, {
+    String? UUID,
+    Rectangle3D? frame, {
     this.valueHolder,
     constraints,
   }) : super(UUID, frame, '', constraints: constraints) {
@@ -25,18 +25,18 @@ class InjectedPositioned extends PBIntermediateNode
   }
 
   @override
-  PBIntermediateNode fromJson(Map<String, dynamic> json) => null;
+  PBIntermediateNode? fromJson(Map<String, dynamic> json) => null;
 }
 
 /// Class to help us communicate and manipulate positioning values.
 class PositionedValueHolder {
-  double top;
-  double bottom;
-  double left;
-  double right;
+  double? top;
+  double? bottom;
+  double? left;
+  double? right;
 
-  double height;
-  double width;
+  double? height;
+  double? width;
 
   PositionedValueHolder(
       {this.top, this.bottom, this.left, this.right, this.height, this.width}) {

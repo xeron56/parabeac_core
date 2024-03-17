@@ -18,10 +18,10 @@ class ProviderGenerationConfiguration extends GenerationConfiguration {
     logger.info(
         'Thanks for trying our state management configuration that is now in Beta!\nIf you run into any issues please feel free to post it in Github or in our Discord!');
     fileStructureStrategy = ProviderFileStructureStrategy(
-        pbProject.projectAbsPath, pageWriter, pbProject, fileSystemAnalyzer);
+        pbProject.projectAbsPath!, pageWriter, pbProject, fileSystemAnalyzer);
     registerMiddleware(ProviderMiddleware(generationManager, this));
     logger.info('Setting up the directories');
-    await fileStructureStrategy.setUpDirectories();
+    await fileStructureStrategy!.setUpDirectories();
   }
 
   @override
@@ -31,7 +31,7 @@ class ProviderGenerationConfiguration extends GenerationConfiguration {
     imports.addAll(registeredModels
         .map((e) => FlutterImport(
             p.setExtension(
-                p.join(fileStructureStrategy.GENERATED_PROJECT_PATH, 'models',
+                p.join(fileStructureStrategy!.GENERATED_PROJECT_PATH!, 'models',
                     e.snakeCase),
                 '.dart'),
             pb_project.projectName))

@@ -1,5 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+import 'package:collection/collection.dart' show IterableExtension;
 part of 'pb_shared_instance.dart';
 
 // **************************************************************************
@@ -9,20 +10,20 @@ part of 'pb_shared_instance.dart';
 PBSharedInstanceIntermediateNode _$PBSharedInstanceIntermediateNodeFromJson(
     Map<String, dynamic> json) {
   return PBSharedInstanceIntermediateNode(
-    json['UUID'] as String,
+    json['UUID'] as String?,
     Rectangle3D.fromJson(json['boundaryRectangle'] as Map<String, dynamic>),
-    SYMBOL_ID: json['symbolID'] as String,
-    sharedParamValues: (json['overrideValues'] as List)
+    SYMBOL_ID: json['symbolID'] as String?,
+    sharedParamValues: (json['overrideValues'] as List?)
         ?.map((e) => e == null
             ? null
             : PBInstanceOverride.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        .toList(),
     prototypeNode: PrototypeNode.prototypeNodeFromJson(
-        json['prototypeNodeUUID'] as String),
-    name: json['name'] as String,
-    sharedNodeSetID: json['sharedNodeSetID'] as String,
+        json['prototypeNodeUUID'] as String?),
+    name: json['name'] as String?,
+    sharedNodeSetID: json['sharedNodeSetID'] as String?,
   )
-    ..subsemantic = json['subsemantic'] as String
+    ..subsemantic = json['subsemantic'] as String?
     ..constraints = json['constraints'] == null
         ? null
         : PBIntermediateConstraints.fromJson(
@@ -35,7 +36,7 @@ PBSharedInstanceIntermediateNode _$PBSharedInstanceIntermediateNodeFromJson(
         ? null
         : IntermediateAuxiliaryData.fromJson(
             json['style'] as Map<String, dynamic>)
-    ..type = json['type'] as String;
+    ..type = json['type'] as String?;
 }
 
 Map<String, dynamic> _$PBSharedInstanceIntermediateNodeToJson(
@@ -48,21 +49,21 @@ Map<String, dynamic> _$PBSharedInstanceIntermediateNodeToJson(
           _$ParentLayoutSizingEnumMap[instance.layoutMainAxisSizing],
       'layoutCrossAxisSizing':
           _$ParentLayoutSizingEnumMap[instance.layoutCrossAxisSizing],
-      'boundaryRectangle': Rectangle3D.toJson(instance.frame),
+      'boundaryRectangle': Rectangle3D.toJson(instance.frame!),
       'style': instance.auxiliaryData?.toJson(),
       'name': instance.name,
       'symbolID': instance.SYMBOL_ID,
       'overrideValues':
-          instance.sharedParamValues?.map((e) => e?.toJson())?.toList(),
+          instance.sharedParamValues?.map((e) => e?.toJson()).toList(),
       'prototypeNodeUUID': instance.prototypeNode?.toJson(),
       'type': instance.type,
       'sharedNodeSetID': instance.sharedNodeSetID,
     };
 
-T _$enumDecode<T>(
+T? _$enumDecode<T>(
   Map<T, dynamic> enumValues,
   dynamic source, {
-  T unknownValue,
+  T? unknownValue,
 }) {
   if (source == null) {
     throw ArgumentError('A value must be provided. Supported values: '
@@ -70,7 +71,7 @@ T _$enumDecode<T>(
   }
 
   final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
+      .singleWhereOrNull((e) => e.value == source)
       ?.key;
 
   if (value == null && unknownValue == null) {
@@ -80,10 +81,10 @@ T _$enumDecode<T>(
   return value ?? unknownValue;
 }
 
-T _$enumDecodeNullable<T>(
+T? _$enumDecodeNullable<T>(
   Map<T, dynamic> enumValues,
   dynamic source, {
-  T unknownValue,
+  T? unknownValue,
 }) {
   if (source == null) {
     return null;
@@ -99,11 +100,11 @@ const _$ParentLayoutSizingEnumMap = {
 
 PBInstanceOverride _$PBInstanceOverrideFromJson(Map<String, dynamic> json) {
   return PBInstanceOverride(
-    json['ovrType'] as String,
-    json['value'] as Map<String, dynamic>,
-    json['UUID'] as String,
-    json['name'] as String,
-    json['valueName'] as String,
+    json['ovrType'] as String?,
+    json['value'] as Map<String, dynamic>?,
+    json['UUID'] as String?,
+    json['name'] as String?,
+    json['valueName'] as String?,
   );
 }
 

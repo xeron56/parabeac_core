@@ -34,7 +34,7 @@ class PBIntermediateColumnLayout extends PBLayoutIntermediateNode
   @override
   AlignStrategy alignStrategy = AutoLayoutAlignStrategy();
 
-  PBIntermediateColumnLayout(Rectangle3D frame, {String name})
+  PBIntermediateColumnLayout(Rectangle3D? frame, {String? name})
       : super(null, frame, COLUMN_RULES, COLUMN_EXCEPTIONS, name) {
     generator = PBColumnGenerator();
   }
@@ -51,14 +51,14 @@ class PBIntermediateColumnLayout extends PBLayoutIntermediateNode
   }
 
   @JsonKey(name: 'autoLayoutOptions')
-  LayoutProperties layoutProperties;
+  LayoutProperties? layoutProperties;
 
   @override
-  String type = 'col';
+  String? type = 'col';
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-      PBIntermediateNode parent, PBIntermediateTree tree) {
+      PBIntermediateNode? parent, PBIntermediateTree tree) {
     var tempCol = _$PBIntermediateColumnLayoutFromJson(json)
       ..mapRawChildren(json, tree);
     return tempCol;

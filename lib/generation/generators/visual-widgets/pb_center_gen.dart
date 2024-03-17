@@ -5,8 +5,8 @@ import 'package:parabeac_core/interpret_and_optimize/entities/subclasses/pb_inte
 
 class PBCenterGenerator extends PBGenerator {
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
-    var children = context.tree.childrenOf(source);
+  String generate(PBIntermediateNode? source, PBContext? context) {
+    var children = context!.tree!.childrenOf(source);
     if (!(source is InjectedCenter) || children.isEmpty) {
       return '';
     }
@@ -14,6 +14,6 @@ class PBCenterGenerator extends PBGenerator {
       logger.error(
           '$runtimeType contains more than a single child. Rendering only the first one');
     }
-    return 'Center(\nchild: ${children.first.generator.generate(children.first, context)})';
+    return 'Center(\nchild: ${children.first.generator!.generate(children.first, context)})';
   }
 }

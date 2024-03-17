@@ -10,44 +10,44 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 import 'dart:math';
 
 class PBContainerGenerator extends PBGenerator {
-  String color;
+  String? color;
 
   PBContainerGenerator() : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     if (source is PBContainer) {
-      var sourceChildren = context.tree.childrenOf(source);
+      var sourceChildren = context!.tree!.childrenOf(source);
       var buffer = StringBuffer();
       // buffer.write('\n \/* ${source.name} *\/ \n');
       buffer.write('Container(');
 
       /// Add clip behavior in case children needs to be clipped
       /// TODO: Extend to different kinds of clip
-      if (source.auxiliaryData.clipsContent ?? false) {
+      if (source.auxiliaryData!.clipsContent ?? false) {
         buffer.write('clipBehavior: Clip.hardEdge,');
       }
 
       /// Write container padding
       if (source.padding != null) {
-        buffer.write(getPadding(source.padding));
+        buffer.write(getPadding(source.padding!));
       }
 
       //TODO(ivanV): please clean my if statement :(
       if (source is InjectedContainer) {
-        if (source.constraints.fixedHeight &&
-            source.frame.height > 0 &&
-            source.showHeight) {
-          buffer.write('height: ${source.frame.height},');
-        } else if (!source.constraints.fixedHeight) {
+        if (source.constraints!.fixedHeight! &&
+            source.frame!.height > 0 &&
+            source.showHeight!) {
+          buffer.write('height: ${source.frame!.height},');
+        } else if (!source.constraints!.fixedHeight!) {
           buffer.write(PBSizeHelper().getSize(source, context, true));
         }
 
-        if (source.constraints.fixedWidth &&
-            source.frame.width > 0 &&
-            source.showWidth) {
-          buffer.write('width: ${source.frame.width},');
-        } else if (!source.constraints.fixedWidth) {
+        if (source.constraints!.fixedWidth! &&
+            source.frame!.width > 0 &&
+            source.showWidth!) {
+          buffer.write('width: ${source.frame!.width},');
+        } else if (!source.constraints!.fixedWidth!) {
           buffer.write(PBSizeHelper().getSize(source, context, false));
         }
       }
@@ -58,7 +58,7 @@ class PBContainerGenerator extends PBGenerator {
       }
 
       /// If border info exists, use box decoration for auxiliary data
-      if (source.auxiliaryData.borderInfo != null) {
+      if (source.auxiliaryData!.borderInfo != null) {
         buffer.write(PBBoxDecorationHelper().generate(source, context));
       }
 
@@ -71,7 +71,7 @@ class PBContainerGenerator extends PBGenerator {
       var child = sourceChildren.isEmpty ? null : sourceChildren.first;
       if (child != null) {
         child.frame = source.frame;
-        var statement = 'child: ${child.generator.generate(child, context)}';
+        var statement = 'child: ${child.generator!.generate(child, context)}';
 
         buffer.write(statement);
       }

@@ -29,7 +29,7 @@ class ThemingPostGenTask extends PostGenTask {
     final themingRelativePath =
         pathService.themingRelativePath.replaceFirst('lib/', '');
 
-    final projectName = MainInfo().projectName;
+    final projectName = MainInfo().projectName!;
 
     final constants = <ConstantHolder>[];
     final importBuffer = StringBuffer(
@@ -44,7 +44,7 @@ class ThemingPostGenTask extends PostGenTask {
       /// Map the [TextStyle] attributes in the project for [TextTheme]
       final textThemeAttributes = textStyles
           .map((style) =>
-              '${style.name.camelCase}: ${projectName.pascalCase}TextStyles.${style.name.camelCase},')
+              '${style.name!.camelCase}: ${projectName.pascalCase}TextStyles.${style.name!.camelCase},')
           .join();
       final textThemeBoilerplate = 'TextTheme($textThemeAttributes)';
 
@@ -73,13 +73,13 @@ class ThemingPostGenTask extends PostGenTask {
       );
 
       /// Map the [ColorSchemes] by name
-      final colorSchemeMap = <String, List<String>>{};
+      final colorSchemeMap = <String?, List<String>>{};
       for (final color in colors) {
-        final attributeName = color.name.split('/').last;
+        final attributeName = color.name!.split('/').last;
         final colorAttribute =
-            '$attributeName: ${projectName.pascalCase}Colors.${color.name.camelCase}';
+            '$attributeName: ${projectName.pascalCase}Colors.${color.name!.camelCase}';
         if (colorSchemeMap.containsKey(color.colorScheme)) {
-          colorSchemeMap[color.colorScheme].add(colorAttribute);
+          colorSchemeMap[color.colorScheme]!.add(colorAttribute);
         } else {
           colorSchemeMap[color.colorScheme] = [colorAttribute];
         }
@@ -92,14 +92,14 @@ class ThemingPostGenTask extends PostGenTask {
             'ColorScheme', entry.key, 'ColorScheme.${entry.key}($attributes)'));
         constants.add(ConstantHolder(
           'ThemeData',
-          'themeData${entry.key.pascalCase}',
+          'themeData${entry.key!.pascalCase}',
           'ThemeData(${textStyles.isNotEmpty ? 'textTheme: textTheme,' : ''} colorScheme: ${entry.key},)',
           isconst: false,
         ));
       }
     }
 
-    generationConfiguration.fileStructureStrategy.commandCreated(
+    generationConfiguration.fileStructureStrategy!.commandCreated(
       WriteConstantsCommand(
         Uuid().v4(),
         constants,

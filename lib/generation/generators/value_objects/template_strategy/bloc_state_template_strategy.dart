@@ -5,28 +5,28 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 import 'package:recase/recase.dart';
 
 class BLoCStateTemplateStrategy extends TemplateStrategy {
-  bool isFirst = true;
-  String abstractClassName;
+  bool? isFirst = true;
+  String? abstractClassName;
   BLoCStateTemplateStrategy({this.isFirst, this.abstractClassName});
   @override
   String generateTemplate(
-      PBIntermediateNode node, PBGenerationManager manager, PBContext context,
+      PBIntermediateNode node, PBGenerationManager manager, PBContext? context,
       {args}) {
-    context.managerData.hasParams = true;
-    context.managerData.hasParams = false;
+    context!.managerData!.hasParams = true;
+    context.managerData!.hasParams = false;
 
     return '''
-${isFirst ? _getHeader(manager) : ''}
+${isFirst! ? _getHeader(manager) : ''}
 
-class ${node.name.pascalCase}State extends ${abstractClassName.pascalCase}State{}''';
+class ${node.name!.pascalCase}State extends ${abstractClassName!.pascalCase}State{}''';
   }
 
   String _getHeader(manager) {
     return '''
-    part of '${abstractClassName.snakeCase}_cubit.dart';
+    part of '${abstractClassName!.snakeCase}_cubit.dart';
 
     @immutable
-    abstract class ${abstractClassName.pascalCase}State{
+    abstract class ${abstractClassName!.pascalCase}State{
       
     }
     ''';

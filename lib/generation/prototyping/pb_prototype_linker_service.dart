@@ -9,15 +9,15 @@ import 'package:parabeac_core/interpret_and_optimize/services/intermediate_node_
 import 'package:parabeac_core/interpret_and_optimize/entities/interfaces/pb_prototype_enabled.dart';
 
 class PBPrototypeLinkerService {
-  PBPrototypeStorage _prototypeStorage;
-  PBPrototypeAggregationService _aggregationService;
+  late PBPrototypeStorage _prototypeStorage;
+  late PBPrototypeAggregationService _aggregationService;
 
   PBPrototypeLinkerService() {
     _prototypeStorage = PBPrototypeStorage();
     _aggregationService = PBPrototypeAggregationService();
   }
 
-  Future<PBIntermediateNode> linkPrototypeNodes(
+  Future<PBIntermediateNode?> linkPrototypeNodes(
       PBIntermediateTree tree, PBContext context) async {
     var rootNode = tree.rootNode;
     if (rootNode == null) {
@@ -42,7 +42,7 @@ class PBPrototypeLinkerService {
         var prototypeEnableElement =
             element as PrototypeEnable; // Explicit cast
         if (prototypeEnableElement.prototypeNode?.destinationUUID != null &&
-            prototypeEnableElement.prototypeNode.destinationUUID.isNotEmpty) {
+            prototypeEnableElement.prototypeNode!.destinationUUID!.isNotEmpty) {
           await addAndPopulatePrototypeNode(
               prototypeEnableElement, rootNode, context);
         }
@@ -57,8 +57,8 @@ class PBPrototypeLinkerService {
     await _prototypeStorage.addPrototypeInstance(currentNode, context);
     var pNode = _aggregationService.populatePrototypeNode(context, currentNode);
     if (pNode != null) {
-      context.tree.addEdges(pNode.parent, [pNode]);
-      context.tree.removeEdges(pNode.parent, <PBIntermediateNode>[currentNode]);
+      context.tree!.addEdges(pNode.parent!, [pNode]);
+      context.tree!.removeEdges(pNode.parent!, <PBIntermediateNode>[currentNode]);
     }
   }
 }

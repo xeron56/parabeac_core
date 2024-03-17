@@ -39,8 +39,8 @@ List<PBIntermediateNode> handleFlex(bool isVertical, Point topLeft,
       var prevChild = children[i - 1];
 
       var spacerLength = isVertical
-          ? _calculateHeight(prevChild.frame.bottomRight, child.frame.topLeft)
-          : _calculateWidth(prevChild.frame.bottomRight, child.frame.topLeft);
+          ? _calculateHeight(prevChild.frame!.bottomRight, child.frame!.topLeft)
+          : _calculateWidth(prevChild.frame!.bottomRight, child.frame!.topLeft);
 
       if (spacerLength > 0) {
         var flex = _calculateFlex(spacerLength, parentLength);
@@ -49,13 +49,13 @@ List<PBIntermediateNode> handleFlex(bool isVertical, Point topLeft,
           Rectangle.fromPoints(
               isVertical
                   ? Point(
-                      prevChild.frame.topLeft.x, prevChild.frame.bottomRight.y)
+                      prevChild.frame!.topLeft.x, prevChild.frame!.bottomRight.y)
                   : Point(
-                      prevChild.frame.bottomRight.x, prevChild.frame.topLeft.y),
+                      prevChild.frame!.bottomRight.x, prevChild.frame!.topLeft.y),
               isVertical
-                  ? Point(child.frame.bottomRight.x, child.frame.topLeft.y)
+                  ? Point(child.frame!.bottomRight.x, child.frame!.topLeft.y)
                   : Point(
-                      child.frame.topLeft.x, child.frame.bottomRight.y)), //brc
+                      child.frame!.topLeft.x, child.frame!.bottomRight.y)) as Rectangle3D<num>, //brc
 
           flex: flex,
         ));
@@ -66,7 +66,7 @@ List<PBIntermediateNode> handleFlex(bool isVertical, Point topLeft,
         child is! PBIntermediateColumnLayout) {
       // Wrap text in container
       if (child is! InheritedText) {
-        resultingChildren.add(_putChildInFlex(isVertical, child, parentLength));
+        resultingChildren.add(_putChildInFlex(isVertical, child, parentLength as double));
       }
     } else {
       resultingChildren.add(child);
@@ -81,8 +81,8 @@ PBIntermediateNode _putChildInFlex(
     bool isVertical, PBIntermediateNode child, double parentLength) {
   //Calculate child flex
   var widgetLength = isVertical
-      ? _calculateHeight(child.frame.topLeft, child.frame.bottomRight)
-      : _calculateWidth(child.frame.topLeft, child.frame.bottomRight);
+      ? _calculateHeight(child.frame!.topLeft, child.frame!.bottomRight)
+      : _calculateWidth(child.frame!.topLeft, child.frame!.bottomRight);
   var flex = _calculateFlex(widgetLength.abs(), parentLength.abs());
 
  //FIXMEreturn Flexible(null, child.frame, child: child, flex: flex);

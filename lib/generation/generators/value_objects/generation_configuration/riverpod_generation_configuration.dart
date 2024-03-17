@@ -17,10 +17,10 @@ class RiverpodGenerationConfiguration extends GenerationConfiguration {
     logger.info(
         'Thanks for trying our state management configuration that is now in Beta!\nIf you run into any issues please feel free to post it in Github or in our Discord!');
     fileStructureStrategy = RiverpodFileStructureStrategy(
-        pbProject.projectAbsPath,pageWriter, pbProject, fileSystemAnalyzer);
+        pbProject.projectAbsPath!,pageWriter, pbProject, fileSystemAnalyzer);
     registerMiddleware(RiverpodMiddleware(generationManager, this));
     logger.info('Setting up the directories');
-    await fileStructureStrategy.setUpDirectories();
+    await fileStructureStrategy!.setUpDirectories();
   }
 
   @override
@@ -28,7 +28,7 @@ class RiverpodGenerationConfiguration extends GenerationConfiguration {
     await super.generateProject(pb_project);
     if (pageWriter is PBFlutterWriter) {
       (pageWriter as PBFlutterWriter).rewriteMainFunction(
-        p.join(fileStructureStrategy.GENERATED_PROJECT_PATH, 'lib/main.dart'),
+        p.join(fileStructureStrategy!.GENERATED_PROJECT_PATH!, 'lib/main.dart'),
         _generateMainFunction(),
         imports: {FlutterImport('flutter_riverpod.dart', 'flutter_riverpod')},
       );

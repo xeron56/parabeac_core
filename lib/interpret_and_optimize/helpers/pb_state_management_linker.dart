@@ -13,8 +13,8 @@ import 'package:parabeac_core/interpret_and_optimize/services/pb_symbol_linker_s
 import 'package:parabeac_core/interpret_and_optimize/state_management/directed_state_graph.dart';
 
 class PBStateManagementLinker {
-  ElementStorage elementStorage;
-  Interpret interpret;
+  ElementStorage? elementStorage;
+  Interpret? interpret;
   PBStateManagementLinker._internal() {
     interpret = Interpret();
     stateQueue = [];
@@ -28,11 +28,11 @@ class PBStateManagementLinker {
 
   // Interpret interpret;
 
-  final Map<String, DirectedStateGraph> _rootNameToGraph = {};
+  final Map<String?, DirectedStateGraph> _rootNameToGraph = {};
 
-  List<Future> stateQueue;
+  late List<Future> stateQueue;
 
-  bool containsElement(String sharedNodeSetID) =>
+  bool containsElement(String? sharedNodeSetID) =>
       _rootNameToGraph.containsKey(sharedNodeSetID);
 
   /// Returns true if `name` exists in the statemap and it is
@@ -41,7 +41,7 @@ class PBStateManagementLinker {
       _rootNameToGraph.containsKey(name) &&
       _rootNameToGraph[name] is PBSharedInstanceIntermediateNode;
 
-  void processVariation(PBIntermediateNode node, String sharedNodeSetID,
+  void processVariation(PBIntermediateNode node, String? sharedNodeSetID,
       PBIntermediateTree tree) async {
     // if `node` is default, create a new graph
     if (!containsElement(sharedNodeSetID)) {
@@ -56,17 +56,17 @@ class PBStateManagementLinker {
         tempSym?.forEach((element) => element.isMasterState = true);
       }
       stateQueue.add(_interpretVariationNode(node, tree).then((processedNode) =>
-          _rootNameToGraph[sharedNodeSetID].addVariation(processedNode)));
+          _rootNameToGraph[sharedNodeSetID]!.addVariation(processedNode)));
     }
   }
 
   /// Gets the [DirectedStateGraph] of `rootNodeName` or `null` if it does not exist.
-  DirectedStateGraph getDirectedStateGraphOfName(String sharedNodeSetID) =>
+  DirectedStateGraph? getDirectedStateGraphOfName(String? sharedNodeSetID) =>
       _rootNameToGraph[sharedNodeSetID];
 
   /// Runs the state management [PBIntermediateNode] through
   /// the necessary interpretation services.
-  Future<PBIntermediateNode> _interpretVariationNode(
+  Future<PBIntermediateNode?> _interpretVariationNode(
       PBIntermediateNode node, PBIntermediateTree tree) async {
     var builder = AITServiceBuilder([
       PBSymbolLinkerService(),

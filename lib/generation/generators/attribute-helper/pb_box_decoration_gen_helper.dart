@@ -7,13 +7,13 @@ class PBBoxDecorationHelper extends PBAttributesHelper {
   PBBoxDecorationHelper() : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext generatorContext) {
+  String generate(PBIntermediateNode? source, PBContext? generatorContext) {
     final buffer = StringBuffer();
 
     buffer.write('decoration: BoxDecoration(');
-    var borderInfo = source.auxiliaryData.borderInfo;
-    var effectsInfo = source.auxiliaryData.effects;
-    var colors = source.auxiliaryData.colors;
+    var borderInfo = source!.auxiliaryData!.borderInfo;
+    var effectsInfo = source.auxiliaryData!.effects;
+    var colors = source.auxiliaryData!.colors;
     if (colors != null && colors.isNotEmpty) {
       buffer.write(PBColorGenHelper().generate(source, generatorContext));
     }
@@ -27,7 +27,7 @@ class PBBoxDecorationHelper extends PBAttributesHelper {
       }
 
       // Write border outline properties if applicable
-      if (borderInfo.thickness > 0 && borderInfo.visible) {
+      if (borderInfo.thickness! > 0 && borderInfo.visible) {
         buffer.write('border: Border.all(');
         if (borderInfo.color != null) {
           buffer.write('color: Color(${borderInfo.color.toString()}),');
@@ -39,7 +39,7 @@ class PBBoxDecorationHelper extends PBAttributesHelper {
 
     if (effectsInfo != null &&
         effectsInfo.isNotEmpty &&
-        effectsInfo.first.type.toLowerCase().contains('shadow')) {
+        effectsInfo.first.type!.toLowerCase().contains('shadow')) {
       buffer.write('boxShadow: [');
 
       for (var effect in effectsInfo) {
@@ -48,7 +48,7 @@ class PBBoxDecorationHelper extends PBAttributesHelper {
               ${PBColorGenHelper().getHexColor(effect.color)}
               spreadRadius: ${effect.radius},
               blurRadius: ${effect.radius},
-              offset: Offset(${effect.offset['x']}, ${effect.offset['y']}),
+              offset: Offset(${effect.offset!['x']}, ${effect.offset!['y']}),
             ),
           ''');
       }

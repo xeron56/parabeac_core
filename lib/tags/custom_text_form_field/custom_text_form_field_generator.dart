@@ -24,39 +24,39 @@ class CustomTextFormFieldGenerator extends PBGenerator with PBTextStyleGen {
   final String suffixIconSemantic = '<suffixIcon>';
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     /// Variables that will hold generated attributes of TextField.
-    String hinttextGen;
-    String hintStyle;
-    String prefixIconGen;
-    String fillColor;
-    String outlineInputBorder;
-    String suffixIconGen;
+    String? hinttextGen;
+    String? hintStyle;
+    String? prefixIconGen;
+    String? fillColor;
+    String? outlineInputBorder;
+    String? suffixIconGen;
 
     /// Get subsemantic nodes
-    var hinttext = context.tree.findChild(
+    var hinttext = context!.tree!.findChild(
       source,
       hintTextSemantic,
       InheritedText,
     );
 
-    var prefixIcon = context.tree.findChild(
+    var prefixIcon = context.tree!.findChild(
       source,
       prefixIconSemantic,
       PBIntermediateNode,
     );
 
-    var suffixIcon = context.tree.findChild(
+    var suffixIcon = context.tree!.findChild(
       source,
       suffixIconSemantic,
       PBIntermediateNode,
     );
 
     /// Generate [OutlineInputBorder] from [boxDecoration].
-    if (source.auxiliaryData != null) {
-      fillColor = 'Color(${source.auxiliaryData.color ?? '0xFFFFFFFF'})';
+    if (source!.auxiliaryData != null) {
+      fillColor = 'Color(${source.auxiliaryData!.color ?? '0xFFFFFFFF'})';
       outlineInputBorder =
-          _generateOutlineInputBorder(source.auxiliaryData.borderInfo);
+          _generateOutlineInputBorder(source.auxiliaryData!.borderInfo!);
     }
 
     /// Get [hinttextGen] from [hinttext].
@@ -67,7 +67,7 @@ class CustomTextFormFieldGenerator extends PBGenerator with PBTextStyleGen {
 
     /// Generate [prefixIconGen] from [prefixIcon].
     if (prefixIcon != null) {
-      prefixIconGen = prefixIcon.generator.generate(
+      prefixIconGen = prefixIcon.generator!.generate(
             prefixIcon,
             context.copyWith(sizingContext: SizingValueContext.ScaleValue),
           ) ??
@@ -76,7 +76,7 @@ class CustomTextFormFieldGenerator extends PBGenerator with PBTextStyleGen {
 
     /// Generate [suffixIconGen] from [suffixIcon].
     if (suffixIcon != null) {
-      suffixIconGen = suffixIcon.generator.generate(
+      suffixIconGen = suffixIcon.generator!.generate(
             suffixIcon,
             context.copyWith(sizingContext: SizingValueContext.ScaleValue),
           ) ??
@@ -84,20 +84,20 @@ class CustomTextFormFieldGenerator extends PBGenerator with PBTextStyleGen {
     }
 
     final pathService = GetIt.I<PathService>();
-    final projectName = MainInfo().projectName;
+    final projectName = MainInfo().projectName!;
 
-    final logicFilename = '${source.name.snakeCase}_logic';
-    final widgetFilename = '${source.name.snakeCase}_widget';
+    final logicFilename = '${source.name!.snakeCase}_logic';
+    final widgetFilename = '${source.name!.snakeCase}_widget';
     const abstractLogicFilename = 'text_form_field_logic';
 
     final logicFilePath = p.join(
       WriteSymbolCommand.DEFAULT_SYMBOL_PATH,
-      context.tree.name,
+      context.tree!.name,
       pathService.customRelativePath,
     );
     final widgetFilePath = p.join(
       WriteSymbolCommand.DEFAULT_SYMBOL_PATH,
-      context.tree.name,
+      context.tree!.name,
     );
     final abstractLogicImport = p
             .join(
@@ -110,18 +110,18 @@ class CustomTextFormFieldGenerator extends PBGenerator with PBTextStyleGen {
     final concreteLogicImport = p.join(logicFilePath, '$logicFilename.dart');
 
     /// Add imports to files to be created.
-    context.managerData.addImport(FlutterImport(
+    context.managerData!.addImport(FlutterImport(
       concreteLogicImport,
       projectName,
     ));
 
-    context.managerData.addImport(FlutterImport(
+    context.managerData!.addImport(FlutterImport(
       p.join(widgetFilePath, '$widgetFilename.g.dart'),
       projectName,
     ));
 
     /// Write the abstract TextFormField logic file.
-    context.configuration.generationConfiguration.fileStructureStrategy
+    context.configuration!.generationConfiguration!.fileStructureStrategy!
         .commandCreated(
       WriteSymbolCommand(
         Uuid().v4(),
@@ -134,7 +134,7 @@ class CustomTextFormFieldGenerator extends PBGenerator with PBTextStyleGen {
     var formattedLogicFilename = logicFilename.pascalCase;
 
     /// Write the concrete TextFormField logic to a separate file.
-    context.configuration.generationConfiguration.fileStructureStrategy
+    context.configuration!.generationConfiguration!.fileStructureStrategy!
         .commandCreated(
       WriteSymbolCommand(
         Uuid().v4(),
@@ -150,7 +150,7 @@ class CustomTextFormFieldGenerator extends PBGenerator with PBTextStyleGen {
     );
 
     /// Write the TextFormField UI to a separate file.
-    context.configuration.generationConfiguration.fileStructureStrategy
+    context.configuration!.generationConfiguration!.fileStructureStrategy!
         .commandCreated(
       WriteSymbolCommand(
         Uuid().v4(),
@@ -172,7 +172,7 @@ class CustomTextFormFieldGenerator extends PBGenerator with PBTextStyleGen {
     );
     if (source is CustomTextFormField) {
       // Add tag to analytics
-      if (!context.tree.lockData) {
+      if (!context.tree!.lockData) {
         GetIt.I.get<AmplitudeService>().addToSpecified(
             'CustomTextFormField', 'tag', 'Number of tags generated');
       }
@@ -204,7 +204,7 @@ class CustomTextFormFieldGenerator extends PBGenerator with PBTextStyleGen {
   String customBoilerPlate(
     String className,
     String logicImport,
-    String hintText,
+    String? hintText,
   ) {
     return '''
 import 'package:flutter/material.dart';
@@ -237,11 +237,11 @@ class $className extends TextFormFieldLogic {
     String abstractLogicImport,
     String concreteLogicImport,
     String logicClassName, {
-    String border,
-    String prefixIcon,
-    String suffixIcon,
-    String fillColor,
-    String hintStyle,
+    String? border,
+    String? prefixIcon,
+    String? suffixIcon,
+    String? fillColor,
+    String? hintStyle,
   }) {
     return '''
 import 'package:flutter/material.dart';

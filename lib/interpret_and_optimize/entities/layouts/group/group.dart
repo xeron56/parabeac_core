@@ -17,22 +17,22 @@ abstract class Group extends PBLayoutIntermediateNode
   @override
   @JsonKey(
       fromJson: PrototypeNode.prototypeNodeFromJson, name: 'prototypeNodeUUID')
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @override
   @JsonKey()
-  String type = 'group';
+  String? type = 'group';
 
   @override
-  Map<String, dynamic> originalRef;
+  Map<String, dynamic>? originalRef;
 
   Group(
-    String UUID,
-    Rectangle3D frame, {
+    String? UUID,
+    Rectangle3D? frame, {
     this.originalRef,
-    String name,
+    String? name,
     this.prototypeNode,
-    PBIntermediateConstraints constraints,
+    PBIntermediateConstraints? constraints,
   }) : super(
           UUID,
           frame,
@@ -44,14 +44,14 @@ abstract class Group extends PBLayoutIntermediateNode
         );
 
   @override
-  bool satisfyRules(PBContext context, PBIntermediateNode currentNode,
+  bool? satisfyRules(PBContext context, PBIntermediateNode currentNode,
       PBIntermediateNode nextNode) {
     assert(false, 'Attempted to satisfyRules for class type [$runtimeType]');
     return null;
   }
 
   @override
-  PBLayoutIntermediateNode generateLayout(List<PBIntermediateNode> children,
+  PBLayoutIntermediateNode? generateLayout(List<PBIntermediateNode> children,
       PBContext currentContext, String name) {
     assert(false, 'Attempted to generateLayout for class type [$runtimeType]');
     return null;

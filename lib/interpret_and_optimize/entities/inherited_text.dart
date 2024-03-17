@@ -19,30 +19,30 @@ class InheritedText extends PBVisualIntermediateNode
     implements PBInheritedIntermediate, IntermediateNodeFactory {
   ///For the generator to strip out the quotation marks.
   @JsonKey(defaultValue: false)
-  bool isTextParameter = false;
+  bool? isTextParameter = false;
 
   @override
   @JsonKey(
       fromJson: PrototypeNode.prototypeNodeFromJson, name: 'prototypeNodeUUID')
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @JsonKey(ignore: true)
-  num alignmenttype;
+  num? alignmenttype;
 
   @override
   @JsonKey()
-  String type = 'text';
+  String? type = 'text';
 
   @JsonKey(name: 'content')
-  String text;
+  String? text;
 
   @override
   @JsonKey(ignore: true)
-  Map<String, dynamic> originalRef;
+  Map<String, dynamic>? originalRef;
 
   InheritedText(
-    String UUID,
-    Rectangle3D frame, {
+    String? UUID,
+    Rectangle3D? frame, {
     this.originalRef,
     name,
     this.alignmenttype,
@@ -63,7 +63,7 @@ class InheritedText extends PBVisualIntermediateNode
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-      PBIntermediateNode parent, PBIntermediateTree tree) {
+      PBIntermediateNode? parent, PBIntermediateTree tree) {
     var inheritedText = InheritedText.fromJson(json);
     var container = InheritedContainer(
       null,
@@ -72,7 +72,7 @@ class InheritedText extends PBVisualIntermediateNode
       // bottomRightCorner: inheritedText .frame.bottomRight,
       name: inheritedText.name,
       originalRef: json,
-      constraints: inheritedText.constraints.copyWith(),
+      constraints: inheritedText.constraints!.copyWith(),
     )
       ..attributeName = inheritedText.attributeName
       ..layoutCrossAxisSizing = inheritedText.layoutCrossAxisSizing
@@ -86,20 +86,20 @@ class InheritedText extends PBVisualIntermediateNode
 }
 
 class InheritedTextPBDLHelper {
-  static num fontSizeFromJson(Map<String, dynamic> json) =>
-      _fontDescriptor(json)['fontSize'];
+  static num? fontSizeFromJson(Map<String, dynamic> json) =>
+      _fontDescriptor(json)!['fontSize'];
 
-  static String fontNameFromJson(Map<String, dynamic> json) =>
-      _fontDescriptor(json)['fontName'];
+  static String? fontNameFromJson(Map<String, dynamic> json) =>
+      _fontDescriptor(json)!['fontName'];
 
-  static String fontWeightFromJson(Map<String, dynamic> json) =>
-      _fontDescriptor(json)['fontWeight'];
+  static String? fontWeightFromJson(Map<String, dynamic> json) =>
+      _fontDescriptor(json)!['fontWeight'];
 
-  static String fontStyleFromJson(Map<String, dynamic> json) =>
-      _fontDescriptor(json)['fontStyle'];
+  static String? fontStyleFromJson(Map<String, dynamic> json) =>
+      _fontDescriptor(json)!['fontStyle'];
 
   static String textAlignmentFromJson(Map<String, dynamic> json) {
-    var alignmenttype = _textStyle(json)['paragraphStyle']['alignment'] ?? 0;
+    var alignmenttype = _textStyle(json)!['paragraphStyle']['alignment'] ?? 0;
     switch (alignmenttype) {
       case 1:
         return 'right';
@@ -112,12 +112,12 @@ class InheritedTextPBDLHelper {
     }
   }
 
-  static num letterSpacingFromJson(Map<String, dynamic> json) =>
-      _fontDescriptor(json)['letterSpacing'];
+  static num? letterSpacingFromJson(Map<String, dynamic> json) =>
+      _fontDescriptor(json)!['letterSpacing'];
 
-  static Map<String, dynamic> _fontDescriptor(Map<String, dynamic> json) =>
-      _textStyle(json)['fontDescriptor'];
+  static Map<String, dynamic>? _fontDescriptor(Map<String, dynamic> json) =>
+      _textStyle(json)!['fontDescriptor'];
 
-  static Map<String, dynamic> _textStyle(Map<String, dynamic> json) =>
+  static Map<String, dynamic>? _textStyle(Map<String, dynamic> json) =>
       json['style']['textStyle'];
 }

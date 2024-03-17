@@ -8,8 +8,8 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_symbol_storage.d
 class PBIntermediateNodeSearcherService {
   ///Searching for a [PBIntermediateNode] by their unique identifier. If no [PBIntermediateNode] is found
   ///with that [uuid], then `null` should be returned to the caller.
-  static PBIntermediateNode searchNodeByUUID(
-      PBIntermediateNode rootNode, String uuid, PBIntermediateTree tree) {
+  static PBIntermediateNode? searchNodeByUUID(
+      PBIntermediateNode rootNode, String uuid, PBIntermediateTree? tree) {
     if (rootNode == null) {
       return rootNode;
     }
@@ -19,7 +19,7 @@ class PBIntermediateNodeSearcherService {
 
     while (stack.isNotEmpty) {
       var currentNode = stack.removeLast();
-      stack.addAll(tree.childrenOf(currentNode));
+      stack.addAll(tree!.childrenOf(currentNode));
 
       if (currentNode is PBInheritedIntermediate && currentNode.UUID == uuid) {
         return currentNode;

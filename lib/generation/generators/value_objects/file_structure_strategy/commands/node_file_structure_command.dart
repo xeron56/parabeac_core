@@ -4,12 +4,12 @@ import 'package:path/path.dart';
 
 /// Class that relies on `code` to implement its `write` method.
 abstract class NodeFileStructureCommand extends FileStructureCommand {
-  String code;
+  String? code;
 
   /// Depicts the [FileOwnership] of the files that is going to be created
   /// through [write]
   FileOwnership ownership;
 
-  NodeFileStructureCommand(String UUID, this.code, this.ownership)
+  NodeFileStructureCommand(String? UUID, this.code, this.ownership)
       : super(UUID);
 }

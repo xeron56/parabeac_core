@@ -21,33 +21,33 @@ class InheritedBitmap extends PBVisualIntermediateNode
   @override
   @JsonKey(
       fromJson: PrototypeNode.prototypeNodeFromJson, name: 'prototypeNodeUUID')
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   @JsonKey(name: 'imageReference')
-  String referenceImage;
+  String? referenceImage;
 
   @override
   @JsonKey()
-  String type = 'image';
+  String? type = 'image';
 
   @override
   @JsonKey(ignore: true)
-  Map<String, dynamic> originalRef;
+  Map<String, dynamic>? originalRef;
 
   InheritedBitmap(
-    String UUID,
-    Rectangle3D frame, {
+    String? UUID,
+    Rectangle3D? frame, {
     this.originalRef,
-    String name,
+    String? name,
     this.referenceImage,
     this.prototypeNode,
-    PBIntermediateConstraints constraints,
+    PBIntermediateConstraints? constraints,
   }) : super(UUID, frame, name, constraints: constraints) {
     generator = PBBitmapGenerator();
     childrenStrategy = NoChildStrategy();
-    if (referenceImage != null && referenceImage.isNotEmpty) {
+    if (referenceImage != null && referenceImage!.isNotEmpty) {
       ImageReferenceStorage().addReference(
-          referenceImage.replaceAll('images/', ''),
+          referenceImage!.replaceAll('images/', ''),
           '${MainInfo().outputPath}assets/images');
     }
   }
@@ -57,6 +57,6 @@ class InheritedBitmap extends PBVisualIntermediateNode
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-          PBIntermediateNode parent, PBIntermediateTree tree) =>
+          PBIntermediateNode? parent, PBIntermediateTree tree) =>
       (InheritedBitmap.fromJson(json) as InheritedBitmap)..originalRef = json;
 }

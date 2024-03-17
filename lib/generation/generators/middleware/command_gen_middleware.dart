@@ -19,12 +19,12 @@ import 'package:path/path.dart' as p;
 
 class CommandGenMiddleware extends Middleware
     with PBPlatformOrientationGeneration {
-  final String packageName;
-  final ImportHelper _importProcessor;
-  PBPlatformOrientationLinkerService poLinker;
+  final String? packageName;
+  final ImportHelper? _importProcessor;
+  PBPlatformOrientationLinkerService? poLinker;
 
   CommandGenMiddleware(
-    PBGenerationManager generationManager,
+    PBGenerationManager? generationManager,
     GenerationConfiguration configuration,
     this._importProcessor,
     this.packageName,
@@ -34,29 +34,29 @@ class CommandGenMiddleware extends Middleware
 
   @override
   Future<PBIntermediateTree> applyMiddleware(
-      PBIntermediateTree tree, PBContext context) {
+      PBIntermediateTree? tree, PBContext context) {
     if (tree == null) {
       return Future.value(tree);
     }
 
     var command;
     _addDependencyImports(tree, packageName, context);
-    if (poLinker.screenHasMultiplePlatforms(tree.identifier)) {
+    if (poLinker!.screenHasMultiplePlatforms(tree.identifier)) {
       getPlatformOrientationName(tree.rootNode, context);
 
       command = ExportPlatformCommand(
         tree.UUID,
-        context.tree.generationViewData.platform,
+        context.tree!.generationViewData!.platform,
         tree.identifier,
-        tree.rootNode.name.snakeCase,
-        generationManager.generate(tree.rootNode, context),
+        tree.rootNode!.name!.snakeCase,
+        generationManager!.generate(tree.rootNode, context),
       );
     } else if (tree.isScreen()) {
       command = WriteScreenCommand(
         tree.UUID,
         tree.identifier,
         tree.name,
-        generationManager.generate(tree.rootNode, context),
+        generationManager!.generate(tree.rootNode, context),
       );
     } else if (PBStateManagementHelper()
             .getStateGraphOfNode(tree.rootNode)
@@ -76,13 +76,13 @@ class CommandGenMiddleware extends Middleware
       command = WriteSymbolCommand(
         tree.UUID,
         tree.identifier,
-        generationManager.generate(tree.rootNode, context),
+        generationManager!.generate(tree.rootNode, context),
         symbolPath:
             p.join(WriteSymbolCommand.DEFAULT_SYMBOL_PATH, relativePath),
       );
     }
     if (command != null) {
-      configuration.fileStructureStrategy.commandCreated(command);
+      configuration.fileStructureStrategy!.commandCreated(command);
     }
     return Future.value(tree);
   }
@@ -94,9 +94,9 @@ class CommandGenMiddleware extends Middleware
   /// for imports is going to be enforced, therefore, [packageName] is going to be
   /// a required parameter.
   void _addDependencyImports(
-      PBIntermediateTree tree, String packageName, PBContext context) {
+      PBIntermediateTree tree, String? packageName, PBContext context) {
     var iter = tree.dependentsOn;
-    var addImport = context.managerData.addImport;
+    var addImport = context.managerData!.addImport;
 
     /// Check if [tree] has states. If states are present, we need to check
     /// each of the states for dependencies.
@@ -107,21 +107,21 @@ class CommandGenMiddleware extends Middleware
     }
 
     while (iter.moveNext()) {
-      _importProcessor.getFormattedImports(
+      _importProcessor!.getFormattedImports(
         iter.current.UUID,
         importMapper: (import) => addImport(FlutterImport(import, packageName)),
       );
     }
   }
 
-  void _checkStateGraphImports(DirectedStateGraph graph, String packageName) {
+  void _checkStateGraphImports(DirectedStateGraph graph, String? packageName) {
     var elementStorage = ElementStorage();
     graph.states.forEach((state) {
       // Get state's graph
       var stateTreeUUID = elementStorage.elementToTree[state.UUID];
-      var stateTree = elementStorage.treeUUIDs[stateTreeUUID];
+      var stateTree = elementStorage.treeUUIDs[stateTreeUUID]!;
 
-      _addDependencyImports(stateTree, packageName, stateTree.context);
+      _addDependencyImports(stateTree, packageName, stateTree.context!);
     });
   }
 }

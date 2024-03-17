@@ -24,11 +24,11 @@ class ImageReferenceStorage {
 
   /// Adds the reference to the image and writes the png to the assets folder.
   /// Returns true if the image was written successfully, false otherwise
-  bool addReferenceAndWrite(String name, String path, Uint8List image) {
+  bool addReferenceAndWrite(String? name, String path, Uint8List image) {
     if(image == null){
       return false;
     }
-    var imgPath = p.join(MainInfo().pngPath, '$name.png');
+    var imgPath = p.join(MainInfo().pngPath!, '$name.png');
     if (image == null &&
         File('${MainInfo().cwd?.path}/lib/input/assets/image-conversion-error.png')
             .existsSync() &&
@@ -48,7 +48,7 @@ class ImageReferenceStorage {
     return false;
   }
 
-  bool addReference(String name, String path) {
+  bool addReference(String? name, String path) {
     if (name != null && path != null && name.isNotEmpty && path.isNotEmpty) {
       images_references[name] = path;
       return true;
@@ -66,7 +66,7 @@ class ImageReferenceStorage {
 
   /// Returns the symbol with the given [reference],
   /// or [null] if no such symbol exists.
-  String getImagePathByReference(String name) {
+  String? getImagePathByReference(String name) {
     return images_references[name];
   }
 }

@@ -8,7 +8,7 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 import 'package:parabeac_core/interpret_and_optimize/helpers/pb_intermediate_node_tree.dart';
 
 class ContainerPostRule extends PostConditionRule {
-  OverlappingNodesLayoutRule overlappingNodesLayoutRule;
+  late OverlappingNodesLayoutRule overlappingNodesLayoutRule;
 
   ContainerPostRule() {
     overlappingNodesLayoutRule = OverlappingNodesLayoutRule();
@@ -19,14 +19,14 @@ class ContainerPostRule extends PostConditionRule {
   /// have overlapping coordinates.
   @override
   bool testRule(PBContext context, PBIntermediateNode currentNode,
-      PBIntermediateNode nextNode) {
+      PBIntermediateNode? nextNode) {
     var layout =
         currentNode is PBIntermediateStackLayout ? currentNode : nextNode;
     var tree = context.tree;
     if (layout == null || layout is! PBIntermediateStackLayout) {
       return false;
     }
-    var children = tree.childrenOf(layout);
+    var children = tree!.childrenOf(layout);
     if (children.length == 2) {
       if ((children[0] is PBVisualIntermediateNode &&
               children[1] is PBLayoutIntermediateNode) ||
@@ -49,11 +49,11 @@ class ContainerPostRule extends PostConditionRule {
   /// child.
   @override
   dynamic executeAction(PBContext context, PBIntermediateNode currentNode,
-      PBIntermediateNode nextNode) {
+      PBIntermediateNode? nextNode) {
     if (testRule(context, currentNode, nextNode)) {
       var layout =
           currentNode is PBIntermediateStackLayout ? currentNode : nextNode;
-      var tree = context.tree;
+      var tree = context.tree!;
       var layoutChildren = tree.childrenOf(layout);
       var pblayout = layoutChildren
               .firstWhere((element) => element is PBLayoutIntermediateNode),

@@ -24,7 +24,7 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_intermediate_nod
 ///while something like BLoC will assign a directory to a single.
 ///
 abstract class FileStructureStrategy implements CommandInvoker {
-  Logger logger;
+  late Logger logger;
 
   ///The `default` path of where all the views are going to be generated.
   ///
@@ -38,7 +38,7 @@ abstract class FileStructureStrategy implements CommandInvoker {
       GetIt.I.get<PathService>().viewsRelativePath;
 
   ///Path of where the project is generated
-  final String GENERATED_PROJECT_PATH;
+  final String? GENERATED_PROJECT_PATH;
 
   @Deprecated(
       'Each of the methods should be receiving its own [PBProject] instance.')
@@ -74,17 +74,17 @@ abstract class FileStructureStrategy implements CommandInvoker {
 
   /// How the extension of the [File]s are going to be written based on the ownership of
   /// the [File].
-  FileOwnershipPolicy fileOwnershipPolicy;
+  FileOwnershipPolicy? fileOwnershipPolicy;
 
   /// Uses the [FileSystemAnalyzer] to see if certain [File]s aready exist in the file system.
   ///
   /// This is primarly used when checking [FileOwnership.DEV]'s [File]s in the files sytem to see if they exist.
   /// If they do exist, then PBC is not going to modify them, ignoring whatever modification towards the [File]
   /// that was comming through [writeDataToFile] (method that created the actual [File]s).
-  FileSystemAnalyzer _fileSystemAnalyzer;
+  FileSystemAnalyzer? _fileSystemAnalyzer;
 
-  String _screenDirectoryPath;
-  String _viewDirectoryPath;
+  late String _screenDirectoryPath;
+  late String _viewDirectoryPath;
 
   FileStructureStrategy(this.GENERATED_PROJECT_PATH, this._pageWriter,
       this._pbProject, this._fileSystemAnalyzer,
@@ -93,12 +93,12 @@ abstract class FileStructureStrategy implements CommandInvoker {
     if (_fileSystemAnalyzer == null) {
       logger.error(
           '$FileSystemAnalyzer is null, meaning there are no files indexed and all files are going to be created.');
-      _fileSystemAnalyzer = FileSystemAnalyzer(GENERATED_PROJECT_PATH);
+      _fileSystemAnalyzer = FileSystemAnalyzer(GENERATED_PROJECT_PATH!);
     }
     fileOwnershipPolicy ??= DotGFileOwnershipPolicy();
   }
 
-  void addFileObserver(FileWriterObserver observer) {
+  void addFileObserver(FileWriterObserver? observer) {
     if (observer != null) {
       fileObservers.add(observer);
     }
@@ -111,8 +111,8 @@ abstract class FileStructureStrategy implements CommandInvoker {
   Future<void> setUpDirectories() async {
     if (!isSetUp) {
       _screenDirectoryPath =
-          p.join(GENERATED_PROJECT_PATH, RELATIVE_SCREEN_PATH);
-      _viewDirectoryPath = p.join(GENERATED_PROJECT_PATH, RELATIVE_WIDGET_PATH);
+          p.join(GENERATED_PROJECT_PATH!, RELATIVE_SCREEN_PATH);
+      _viewDirectoryPath = p.join(GENERATED_PROJECT_PATH!, RELATIVE_WIDGET_PATH);
       // _pbProject.forest.forEach((dir) {
       //   if (dir.rootNode != null) {
       //     addImportsInfo(dir, context);
@@ -131,13 +131,13 @@ abstract class FileStructureStrategy implements CommandInvoker {
     var node = tree.rootNode;
     var name = node?.name?.snakeCase;
     if (name != null) {
-      var uuid = node is PBSharedMasterNode ? node.SYMBOL_ID : node.UUID;
+      var uuid = node is PBSharedMasterNode ? node.SYMBOL_ID : node!.UUID;
       var path = node is PBSharedMasterNode
           ? p.join(_viewDirectoryPath, tree.name.snakeCase, name)
           : p.join(_screenDirectoryPath, tree.name.snakeCase, name);
-      if (poLinker.screenHasMultiplePlatforms(tree.rootNode.name)) {
+      if (poLinker.screenHasMultiplePlatforms(tree.rootNode!.name)) {
         path = p.join(_screenDirectoryPath, name,
-            poLinker.stripPlatform(context.managerData.platform), name);
+            poLinker.stripPlatform(context.managerData!.platform), name);
       }
 
       PBGenCache().setPathToCache(uuid, path);
@@ -182,21 +182,21 @@ abstract class FileStructureStrategy implements CommandInvoker {
   ///
   /// [FileWriterObserver]s are going to be notfied of the new created file.
   /// TODO: aggregate parameters into a file class
-  void writeDataToFile(String data, String directory, String name,
-      {String UUID, FileOwnership ownership, String ext = '.dart'}) {
+  void writeDataToFile(String? data, String directory, String name,
+      {String? UUID, FileOwnership? ownership, String ext = '.dart'}) {
     var file = getFile(
       directory,
       p.setExtension(
         name,
-        fileOwnershipPolicy.getFileExtension(ownership, ext),
+        fileOwnershipPolicy!.getFileExtension(ownership, ext),
       ),
     );
 
     if (FileOwnership.PBC == ownership) {
-      data = _setHeader(data);
+      data = _setHeader(data!);
     }
 
-    if (_fileSystemAnalyzer.containsFile(file.path) &&
+    if (_fileSystemAnalyzer!.containsFile(file.path) &&
         ownership == FileOwnership.DEV) {
       /// file is going to be ignored
       logger.fine(
@@ -206,14 +206,14 @@ abstract class FileStructureStrategy implements CommandInvoker {
 
     if (!dryRunMode) {
       file.createSync(recursive: true);
-      file.writeAsStringSync(data);
+      file.writeAsStringSync(data!);
       _notifyObservers(file.path, UUID);
     } else if (notifyObserverInDryRun) {
       _notifyObservers(file.path, UUID);
     }
   }
 
-  void _notifyObservers(String path, String UUID) {
+  void _notifyObservers(String path, String? UUID) {
     fileObservers.forEach((observer) => observer.fileCreated(path, UUID));
   }
 
@@ -226,14 +226,14 @@ abstract class FileStructureStrategy implements CommandInvoker {
   /// [ModFile] function is found, its going to append the information at the end of the lines
   /// TODO: aggregate the parameters into a file class
   void appendDataToFile(ModFile modFile, String directory, String name,
-      {String UUID,
+      {String? UUID,
       bool createFileIfNotFound = true,
       String ext = '.dart',
-      FileOwnership ownership}) {
+      FileOwnership? ownership}) {
     var extName = ownership == null
         ? p.setExtension(name, ext)
         : p.setExtension(
-            name, fileOwnershipPolicy.getFileExtension(ownership, ext));
+            name, fileOwnershipPolicy!.getFileExtension(ownership, ext));
     var file = getFile(directory, extName);
 
     /// We can only modify files that are owned by PBC.

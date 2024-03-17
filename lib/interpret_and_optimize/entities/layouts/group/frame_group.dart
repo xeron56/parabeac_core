@@ -22,20 +22,20 @@ class FrameGroup extends Group
     implements PBInheritedIntermediate, IntermediateNodeFactory {
   @override
   @JsonKey()
-  String type = 'frame';
+  String? type = 'frame';
 
   FrameGroup(
-    String UUID,
-    Rectangle3D<num> frame, {
-    String name,
-    PrototypeNode prototypeNode,
-    PBIntermediateConstraints constraints,
+    String? UUID,
+    Rectangle3D<num>? frame, {
+    String? name,
+    PrototypeNode? prototypeNode,
+    PBIntermediateConstraints? constraints,
   }) : super(UUID, frame,
             name: name, prototypeNode: prototypeNode, constraints: constraints);
 
   @override
   PBIntermediateNode createIntermediateNode(Map<String, dynamic> json,
-      PBIntermediateNode parent, PBIntermediateTree tree) {
+      PBIntermediateNode? parent, PBIntermediateTree tree) {
     // Add number of Frame groups to analytics
     if (!tree.lockData) {
       GetIt.I

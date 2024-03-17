@@ -15,9 +15,9 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_symbol_storage.d
 /// [PBIntermediateTree], the [StateManagementMiddleware] is going to handle each
 /// individual [PBIntermediateNode].
 abstract class StateManagementMiddleware extends Middleware {
-  PBStateManagementHelper stmgHelper;
+  late PBStateManagementHelper stmgHelper;
 
-  StateManagementMiddleware(PBGenerationManager generationManager,
+  StateManagementMiddleware(PBGenerationManager? generationManager,
       GenerationConfiguration configuration)
       : super(generationManager, configuration) {
     stmgHelper = PBStateManagementHelper();
@@ -36,8 +36,8 @@ abstract class StateManagementMiddleware extends Middleware {
   /// making the final result `null`.
   @override
   Future<PBIntermediateTree> applyMiddleware(
-      PBIntermediateTree tree, PBContext context) {
-    return Future.wait(tree.map((node) {
+      PBIntermediateTree? tree, PBContext context) {
+    return Future.wait(tree!.map((node) {
       if (containsState(node) || containsMasterState(node)) {
         return handleStatefulNode(node, context);
       }
@@ -49,11 +49,11 @@ abstract class StateManagementMiddleware extends Middleware {
 
   /// Handles the nodes that are stateful(either [containsState] or [containsMasterState]).
   Future<PBIntermediateNode> handleStatefulNode(
-      PBIntermediateNode node, PBContext context);
+      PBIntermediateNode? node, PBContext context);
 
   /// Checks whether the master of the [PBSharedInstanceIntermediateNode] (if the [node]
   /// is a symbol) [containsState].
-  bool containsMasterState(PBIntermediateNode node) {
+  bool containsMasterState(PBIntermediateNode? node) {
     if (node is PBSharedInstanceIntermediateNode) {
       return node.isMasterState ||
           containsState(
@@ -63,7 +63,7 @@ abstract class StateManagementMiddleware extends Middleware {
   }
 
   /// Checks wheather the [node] contains any states.
-  bool containsState(PBIntermediateNode node) => node == null
+  bool containsState(PBIntermediateNode? node) => node == null
       ? false
       : stmgHelper.getStateGraphOfNode(node)?.states?.isNotEmpty ?? false;
 }

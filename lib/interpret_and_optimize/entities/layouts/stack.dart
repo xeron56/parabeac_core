@@ -17,11 +17,11 @@ class PBIntermediateStackLayout extends PBLayoutIntermediateNode {
   Map alignment = {};
 
   @override
-  PrototypeNode prototypeNode;
+  PrototypeNode? prototypeNode;
 
   PBIntermediateStackLayout({
-    String name,
-    PBIntermediateConstraints constraints,
+    String? name,
+    PBIntermediateConstraints? constraints,
     layoutCrossAxisSizing,
     layoutMainAxisSizing,
   }) : super(null, null, STACK_RULES, [], name, constraints: constraints) {
@@ -31,11 +31,11 @@ class PBIntermediateStackLayout extends PBLayoutIntermediateNode {
         layoutMainAxisSizing != ParentLayoutSizing.NONE) {
       if (layoutMainAxisSizing == ParentLayoutSizing.STRETCH) {
         this.constraints =
-            this.constraints.copyWith(fixedHeight: false, pinTop: false);
+            this.constraints!.copyWith(fixedHeight: false, pinTop: false);
       }
       if (layoutCrossAxisSizing == ParentLayoutSizing.STRETCH) {
         this.constraints =
-            this.constraints.copyWith(fixedWidth: false, pinLeft: false);
+            this.constraints!.copyWith(fixedWidth: false, pinLeft: false);
       }
     }
   }
@@ -56,23 +56,23 @@ class PBIntermediateStackLayout extends PBLayoutIntermediateNode {
   // }
 
   @override
-  void sortChildren(List<PBIntermediateNode> children) =>
-      children.sort((c0, c1) => c0.frame.z.compareTo(c1.frame.z));
+  void sortChildren(List<PBIntermediateNode?> children) =>
+      children.sort((c0, c1) => c0!.frame!.z!.compareTo(c1!.frame!.z!));
 
   @override
   PBLayoutIntermediateNode generateLayout(List<PBIntermediateNode> children,
       PBContext currentContext, String name) {
     /// The width of this stack must be the full width of the Scaffold or Artboard. As discussed, at some point we can change this but for now, this makes the most sense.
     var frame = children.first.frame;
-    children.forEach((element) => frame.boundingBox(element.frame));
+    children.forEach((element) => frame!.boundingBox(element.frame!));
 
     var stack = PBIntermediateStackLayout(name: name)..frame = frame;
     //FIXME   stack.prototypeNode = prototypeNode;
     //FIXME children.forEach((child) => stack.addChild(child));
-    currentContext.tree.addEdges(stack, children);
+    currentContext.tree!.addEdges(stack, children);
     return stack;
   }
 
   @override
-  PBIntermediateNode fromJson(Map<String, dynamic> json) => null;
+  PBIntermediateNode? fromJson(Map<String, dynamic> json) => null;
 }

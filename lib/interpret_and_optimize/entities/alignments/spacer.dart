@@ -8,9 +8,9 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/child_strategy.dart
 import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 
 class Spacer extends PBVisualIntermediateNode {
-  int flex;
+  int? flex;
 
-  Spacer(String UUID, Rectangle3D frame, {this.flex, PBContext currentContext})
+  Spacer(String? UUID, Rectangle3D frame, {this.flex, PBContext? currentContext})
       : super(
           UUID,
           frame,
@@ -21,5 +21,5 @@ class Spacer extends PBVisualIntermediateNode {
   }
 
   @override
-  PBIntermediateNode fromJson(Map<String, dynamic> json) => null;
+  PBIntermediateNode? fromJson(Map<String, dynamic> json) => null;
 }

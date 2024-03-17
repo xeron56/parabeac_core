@@ -8,7 +8,7 @@ class PBSpacerGenerator extends PBGenerator {
 
   @override
   String generate(
-      PBIntermediateNode source, PBContext generatorContext) {
+      PBIntermediateNode? source, PBContext? generatorContext) {
     if (source is Spacer) {
       var buffer = StringBuffer();
       buffer.write('Spacer(');

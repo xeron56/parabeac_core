@@ -9,10 +9,10 @@ class JsonToPBDLService implements DesignToPBDLService {
   @override
   Future<PBDLProject> callPBDL(MainInfo info) async {
     var pbdlJson =
-        jsonDecode(File(MainInfo().configuration.pbdlPath).readAsStringSync());
+        jsonDecode(File(MainInfo().configuration!.pbdlPath!).readAsStringSync());
     return await PBDL.fromJson(pbdlJson);
   }
 
   @override
-  DesignType designType = DesignType.PBDL;
+  DesignType? designType = DesignType.PBDL;
 }

@@ -15,15 +15,15 @@ import 'package:quick_log/quick_log.dart';
 /// Parabeac-Core also might generate some non`.g.dart`(e.g. `example.dart`) files the first time,
 /// as boilerplate for the developer.
 class FileSystemAnalyzer {
-  Logger _logger;
+  late Logger _logger;
 
   /// Had to expose use the `file` dart package and expose the
   /// [FileSystem] in order to perform some testing in the [FileSystemAnalyzer].
-  FileSystem fileSystem;
+  FileSystem? fileSystem;
 
   /// A set that contains multiple paths
-  p.PathSet _pathSet;
-  List<String> get paths => _pathSet.toList();
+  late p.PathSet _pathSet;
+  List<String?> get paths => _pathSet.toList();
 
   /// These are the extensions that should be indexed, if the [Set] is empty then, its
   /// going to assume that all the files should be indexed.
@@ -32,14 +32,14 @@ class FileSystemAnalyzer {
   /// to be indexed. In other words, we are only going to care if `dart` files have been changed or
   /// missing.
   Iterable<String> get extensions => _extensions.toList();
-  Set<String> _extensions;
+  late Set<String> _extensions;
 
   /// Path of where the project [Directory] is located.
-  String _projectPath;
-  String get projectPath => _projectPath;
+  String? _projectPath;
+  String? get projectPath => _projectPath;
 
   /// The actual [Directory] of [projectPath]
-  Directory _projectDir;
+  Directory? _projectDir;
 
   /// Flag to see if project exist, mainly so we dont run [projectExist] multiple
   /// times.
@@ -79,10 +79,10 @@ class FileSystemAnalyzer {
 
   /// returns if a [Directory] is present on the path of [_projectPath]
   Future<bool> projectExist() {
-    return fileSystem.isDirectory(_projectPath).then((isDirectory) {
+    return fileSystem!.isDirectory(_projectPath!).then((isDirectory) {
       _projectChecked = true;
       if (isDirectory) {
-        _projectDir = fileSystem.directory(_projectPath);
+        _projectDir = fileSystem!.directory(_projectPath);
       } else {
         _logger.info(
             'The $_projectPath does not exist or its not of type Directory.');
@@ -106,7 +106,7 @@ class FileSystemAnalyzer {
 
     /// Traverse the files of the directory
     _logger.info('Indexing files within $projectPath...');
-    var filePaths = await _projectDir
+    var filePaths = await _projectDir!
         .list(recursive: true, followLinks: false)
         .where((entity) =>
             entity is File &&

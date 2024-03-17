@@ -17,10 +17,10 @@ class WidgetBookService extends AITHandler {
   // FIXME: The reason these are static is because otherwise we'd need a service that can
   // gather the folders, widgets, and categories to pass it to the ComponentIsolationService.
   // The treeIds need to be gathered to generate the imports later on as well.
-  static Map<String, WidgetBookFolder> _widgetBookFolders;
-  static Map<String, WidgetBookWidget> _widgetBookWidgets;
+  static late Map<String, WidgetBookFolder> _widgetBookFolders;
+  static late Map<String?, WidgetBookWidget> _widgetBookWidgets;
   static WidgetBookCategory category = WidgetBookCategory();
-  static final treeIds = <String>[];
+  static final treeIds = <String?>[];
 
   WidgetBookService() {
     _widgetBookFolders = {};
@@ -41,19 +41,19 @@ class WidgetBookService extends AITHandler {
       }
 
       var component = tree.rootNode as PBSharedMasterNode;
-      var rootName = component.componentSetName ?? tree.rootNode.name;
+      var rootName = component.componentSetName ?? tree.rootNode!.name;
 
       /// Create new Widget for this variation if it doesn't exist already
       if (!_widgetBookWidgets.containsKey(rootName)) {
         _widgetBookWidgets[rootName] = WidgetBookWidget(rootName);
-        _widgetBookFolders[tree.name].addChild(_widgetBookWidgets[rootName]);
+        _widgetBookFolders[tree.name]!.addChild(_widgetBookWidgets[rootName]);
       }
 
       /// Create a fake instance in order to generate the Use Case.
       // FIXME: Generating the code should happen somewhere in generate, not here.
       var dummyInstance = PBSharedInstanceIntermediateNode(
         null,
-        tree.rootNode.frame.copyWith(),
+        tree.rootNode!.frame!.copyWith(),
         SYMBOL_ID: component.SYMBOL_ID,
         name: rootName,
         sharedNodeSetID: component.sharedNodeSetID,
@@ -72,10 +72,10 @@ class WidgetBookService extends AITHandler {
 
       /// Create a use case for the current component and add it to the folder.
       var useCase = WidgetBookUseCase(
-        (tree.rootNode as PBSharedMasterNode).name.pascalCase,
+        (tree.rootNode as PBSharedMasterNode).name!.pascalCase,
         generatedCode,
       );
-      _widgetBookWidgets[rootName].addChild(useCase);
+      _widgetBookWidgets[rootName]!.addChild(useCase);
     }
     return tree;
   }

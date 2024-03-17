@@ -13,10 +13,10 @@ class EntryFileCommand extends NodeFileStructureCommand {
   final String mainFileName;
 
   /// The name of the screen that is going to act as the entry point within the [mainFileName]
-  final String entryScreenName;
+  final String? entryScreenName;
 
   /// The import for [entryScreenName]
-  final String entryScreenImport;
+  final String? entryScreenImport;
 
   /// The name of the application as a whole. If no name is specified, the its going to default to
   /// `Parabeac-Core Generated Project`.
@@ -66,9 +66,9 @@ class MyApp extends StatelessWidget {
   }
 
   @override
-  Future write(FileStructureStrategy strategy) {
-    strategy.writeDataToFile(
-        code, strategy.GENERATED_PROJECT_PATH, p.join('lib', mainFileName),
+  Future write(FileStructureStrategy? strategy) {
+    strategy!.writeDataToFile(
+        code, strategy.GENERATED_PROJECT_PATH!, p.join('lib', mainFileName),
         UUID: UUID, ownership: ownership);
   }
 }

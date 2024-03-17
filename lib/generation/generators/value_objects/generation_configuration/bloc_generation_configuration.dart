@@ -16,6 +16,6 @@ class BLoCGenerationConfiguration extends GenerationConfiguration {
         pbProject.projectAbsPath, pageWriter, pbProject, fileSystemAnalyzer);
     registerMiddleware(BLoCMiddleware(generationManager, this));
     logger.info('Setting up the directories');
-    await fileStructureStrategy.setUpDirectories();
+    await fileStructureStrategy!.setUpDirectories();
   }
 }

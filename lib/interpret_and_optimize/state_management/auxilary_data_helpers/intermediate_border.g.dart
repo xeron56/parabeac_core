@@ -8,12 +8,12 @@ part of 'intermediate_border.dart';
 
 PBBorder _$PBBorderFromJson(Map<String, dynamic> json) {
   return PBBorder(
-    blendMode: json['blendMode'] as String,
-    type: json['type'] as String,
+    blendMode: json['blendMode'] as String?,
+    type: json['type'] as String?,
     color: json['color'] == null
         ? null
         : PBColor.fromJson(json['color'] as Map<String, dynamic>),
-    visible: json['visible'] as bool ?? true,
+    visible: json['visible'] as bool? ?? true,
   );
 }
 

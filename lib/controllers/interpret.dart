@@ -17,7 +17,7 @@ import 'package:sentry/sentry.dart';
 import 'package:tuple/tuple.dart';
 
 class Interpret {
-  Logger log;
+  Logger? log;
 
   Interpret._internal();
 
@@ -29,7 +29,7 @@ class Interpret {
     return _interpret;
   }
 
-  PBPrototypeLinkerService _pbPrototypeLinkerService;
+  PBPrototypeLinkerService? _pbPrototypeLinkerService;
 
   List<AITHandler> aitHandlers = [
     StateManagementNodeInterpreter(),
@@ -40,9 +40,9 @@ class Interpret {
     PBAlignGenerationService(),
   ];
 
-  Future<PBIntermediateTree> interpretAndOptimize(
+  Future<PBIntermediateTree?> interpretAndOptimize(
       PBIntermediateTree tree, PBContext context, PBProject project,
-      {List<AITHandler> handlers, AITServiceBuilder aitServiceBuilder}) async {
+      {List<AITHandler>? handlers, AITServiceBuilder? aitServiceBuilder}) async {
     if (handlers == null || handlers.isEmpty) {
       handlers = aitHandlers;
     } else {
@@ -52,7 +52,7 @@ class Interpret {
     aitServiceBuilder ??= AITServiceBuilder(handlers);
     var elementStorage = ElementStorage();
 
-    elementStorage.elementToTree[tree.rootNode.UUID] = tree.UUID;
+    elementStorage.elementToTree[tree.rootNode!.UUID] = tree.UUID;
     elementStorage.treeUUIDs[tree.UUID] = tree;
 
     /// This is a workaround for adding missing information to either the [PBContext] or any of the
@@ -84,19 +84,19 @@ class Interpret {
 }
 
 class AITServiceBuilder {
-  Logger log;
+  late Logger log;
 
-  PBIntermediateTree _intermediateTree;
+  PBIntermediateTree? _intermediateTree;
   set intermediateTree(PBIntermediateTree tree) => _intermediateTree = tree;
 
-  Stopwatch _stopwatch;
+  late Stopwatch _stopwatch;
 
   /// These are the [AITHandler]s that are going to be transforming
   /// the [_intermediateTree] in a [Tuple2]. The [Tuple2.item1] is the id, if any, and
   /// [Tuple2.item2] is the actual [AITHandler]
   final List<Tuple2> _transformations = [];
 
-  AITServiceBuilder([List transformations, PBIntermediateTree tree]) {
+  AITServiceBuilder([List? transformations, PBIntermediateTree? tree]) {
     log = Logger(runtimeType.toString());
     _stopwatch = Stopwatch();
     _intermediateTree = tree;
@@ -111,7 +111,7 @@ class AITServiceBuilder {
 
   /// Adding a [transformation] that will be applyed to the [PBIntermediateTree]. The [id]
   /// is to [log] the [transformation].
-  AITServiceBuilder addTransformation(transformation, {String id, int index}) {
+  AITServiceBuilder addTransformation(transformation, {String? id, int? index}) {
     id ??= transformation.runtimeType.toString();
     index ??= _transformations.length;
     if (transformation is AITHandler) {
@@ -131,14 +131,14 @@ class AITServiceBuilder {
         transformation.item2 is! AITTransformation);
   }
 
-  Future<PBIntermediateTree> build(
-      {PBIntermediateTree tree, PBContext context}) async {
+  Future<PBIntermediateTree?> build(
+      {PBIntermediateTree? tree, PBContext? context}) async {
     if (_intermediateTree == null && tree == null) {
      // throw NullThrownError();
     }
     _intermediateTree ??= tree;
 
-    var treeName = _intermediateTree.name;
+    var treeName = _intermediateTree!.name;
     log.fine('Transforming $treeName ...');
 
     for (var transformationTuple in _transformations) {
@@ -154,11 +154,11 @@ class AITServiceBuilder {
       log.debug('Started running $name...');
       try {
         if (transformation is AITNodeTransformation) {
-          for (var child in _intermediateTree) {
+          for (var child in _intermediateTree!) {
             var dVertex =
                 await transformation(context, child, _intermediateTree);
             if (dVertex.UUID != child.UUID) {
-              tree.replaceNode(child, dVertex);
+              tree!.replaceNode(child, dVertex);
             }
           }
         } else if (transformation is AITTransformation &&
@@ -166,7 +166,7 @@ class AITServiceBuilder {
           _intermediateTree = await transformation(context, _intermediateTree);
         }
 
-        if (_intermediateTree == null || _intermediateTree.rootNode == null) {
+        if (_intermediateTree == null || _intermediateTree!.rootNode == null) {
           log.warning(
               'The $name returned a null \"$treeName\" $PBIntermediateTree (or its rootnode is null)\n after its transformation, this will remove the tree from the process!');
           // throw NullThrownError();
@@ -190,10 +190,10 @@ class AITServiceBuilder {
 /// Abstract class for Generatiion Services
 /// so they all have the current context
 abstract class AITHandler {
-  Logger logger;
+  late Logger logger;
 
   /// Delegates the tranformation/modification to the current [AITHandler]
-  Future<PBIntermediateTree> handleTree(
+  Future<PBIntermediateTree>? handleTree(
       PBContext context, PBIntermediateTree tree);
   AITHandler() {
     logger = Logger(runtimeType.toString());
@@ -201,6 +201,6 @@ abstract class AITHandler {
 }
 
 typedef AITTransformation = Future<PBIntermediateTree> Function(
-    PBContext, PBIntermediateTree);
+    PBContext?, PBIntermediateTree?);
 typedef AITNodeTransformation = Future<PBIntermediateNode> Function(
-    PBContext, PBIntermediateNode, PBIntermediateTree);
+    PBContext?, PBIntermediateNode?, PBIntermediateTree?);

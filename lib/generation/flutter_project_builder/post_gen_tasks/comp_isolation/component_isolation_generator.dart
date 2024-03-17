@@ -7,11 +7,11 @@ import 'package:parabeac_core/generation/generators/util/pb_generation_project_d
 /// to create the necessary classes and generate the code at the end.
 abstract class ComponentIsolationGenerator {
   /// Method that generates the code for this generator.
-  String generateCode(ImportHelper importHelper);
+  String generateCode(ImportHelper? importHelper);
 
   /// Path to the file to be written, relative to the `lib` directory.
-  String fileName;
+  String? fileName;
 
   /// projectData used to add dependencies to the project.
-  PBGenerationProjectData projectData;
+  PBGenerationProjectData? projectData;
 }

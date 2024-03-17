@@ -16,13 +16,13 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_intermediate_nod
 /// The correct order should be: `[t2, t0, t1]`,
 /// because t2 has dependets, therefore, it needs to be processed first.
 class IntermediateTopoIterator<E extends PBIntermediateTree>
-    implements Iterator<E> {
+    implements Iterator<E?> {
   List<E> trees;
 
-  E _currentElement;
+  E? _currentElement;
 
   @override
-  E get current => _currentElement;
+  E? get current => _currentElement;
 
   IntermediateTopoIterator(this.trees) {
     trees = topologicalSort(trees);
@@ -39,10 +39,10 @@ class IntermediateTopoIterator<E extends PBIntermediateTree>
   HashMap<E, int> _inDegrees(List<PBIntermediateTree> items) {
     var inDegree = HashMap<E, int>();
     items.forEach((tree) {
-      inDegree.putIfAbsent(tree, () => 0);
+      inDegree.putIfAbsent(tree as E, () => 0);
       var dependentOnIterator = tree.dependentsOn;
       while (dependentOnIterator.moveNext()) {
-        inDegree.update(dependentOnIterator.current, (value) => value + 1,
+        inDegree.update(dependentOnIterator.current as E, (value) => value + 1,
             ifAbsent: () => 1);
       }
     });
@@ -67,9 +67,9 @@ class IntermediateTopoIterator<E extends PBIntermediateTree>
       ordered.add(vertex);
       var it = vertex.dependentsOn;
       while (it.moveNext()) {
-        inDegrees[it.current] = inDegrees[it.current] - 1;
+        inDegrees[it.current as E] = inDegrees[it.current]! - 1;
         if (inDegrees[it.current] == 0) {
-          noInDegrees.add(it.current);
+          noInDegrees.add(it.current as E);
         }
       }
     }
@@ -96,7 +96,7 @@ class IntermediateTopoIterator<E extends PBIntermediateTree>
 
 /// Error thrown when there is a cycle in the dependency graph of [PBIntermediateTree]
 class CyclicDependencyError extends Error {
-  List items;
+  List? items;
   CyclicDependencyError([this.items]);
   @override
   String toString() {

@@ -36,17 +36,17 @@ mixin AxisComparisonRule {
 /// of the second set of points [topLeftCorner1] and [bottomRightCorner].
 class HorizontalNodesLayoutRule extends LayoutRule with AxisComparisonRule {
   @override
-  bool testRule(PBContext context, PBIntermediateNode currentNode, PBIntermediateNode nextNode) =>
+  bool testRule(PBContext context, PBIntermediateNode currentNode, PBIntermediateNode? nextNode) =>
       (!(areXCoordinatesOverlapping(
-          currentNode.frame.topLeft,
-          currentNode.frame.bottomRight,
-          nextNode.frame.topLeft,
-          nextNode.frame.bottomRight))) &&
+          currentNode.frame!.topLeft,
+          currentNode.frame!.bottomRight,
+          nextNode!.frame!.topLeft,
+          nextNode.frame!.bottomRight))) &&
       areYCoordinatesOverlapping(
-          currentNode.frame.topLeft,
-          currentNode.frame.bottomRight,
-          nextNode.frame.topLeft,
-          nextNode.frame.bottomRight);
+          currentNode.frame!.topLeft,
+          currentNode.frame!.bottomRight,
+          nextNode.frame!.topLeft,
+          nextNode.frame!.bottomRight);
 }
 
 ///Returns if the points [topLeftCorner0] and [bottomRightCorner0]
@@ -55,25 +55,25 @@ class HorizontalNodesLayoutRule extends LayoutRule with AxisComparisonRule {
 class VerticalNodesLayoutRule extends LayoutRule with AxisComparisonRule {
   @override
   bool testRule(PBContext context, PBIntermediateNode currentNode,
-          PBIntermediateNode nextNode) =>
+          PBIntermediateNode? nextNode) =>
       (!(areYCoordinatesOverlapping(
-          currentNode.frame.topLeft,
-          currentNode.frame.bottomRight,
-          nextNode.frame.topLeft,
-          nextNode.frame.bottomRight))) &&
+          currentNode.frame!.topLeft,
+          currentNode.frame!.bottomRight,
+          nextNode!.frame!.topLeft,
+          nextNode.frame!.bottomRight))) &&
       areXCoordinatesOverlapping(
-          currentNode.frame.topLeft,
-          currentNode.frame.bottomRight,
-          nextNode.frame.topLeft,
-          nextNode.frame.bottomRight);
+          currentNode.frame!.topLeft,
+          currentNode.frame!.bottomRight,
+          nextNode.frame!.topLeft,
+          nextNode.frame!.bottomRight);
 }
 
 class OverlappingNodesLayoutRule extends LayoutRule with AxisComparisonRule {
   @override
   bool testRule(PBContext context, PBIntermediateNode currentNode,
-          PBIntermediateNode nextNode) =>
-      currentNode.frame.containsPoint(nextNode.frame.topLeft) ||
-      currentNode.frame.containsPoint(nextNode.frame.bottomRight);
+          PBIntermediateNode? nextNode) =>
+      currentNode.frame!.containsPoint(nextNode!.frame!.topLeft) ||
+      currentNode.frame!.containsPoint(nextNode.frame!.bottomRight);
   // (areXCoordinatesOverlapping(
   //     currentNode .frame.topLeft,
   //     currentNode .frame.bottomRight,

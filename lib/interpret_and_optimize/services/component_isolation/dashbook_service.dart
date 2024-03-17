@@ -13,9 +13,9 @@ import 'package:recase/recase.dart';
 class DashbookService extends AITHandler {
   /// Map that holds the name of the folder as its key, and the folder as its value.
 
-  static Map<String, DashBookStory> _dashBookStories;
+  static late Map<String?, DashBookStory> _dashBookStories;
   static DashBookBook book = DashBookBook();
-  static final treeIds = <String>[];
+  static final treeIds = <String?>[];
 
   DashbookService() {
     _dashBookStories = {};
@@ -29,7 +29,7 @@ class DashbookService extends AITHandler {
       treeIds.add(tree.UUID);
 
       var component = tree.rootNode as PBSharedMasterNode;
-      var rootName = component.componentSetName ?? tree.rootNode.name;
+      var rootName = component.componentSetName ?? tree.rootNode!.name;
 
       /// Create new Widget for this variation if it doesn't exist already
       if (!_dashBookStories.containsKey(rootName)) {
@@ -41,7 +41,7 @@ class DashbookService extends AITHandler {
       // FIXME: Generating the code should happen somewhere in generate, not here.
       var dummyInstance = PBSharedInstanceIntermediateNode(
         null,
-        tree.rootNode.frame.copyWith(),
+        tree.rootNode!.frame!.copyWith(),
         SYMBOL_ID: component.SYMBOL_ID,
         name: rootName,
         sharedNodeSetID: component.sharedNodeSetID,
@@ -60,10 +60,10 @@ class DashbookService extends AITHandler {
 
       /// Create a use case for the current component and add it to the folder.
       var useCase = DashBookChapter(
-        (tree.rootNode as PBSharedMasterNode).name.pascalCase,
+        (tree.rootNode as PBSharedMasterNode).name!.pascalCase,
         generatedCode,
       );
-      _dashBookStories[rootName].addChild(useCase);
+      _dashBookStories[rootName]!.addChild(useCase);
     }
     return tree;
   }

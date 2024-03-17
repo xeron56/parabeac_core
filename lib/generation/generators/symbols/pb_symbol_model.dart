@@ -6,7 +6,7 @@ class PBSymbolModel {
   factory PBSymbolModel() => _model;
   PBSymbolModel._internal();
 
-  String getSymbol(String id) => _symbols[id];
+  String? getSymbol(String id) => _symbols[id];
   void setSymbol(String id, String value) {
     if(_symbols.containsKey(id)){
       return;

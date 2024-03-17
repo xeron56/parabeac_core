@@ -12,11 +12,11 @@ class CustomTextFormField extends PBTag {
   @override
   final String semanticName = '<textformfield>';
   CustomTextFormField(
-    String UUID,
-    Rectangle3D frame,
+    String? UUID,
+    Rectangle3D? frame,
     String name,
-    PBIntermediateConstraints constraints, {
-    IntermediateAuxiliaryData auxiliaryData,
+    PBIntermediateConstraints? constraints, {
+    IntermediateAuxiliaryData? auxiliaryData,
   }) : super(
           UUID,
           frame,
@@ -30,7 +30,7 @@ class CustomTextFormField extends PBTag {
 
   @override
   PBIntermediateNode handleIntermediateNode(PBIntermediateNode iNode,
-      PBIntermediateNode parent, PBTag tag, PBIntermediateTree tree) {
+      PBIntermediateNode? parent, PBTag tag, PBIntermediateTree tree) {
     /// Need to remove auxiliary data from component so it's not duplicated
     if (iNode is PBSharedMasterNode) {
       iNode.auxiliaryData = IntermediateAuxiliaryData();
@@ -44,14 +44,14 @@ class CustomTextFormField extends PBTag {
   }
 
   @override
-  PBTag generatePluginNode(Rectangle3D frame, PBIntermediateNode originalRef,
+  PBTag generatePluginNode(Rectangle3D? frame, PBIntermediateNode originalRef,
       PBIntermediateTree tree) {
     return CustomTextFormField(
       null,
-      frame.copyWith(),
-      originalRef.name.replaceAll(semanticName, '').pascalCase,
-      originalRef.constraints.copyWith(),
-      auxiliaryData: originalRef.auxiliaryData.copyWith(),
+      frame!.copyWith(),
+      originalRef.name!.replaceAll(semanticName, '').pascalCase,
+      originalRef.constraints!.copyWith(),
+      auxiliaryData: originalRef.auxiliaryData!.copyWith(),
     );
   }
 }

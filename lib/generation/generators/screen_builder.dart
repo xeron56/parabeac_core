@@ -14,15 +14,15 @@ class SimpleBuilder extends Builder {
   @override
   Future<void> build(BuildStep buildStep) async {
     print('GENERATING CODE');
-    Map<String, Object> source;
+    late Map<String, Object> source;
     final outputId = buildStep.inputId.changeExtension('.dart');
 
     if (source.containsKey(GLOBAL_SYMBOL_KEY)) {
-      _generateArray(source[GLOBAL_SYMBOL_KEY], outputId, buildStep);
+      _generateArray(source[GLOBAL_SYMBOL_KEY] as List<dynamic>?, outputId, buildStep);
     }
   }
 
-  void _generateArray(List data, var output_id, var build_step) {
+  void _generateArray(List? data, var output_id, var build_step) {
     data ??= [];
     var buffer = StringBuffer();
     buffer.write("import \'package:flutter/material.dart\';\n");

@@ -3,7 +3,7 @@ import 'package:parabeac_core/generation/flutter_project_builder/post_gen_tasks/
 
 /// Node that represents a Widgetbook component.
 class WidgetBookWidget extends IsolationNode {
-  WidgetBookWidget(String name) : super(name: name);
+  WidgetBookWidget(String? name) : super(name: name);
 
   @override
   String generate() {

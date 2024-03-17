@@ -7,24 +7,24 @@ import 'package:parabeac_core/interpret_and_optimize/services/component_isolatio
 
 class DashbookGenerator implements ComponentIsolationGenerator {
   @override
-  String fileName = 'main_dashbook.dart';
+  String? fileName = 'main_dashbook.dart';
 
-  DashbookGenerator(this.projectData) {
-    projectData.addDependencies('dashbook', '^0.1.6');
+  DashbookGenerator(PBGenerationProjectData this.projectData) {
+    projectData!.addDependencies('dashbook', '^0.1.6');
   }
 
   @override
-  PBGenerationProjectData projectData;
+  PBGenerationProjectData? projectData;
 
   @override
-  String generateCode(ImportHelper helper) {
+  String generateCode(ImportHelper? helper) {
     var book = DashbookService.book;
     var treeIds = DashbookService.treeIds;
     var generatedCode = book.generate();
 
     var imports = treeIds
         .map(
-          (id) => helper
+          (id) => helper!
               .getFormattedImports(
                 id,
                 importMapper: (import) => FlutterImport(

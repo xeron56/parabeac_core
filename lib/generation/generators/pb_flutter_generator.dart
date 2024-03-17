@@ -9,7 +9,7 @@ import 'package:quick_log/quick_log.dart';
 class PBFlutterGenerator extends PBGenerationManager {
   var log = Logger('Flutter Generator');
   final DEFAULT_STRATEGY = EmptyPageTemplateStrategy();
-  PBFlutterGenerator(ImportHelper importHelper, {PBGenerationViewData data})
+  PBFlutterGenerator(ImportHelper? importHelper, {PBGenerationViewData? data})
       : super(importHelper, data: data) {
     body = StringBuffer();
   }
@@ -17,13 +17,13 @@ class PBFlutterGenerator extends PBGenerationManager {
   ///Generates a constructor given a name and `constructorVariable`
   @override
   String generateConstructor(name) {
-    if (data.constructorVariables == null) {
+    if (data!.constructorVariables == null) {
       return '';
     }
     var stringBuffer = StringBuffer();
     stringBuffer.write(name + '(');
     var param;
-    var it = data.constructorVariables;
+    var it = data!.constructorVariables;
     while (it.moveNext()) {
       param = it.current;
       if (param.isRequired) {
@@ -35,9 +35,9 @@ class PBFlutterGenerator extends PBGenerationManager {
     var counter = 0;
     var optionalParamBuffer = StringBuffer();
     optionalParamBuffer.write('{');
-    it = data.constructorVariables;
+    it = data!.constructorVariables;
     while (it.moveNext()) {
-      param = data.constructorVariables.current;
+      param = data!.constructorVariables.current;
       if (!param.isRequired) {
         optionalParamBuffer.write('this.' + param.variableName + ',');
         counter++;
@@ -54,12 +54,12 @@ class PBFlutterGenerator extends PBGenerationManager {
   ///Generate global variables
   @override
   String generateGlobalVariables() {
-    if (data.globalVariables == null) {
+    if (data!.globalVariables == null) {
       return '';
     }
     var stringBuffer = StringBuffer();
     var param;
-    var it = data.globalVariables;
+    var it = data!.globalVariables;
     while (it.moveNext()) {
       param = it.current;
       stringBuffer.write(param.pbdlType +
@@ -75,7 +75,7 @@ class PBFlutterGenerator extends PBGenerationManager {
   @override
   String generateImports() {
     var buffer = StringBuffer();
-    var it = data.imports;
+    var it = data!.imports;
     while (it.moveNext()) {
       buffer.write(it.current.toString());
     }
@@ -86,7 +86,7 @@ class PBFlutterGenerator extends PBGenerationManager {
   @override
   String generateDispose() {
     var buffer = StringBuffer();
-    var it = data.toDispose;
+    var it = data!.toDispose;
     while (it.moveNext()) {
       buffer.write('${it.current};\n');
     }
@@ -100,9 +100,9 @@ class PBFlutterGenerator extends PBGenerationManager {
   }
 
   @override
-  String generate(
-    PBIntermediateNode rootNode,
-    PBContext context,
+  String? generate(
+    PBIntermediateNode? rootNode,
+    PBContext? context,
   ) {
     if (rootNode == null) {
       return null;
@@ -111,7 +111,7 @@ class PBFlutterGenerator extends PBGenerationManager {
     if (rootNode.generator == null) {
       log.error('Generator not registered for $rootNode');
     }
-    context.sizingContext = SizingValueContext.PointValue;
+    context!.sizingContext = SizingValueContext.PointValue;
     return rootNode.generator?.templateStrategy
             ?.generateTemplate(rootNode, this, context) ??
 

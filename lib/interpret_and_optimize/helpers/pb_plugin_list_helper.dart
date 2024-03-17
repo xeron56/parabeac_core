@@ -37,7 +37,7 @@ class PBPluginListHelper {
     };
   }
 
-  Map<String, PBTag> allowListNames;
+  late Map<String?, PBTag> allowListNames;
 
   /// List of static plugin names used for Amplitude
   static List<String> names = [
@@ -72,12 +72,12 @@ class PBPluginListHelper {
 
   /// Iterates through Plugin List and checks for a match of `node.name`.
   /// Returns the PluginNode associated if it exists.
-  PBTag returnAllowListNodeIfExists(
+  PBTag? returnAllowListNodeIfExists(
       PBIntermediateNode node, PBIntermediateTree tree) {
     if (node != null) {
       for (var key in allowListNames.keys) {
-        if (node.name?.contains(key) ?? false) {
-          return allowListNames[key].generatePluginNode(node.frame, node, tree);
+        if (node.name?.contains(key!) ?? false) {
+          return allowListNames[key]!.generatePluginNode(node.frame, node, tree);
         }
       }
     }

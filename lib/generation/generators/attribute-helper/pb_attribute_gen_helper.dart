@@ -6,5 +6,5 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 abstract class PBAttributesHelper extends PBGenerator {
   PBAttributesHelper() : super();
   @override
-  String generate(PBIntermediateNode source, PBContext generatorContext);
+  String generate(PBIntermediateNode? source, PBContext? generatorContext);
 }

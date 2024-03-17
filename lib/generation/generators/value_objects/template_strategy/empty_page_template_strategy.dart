@@ -6,7 +6,7 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 class EmptyPageTemplateStrategy extends TemplateStrategy {
   @override
   String generateTemplate(PBIntermediateNode node, PBGenerationManager manager,
-          PBContext generatorContext,
+          PBContext? generatorContext,
           {var args}) =>
       args is String ? args : '';
 }

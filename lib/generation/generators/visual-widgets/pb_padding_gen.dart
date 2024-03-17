@@ -11,7 +11,7 @@ class PBPaddingGen extends PBGenerator {
   PBPaddingGen() : super();
 
   String relativePadding(
-      TemplateStrategy strategy, double value, Tuple2 paddingPosition) {
+      TemplateStrategy? strategy, double value, Tuple2 paddingPosition) {
     var fixedValue = value.toStringAsFixed(2);
     if (strategy is StatelessTemplateStrategy) {
       return 'constraints.max' +
@@ -32,17 +32,17 @@ class PBPaddingGen extends PBGenerator {
   }
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
-    var sourceChildren = context.tree.childrenOf(source);
+  String generate(PBIntermediateNode? source, PBContext? context) {
+    var sourceChildren = context!.tree!.childrenOf(source);
     if (context.sizingContext == SizingValueContext.AppBarChild) {
       // source.child.currentContext = source.currentContext;
-      return sourceChildren.first.generator
+      return sourceChildren.first.generator!
           .generate(sourceChildren.first, context);
     }
     if (!(source is Padding)) {
       return '';
     }
-    final padding = source as Padding;
+    final padding = source;
     var buffer = StringBuffer();
     buffer.write('Padding(');
     buffer.write('padding: EdgeInsets.only(');
@@ -50,19 +50,19 @@ class PBPaddingGen extends PBGenerator {
     final paddingPositions = [
       Tuple2(
         'left',
-        padding.childToParentConstraints.pinLeft,
+        padding.childToParentConstraints!.pinLeft,
       ),
       Tuple2(
         'right',
-        padding.childToParentConstraints.pinRight,
+        padding.childToParentConstraints!.pinRight,
       ),
       Tuple2(
         'bottom',
-        padding.childToParentConstraints.pinBottom,
+        padding.childToParentConstraints!.pinBottom,
       ),
       Tuple2(
         'top',
-        padding.childToParentConstraints.pinTop,
+        padding.childToParentConstraints!.pinTop,
       )
     ];
 
@@ -71,7 +71,7 @@ class PBPaddingGen extends PBGenerator {
     for (var position in paddingPositions) {
       if (reflectedPadding.getField(Symbol(position.item1)).reflectee != 0) {
         buffer.write(
-            '${position.item1}: ${relativePadding(source.generator.templateStrategy, reflectedPadding.getField(Symbol(position.item1)).reflectee, position)},');
+            '${position.item1}: ${relativePadding(source.generator!.templateStrategy, reflectedPadding.getField(Symbol(position.item1)).reflectee, position)},');
       }
     }
 
@@ -80,7 +80,7 @@ class PBPaddingGen extends PBGenerator {
     if (sourceChildren.first != null) {
       // source.child.currentContext = source.currentContext;
       buffer.write(
-          'child: ${sourceChildren.first.generator.generate(sourceChildren.first, context)}');
+          'child: ${sourceChildren.first.generator!.generate(sourceChildren.first, context)}');
     }
     buffer.write(')');
 

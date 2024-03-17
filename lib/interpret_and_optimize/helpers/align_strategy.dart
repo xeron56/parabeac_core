@@ -30,23 +30,23 @@ abstract class AlignStrategy<T extends PBIntermediateNode> {
   /// When [context.fixedWidth] is not `null`, se assign the [context.fixedWidth] to subtree and
   /// we make [node.constraints.pinLeft] = `true` and [node.constraints.pingRight] = `false`.
   void setConstraints(PBContext context, T node) {
-    if (context.contextConstraints.fixedHeight) {
+    if (context.contextConstraints!.fixedHeight!) {
       node.constraints?.fixedHeight = context.contextConstraints?.fixedHeight;
       node.constraints?.pinTop = true;
       node.constraints?.pinBottom = false;
     }
 
-    if (context.contextConstraints.fixedWidth) {
-      node.constraints?.fixedWidth = context.contextConstraints.fixedWidth;
+    if (context.contextConstraints!.fixedWidth!) {
+      node.constraints?.fixedWidth = context.contextConstraints!.fixedWidth;
       node.constraints?.pinLeft = true;
       node.constraints?.pinRight = false;
     }
 
-    if (node.constraints.fixedHeight) {
-      context.contextConstraints.fixedHeight = true;
+    if (node.constraints!.fixedHeight!) {
+      context.contextConstraints!.fixedHeight = true;
     }
-    if (node.constraints.fixedWidth) {
-      context.contextConstraints.fixedWidth = true;
+    if (node.constraints!.fixedWidth!) {
+      context.contextConstraints!.fixedWidth = true;
     }
   }
 }
@@ -54,18 +54,18 @@ abstract class AlignStrategy<T extends PBIntermediateNode> {
 class PaddingAlignment extends AlignStrategy {
   @override
   void align(PBContext context, PBIntermediateNode node) {
-    var child = node.getAttributeNamed(context.tree, 'child');
+    var child = node.getAttributeNamed(context.tree!, 'child')!;
     var padding = Padding(
       null,
       node.frame,
       child.constraints,
-      left: (child.frame.topLeft.x - node.frame.topLeft.x).abs(),
-      right: (node.frame.bottomRight.x - child.frame.bottomRight.x).abs(),
-      top: (child.frame.topLeft.y - node.frame.topLeft.y).abs(),
-      bottom: (child.frame.bottomRight.y - node.frame.bottomRight.y).abs(),
+      left: (child.frame!.topLeft.x - node.frame!.topLeft.x).abs() as double?,
+      right: (node.frame!.bottomRight.x - child.frame!.bottomRight.x).abs() as double?,
+      top: (child.frame!.topLeft.y - node.frame!.topLeft.y).abs() as double?,
+      bottom: (child.frame!.bottomRight.y - node.frame!.bottomRight.y).abs() as double?,
     );
-    context.tree.addEdges(padding, [child]);
-    context.tree.addEdges(node, [padding]);
+    context.tree!.addEdges(padding, [child]);
+    context.tree!.addEdges(node, [padding]);
 
     // super.setConstraints(context, node);
   }
@@ -84,15 +84,15 @@ class PositionedAlignment extends AlignStrategy<PBIntermediateStackLayout> {
   @override
   void align(PBContext context, PBIntermediateStackLayout node) {
     var alignedChildren = <PBIntermediateNode>[];
-    var tree = context.tree;
-    var nodeChildren = context.tree.childrenOf(node);
+    var tree = context.tree!;
+    var nodeChildren = context.tree!.childrenOf(node);
 
     nodeChildren.forEach((child) {
       var centerY = false;
       var centerX = false;
 
-      var heightLayoutSizing = ParentLayoutSizing.INHERIT;
-      var widthLayoutSizing = ParentLayoutSizing.INHERIT;
+      ParentLayoutSizing? heightLayoutSizing = ParentLayoutSizing.INHERIT;
+      ParentLayoutSizing? widthLayoutSizing = ParentLayoutSizing.INHERIT;
 
       var parentLayout = _findNearestParentLayout(node);
 
@@ -108,22 +108,22 @@ class PositionedAlignment extends AlignStrategy<PBIntermediateStackLayout> {
       }
 
       /// Rule to inherit fixed height to children
-      if (node.constraints.fixedHeight &&
+      if (node.constraints!.fixedHeight! &&
           heightLayoutSizing != ParentLayoutSizing.STRETCH) {
-        child.constraints.fixedHeight = true;
-        if (!child.constraints.pinTop && !child.constraints.pinBottom) {
-          child.constraints.pinTop = true;
-          child.constraints.pinBottom = false;
+        child.constraints!.fixedHeight = true;
+        if (!child.constraints!.pinTop! && !child.constraints!.pinBottom!) {
+          child.constraints!.pinTop = true;
+          child.constraints!.pinBottom = false;
         }
       }
 
       /// Rule to inherit fixed width to children
-      if (node.constraints.fixedWidth &&
+      if (node.constraints!.fixedWidth! &&
           widthLayoutSizing != ParentLayoutSizing.STRETCH) {
-        child.constraints.fixedWidth = true;
-        if (!child.constraints.pinLeft && !child.constraints.pinRight) {
-          child.constraints.pinLeft = true;
-          child.constraints.pinRight = false;
+        child.constraints!.fixedWidth = true;
+        if (!child.constraints!.pinLeft! && !child.constraints!.pinRight!) {
+          child.constraints!.pinLeft = true;
+          child.constraints!.pinRight = false;
         }
       }
 
@@ -131,22 +131,22 @@ class PositionedAlignment extends AlignStrategy<PBIntermediateStackLayout> {
         child.name,
         null,
         child.frame,
-        constraints: child.constraints.copyWith(),
+        constraints: child.constraints!.copyWith(),
         valueHolder: PositionedValueHolder(
-            top: child.frame.topLeft.y - node.frame.topLeft.y,
-            bottom: node.frame.bottomRight.y - child.frame.bottomRight.y,
-            left: child.frame.topLeft.x - node.frame.topLeft.x,
-            right: node.frame.bottomRight.x - child.frame.bottomRight.x,
-            width: child.frame.width,
-            height: child.frame.height),
+            top: child.frame!.topLeft.y - (node.frame!.topLeft.y as double),
+            bottom: node.frame!.bottomRight.y - (child.frame!.bottomRight.y as double),
+            left: child.frame!.topLeft.x - (node.frame!.topLeft.x as double),
+            right: node.frame!.bottomRight.x - (child.frame!.bottomRight.x as double),
+            width: child.frame!.width as double?,
+            height: child.frame!.height as double?),
       );
 
       /// Rules to center child horizontally
       if (_needsHorizontalCenter(child)) {
         if (widthLayoutSizing == ParentLayoutSizing.STRETCH) {
-          injectedPositioned.constraints.fixedWidth = true;
+          injectedPositioned.constraints!.fixedWidth = true;
         } else if (widthLayoutSizing == ParentLayoutSizing.INHERIT) {
-          injectedPositioned.constraints.fixedWidth = false;
+          injectedPositioned.constraints!.fixedWidth = false;
         }
         centerX = true;
       }
@@ -154,9 +154,9 @@ class PositionedAlignment extends AlignStrategy<PBIntermediateStackLayout> {
       /// Rules to center child vertically
       if (_needsVerticalCenter(child)) {
         if (heightLayoutSizing == ParentLayoutSizing.STRETCH) {
-          injectedPositioned.constraints.fixedHeight = true;
+          injectedPositioned.constraints!.fixedHeight = true;
         } else if (heightLayoutSizing == ParentLayoutSizing.INHERIT) {
-          injectedPositioned.constraints.fixedHeight = false;
+          injectedPositioned.constraints!.fixedHeight = false;
         }
         centerY = true;
       }
@@ -167,15 +167,15 @@ class PositionedAlignment extends AlignStrategy<PBIntermediateStackLayout> {
         tree.addEdges(injectedPositioned, [child]);
       } else {
         // Center widget to wrap child
-        var center = InjectedCenter(null, child.frame.boundingBox(child.frame),
+        var center = InjectedCenter(null, child.frame!.boundingBox(child.frame!) as Rectangle3D<num>,
             '$InjectedCenter-${child.name}');
         if (child is! PBContainer) {
           /// The container is going to be used to control the point value height/width
           var container = InjectedContainer(
             null,
-            child.frame.boundingBox(child.frame),
+            child.frame!.boundingBox(child.frame!) as Rectangle3D<num>?,
             name: child.name,
-            constraints: child.constraints.copyWith(),
+            constraints: child.constraints!.copyWith(),
           );
           tree.addEdges(container, [child]);
           tree.addEdges(center, [container]);
@@ -190,7 +190,7 @@ class PositionedAlignment extends AlignStrategy<PBIntermediateStackLayout> {
           if (grandChild is InheritedText && _needsVerticalCenter(grandChild)) {
             var newCenter = InjectedCenter(
                 null,
-                grandChild.frame.boundingBox(grandChild.frame),
+                grandChild.frame!.boundingBox(grandChild.frame!) as Rectangle3D<num>,
                 '$InjectedCenter-${grandChild.name}');
             tree.addEdges(newCenter, [grandChild]);
             tree.removeEdges(child);
@@ -210,18 +210,18 @@ class PositionedAlignment extends AlignStrategy<PBIntermediateStackLayout> {
 
   /// Check if child needs center horizontally
   bool _needsHorizontalCenter(PBIntermediateNode child) =>
-      (!child.constraints.pinLeft && !child.constraints.pinRight) &&
-      child.constraints.fixedWidth;
+      (!child.constraints!.pinLeft! && !child.constraints!.pinRight!) &&
+      child.constraints!.fixedWidth!;
 
   /// Check if child needs center vertically
   bool _needsVerticalCenter(PBIntermediateNode child) =>
-      (!child.constraints.pinTop && !child.constraints.pinBottom) &&
-      child.constraints.fixedHeight;
+      (!child.constraints!.pinTop! && !child.constraints!.pinBottom!) &&
+      child.constraints!.fixedHeight!;
 
   /// Traverses [node] upwards and returns the first [PBLayoutIntermediateNode].
   ///
   /// Returns [null] if there is none.
-  PBLayoutIntermediateNode _findNearestParentLayout(PBIntermediateNode node) {
+  PBLayoutIntermediateNode? _findNearestParentLayout(PBIntermediateNode node) {
     //TODO: We could abstract this method to [PBIntermediateTree] to look for any type of node up the tree using generics.
     if (node == null) {
       return null;

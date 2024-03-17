@@ -9,32 +9,32 @@ part of 'intermediate_auxillary_data.dart';
 IntermediateAuxiliaryData _$IntermediateAuxiliaryDataFromJson(
     Map<String, dynamic> json) {
   return IntermediateAuxiliaryData(
-    colors: (json['fills'] as List)
+    colors: (json['fills'] as List?)
         ?.map((e) =>
             e == null ? null : PBFill.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        .toList(),
     borderInfo: json['borderOptions'] == null
         ? null
         : IntermediateBorderInfo.fromJson(
             json['borderOptions'] as Map<String, dynamic>),
-    effects: (json['effects'] as List)
+    effects: (json['effects'] as List?)
         ?.map((e) =>
             e == null ? null : PBEffect.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        .toList(),
     intermediateTextStyle: json['textStyle'] == null
         ? null
         : PBTextStyle.fromJson(json['textStyle'] as Map<String, dynamic>),
-    clipsContent: json['clipsContent'] as bool ?? false,
-  )..alignment = json['alignment'] as Map<String, dynamic>;
+    clipsContent: json['clipsContent'] as bool? ?? false,
+  )..alignment = json['alignment'] as Map<String, dynamic>?;
 }
 
 Map<String, dynamic> _$IntermediateAuxiliaryDataToJson(
         IntermediateAuxiliaryData instance) =>
     <String, dynamic>{
       'alignment': instance.alignment,
-      'fills': instance.colors?.map((e) => e?.toJson())?.toList(),
+      'fills': instance.colors?.map((e) => e?.toJson()).toList(),
       'borderOptions': instance.borderInfo?.toJson(),
-      'effects': instance.effects?.map((e) => e?.toJson())?.toList(),
+      'effects': instance.effects?.map((e) => e?.toJson()).toList(),
       'textStyle': instance.intermediateTextStyle?.toJson(),
       'clipsContent': instance.clipsContent,
     };

@@ -16,7 +16,7 @@ class PBSymbolInstanceGenerator extends PBGenerator {
   var log = Logger('Symbol Instance Generator');
 
   @override
-  String generate(PBIntermediateNode source, PBContext generatorContext) {
+  String generate(PBIntermediateNode? source, PBContext? generatorContext) {
     if (source is PBSharedInstanceIntermediateNode) {
       var buffer = StringBuffer();
 
@@ -36,7 +36,7 @@ class PBSymbolInstanceGenerator extends PBGenerator {
     return '';
   }
 
-  PBSharedMasterNode getMasterSymbol(String UUID) {
+  PBSharedMasterNode? getMasterSymbol(String UUID) {
     var masterSymbol;
     var nodeFound = PBSymbolStorage().getAllSymbolById(UUID);
     if (nodeFound is PBSharedMasterNode) {
@@ -54,9 +54,9 @@ class PBSymbolInstanceGenerator extends PBGenerator {
   }
 
   String genSymbolInstance(
-    String UUID,
-    List<PBInstanceOverride> overrideValues,
-    PBContext context, {
+    String? UUID,
+    List<PBInstanceOverride>? overrideValues,
+    PBContext? context, {
     bool topLevel = true,
     String UUIDPath = '',
   }) {
@@ -73,7 +73,7 @@ class PBSymbolInstanceGenerator extends PBGenerator {
       return 'Container(/** This Symbol was not found **/)';
     }
 
-    var symName = masterSymbol.name.snakeCase;
+    var symName = masterSymbol.name!.snakeCase;
     if (symName == null) {
       log.error(' Could not find master name on: $masterSymbol');
       return 'Container(/** This Symbol was not found **/)';
@@ -103,7 +103,7 @@ class PBSymbolInstanceGenerator extends PBGenerator {
 
   // Traverse all overridable properties to write them for class use
   String overridesToString(
-      List<PBInstanceOverride> overrideValues, PBContext context) {
+      List<PBInstanceOverride> overrideValues, PBContext? context) {
     var buffer = StringBuffer();
     for (var element in overrideValues) {
       if (element.overrideName != null &&
@@ -114,7 +114,7 @@ class PBSymbolInstanceGenerator extends PBGenerator {
         // TODO: Refactor so it place the image from the instance not from component
         if (element.ovrType == 'image') {
           var elementCode =
-              element.value.generator.generate(element.value, context);
+              element.value!.generator!.generate(element.value, context);
 
           buffer.write('${element.overrideName}: $elementCode,');
         } else {
@@ -126,7 +126,7 @@ class PBSymbolInstanceGenerator extends PBGenerator {
   }
 
   /// Traverses `params` and attempts to find the override `name` and `value` for each parameter.
-  void formatNameAndValues(List<PBInstanceOverride> params, PBContext context) {
+  void formatNameAndValues(List<PBInstanceOverride> params, PBContext? context) {
     params.forEach((param) {
       var overrideProp = OverrideHelper.getProperty(param.UUID, param.ovrType);
 
@@ -138,16 +138,16 @@ class PBSymbolInstanceGenerator extends PBGenerator {
             param.UUID,
             null,
             SYMBOL_ID: param.valueName,
-            name: param.initialValue['name'],
+            name: param.initialValue!['name'],
             overrideValues: [],
             sharedParamValues: [],
           );
-          var code = instance.generator.generate(instance, context);
+          var code = instance.generator!.generate(instance, context);
           param.valueName = code;
         }
         // Add single quotes to parameter value for override
-        else if (!param.valueName.startsWith('\'') &&
-            !param.valueName.endsWith('\'')) {
+        else if (!param.valueName!.startsWith('\'') &&
+            !param.valueName!.endsWith('\'')) {
           param.valueName = '\'${param.valueName}\'';
         }
       }

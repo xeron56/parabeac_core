@@ -5,7 +5,7 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 
 abstract class TemplateStrategy {
   String generateTemplate(PBIntermediateNode node, PBGenerationManager manager,
-      PBContext generatorContext,
+      PBContext? generatorContext,
       {var args});
   String retrieveNodeName(var node) {
     var formatter = (name) => PBInputFormatter.formatLabel(name,

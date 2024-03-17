@@ -4,20 +4,20 @@ part 'layout_properties.g.dart';
 
 @JsonSerializable(createToJson: true)
 class LayoutProperties {
-  num spacing;
+  num? spacing;
 
-  num leftPadding;
-  num rightPadding;
-  num topPadding;
-  num bottomPadding;
+  num? leftPadding;
+  num? rightPadding;
+  num? topPadding;
+  num? bottomPadding;
 
-  IntermediateAxisAlignment primaryAxisAlignment;
+  IntermediateAxisAlignment? primaryAxisAlignment;
   @JsonKey(name: 'counterAxisAlignment')
-  IntermediateAxisAlignment crossAxisAlignment;
+  IntermediateAxisAlignment? crossAxisAlignment;
 
-  IntermediateAxisMode primaryAxisSizing;
+  IntermediateAxisMode? primaryAxisSizing;
   @JsonKey(name: 'counterAxisSizing')
-  IntermediateAxisMode crossAxisSizing;
+  IntermediateAxisMode? crossAxisSizing;
 
   LayoutProperties({
     this.spacing,

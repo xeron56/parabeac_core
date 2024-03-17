@@ -19,7 +19,7 @@ class FlutterImport {
   /// For example `import 'package:path/path.dart' as p;`, the package would be `path`,
   /// without include the `package:` or `path.dart` section. Relative [path] are going
   /// to contain this field `null`
-  final String package;
+  final String? package;
 
   FlutterImport(this.path, [this.package]);
 
@@ -65,7 +65,7 @@ class FlutterImport {
   String toString() {
     return package == null
         ? importFormat(path)
-        : absImportFormat(package, p.join(package, path));
+        : absImportFormat(package!, p.join(package!, path));
   }
 
   @override

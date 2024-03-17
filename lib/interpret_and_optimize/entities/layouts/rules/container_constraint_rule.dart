@@ -8,13 +8,13 @@ import 'package:uuid/uuid.dart';
 class ContainerConstraintRule extends PostConditionRule {
   @override
   dynamic executeAction(PBContext context, PBIntermediateNode currentNode,
-      PBIntermediateNode nextNode) {
+      PBIntermediateNode? nextNode) {
     if (testRule(context, currentNode, nextNode)) {
       var container = InjectedContainer(
         null,
         currentNode.frame,
         name: currentNode.name,
-        constraints: currentNode.constraints.copyWith(),
+        constraints: currentNode.constraints!.copyWith(),
       );
       //FIXME container.addChild(currentNode);
       return container;
@@ -24,6 +24,6 @@ class ContainerConstraintRule extends PostConditionRule {
 
   @override
   bool testRule(PBContext context, PBIntermediateNode currentNode,
-          PBIntermediateNode nextNode) =>
+          PBIntermediateNode? nextNode) =>
       (currentNode != null && currentNode is PBLayoutIntermediateNode);
 }

@@ -10,13 +10,13 @@ class LayoutBuilderGenerator extends PBGenerator {
 
   var log = Logger('Layout Builder Generator');
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     var buffer = StringBuffer();
     buffer.write('LayoutBuilder( \n');
     buffer.write('  builder: (context, constraints) {\n');
     buffer.write('    return ');
 
-    buffer.write(next.generate(source, context));
+    buffer.write(next!.generate(source, context));
 
     buffer.write(';\n');
     buffer.write('}\n');

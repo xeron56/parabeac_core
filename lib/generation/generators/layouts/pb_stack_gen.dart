@@ -10,9 +10,9 @@ class PBStackGenerator extends PBGenerator {
   PBStackGenerator() : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     if (source is PBIntermediateStackLayout) {
-      var children = context.tree.childrenOf(source);
+      var children = context!.tree!.childrenOf(source);
       var buffer = StringBuffer();
 
       buffer.write('Stack(');
@@ -20,7 +20,7 @@ class PBStackGenerator extends PBGenerator {
         buffer.write('\nchildren: [');
         for (var index = 0; index < children.length; index++) {
           var element =
-              children[index].generator.generate(children[index], context);
+              children[index].generator!.generate(children[index], context);
           buffer.write(element);
           var endingChar = element != null && element.isEmpty ? '' : ',';
           buffer.write(endingChar);

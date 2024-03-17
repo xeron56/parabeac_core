@@ -8,7 +8,7 @@ import 'dart:math';
 import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 
 class Flexible extends PBVisualIntermediateNode {
-  int flex;
+  int? flex;
 
   //TODO: Find a way to make currentContext required
   //without breaking the json serializable
@@ -30,5 +30,5 @@ class Flexible extends PBVisualIntermediateNode {
   }
 
   @override
-  PBIntermediateNode fromJson(Map<String, dynamic> json) => null;
+  PBIntermediateNode? fromJson(Map<String, dynamic> json) => null;
 }

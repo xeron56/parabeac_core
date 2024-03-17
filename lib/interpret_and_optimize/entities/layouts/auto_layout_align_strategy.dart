@@ -22,20 +22,20 @@ class AutoLayoutAlignStrategy extends AlignStrategy<PBLayoutIntermediateNode> {
 
     // New children list
     var spacedChildren = <PBIntermediateNode>[];
-    var children = context.tree.childrenOf(node);
+    var children = context.tree!.childrenOf(node);
     sortChildren(children);
     var isVertical = true;
-    num space;
+    num? space;
 
     // Add boxes if necessary for Column
     if (node is PBIntermediateColumnLayout) {
       isVertical = true;
-      space = node.layoutProperties.spacing;
+      space = node.layoutProperties!.spacing;
     }
     // Add boxes if necessary for Row
     else if (node is PBIntermediateRowLayout) {
       isVertical = false;
-      space = node.layoutProperties.spacing;
+      space = node.layoutProperties!.spacing;
     }
 
     for (var i = 0; i < children.length; i++) {
@@ -54,12 +54,12 @@ class AutoLayoutAlignStrategy extends AlignStrategy<PBLayoutIntermediateNode> {
 
           /// Calculating the Frame properties based
           /// on the current and previous children's frame
-          frame: child.frame.copyWith(
+          frame: child.frame!.copyWith(
             left: isVertical
                 ? 0
-                : children[i - 1].frame.left + children[i - 1].frame.width,
+                : children[i - 1].frame!.left + children[i - 1].frame!.width,
             top: isVertical
-                ? children[i - 1].frame.top + children[i - 1].frame.height
+                ? children[i - 1].frame!.top + children[i - 1].frame!.height
                 : 0,
             height: tHeight,
             width: tWidth,
@@ -79,12 +79,12 @@ class AutoLayoutAlignStrategy extends AlignStrategy<PBLayoutIntermediateNode> {
       spacedChildren.add(_handleLayoutChild(newChild, isVertical, context));
     }
 
-    context.tree.replaceChildrenOf(node, spacedChildren);
+    context.tree!.replaceChildrenOf(node, spacedChildren);
   }
 
   ///Sort children
   void sortChildren(List<PBIntermediateNode> children) => children.sort(
-      (child0, child1) => child0.frame.topLeft.compareTo(child1.frame.topLeft));
+      (child0, child1) => child0.frame!.topLeft.compareTo(child1.frame!.topLeft));
 
   /// Checks if child is a [PBLayoutIntermediateNode]
   /// and adds a container on top of it
@@ -95,10 +95,10 @@ class AutoLayoutAlignStrategy extends AlignStrategy<PBLayoutIntermediateNode> {
     /// CENTER defaults
     /// TODO: Improve if statements
     if (child is InheritedBitmap) {
-      child.constraints.fixedHeight = isVertical
+      child.constraints!.fixedHeight = isVertical
           ? child.layoutMainAxisSizing == ParentLayoutSizing.INHERIT
           : child.layoutCrossAxisSizing == ParentLayoutSizing.INHERIT;
-      child.constraints.fixedWidth = isVertical
+      child.constraints!.fixedWidth = isVertical
           ? child.layoutCrossAxisSizing == ParentLayoutSizing.INHERIT
           : child.layoutMainAxisSizing == ParentLayoutSizing.INHERIT;
     }
@@ -108,11 +108,11 @@ class AutoLayoutAlignStrategy extends AlignStrategy<PBLayoutIntermediateNode> {
         null,
         child.frame,
         name: child.name,
-        constraints: child.constraints.copyWith(),
+        constraints: child.constraints!.copyWith(),
       )
         ..layoutCrossAxisSizing = child.layoutCrossAxisSizing
         ..layoutMainAxisSizing = child.layoutMainAxisSizing;
-      context.tree.addEdges(wrapper, [child]);
+      context.tree!.addEdges(wrapper, [child]);
       return wrapper;
     }
     return child;
@@ -146,7 +146,7 @@ class AutoLayoutAlignStrategy extends AlignStrategy<PBLayoutIntermediateNode> {
           child.frame,
           null,
         );
-        context.tree.addEdges(wrapper, [child]);
+        context.tree!.addEdges(wrapper, [child]);
 
         return wrapper;
         break;

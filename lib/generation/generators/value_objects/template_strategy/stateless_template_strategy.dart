@@ -8,19 +8,19 @@ import 'package:recase/recase.dart';
 class StatelessTemplateStrategy extends TemplateStrategy {
   @override
   String generateTemplate(
-      PBIntermediateNode node, PBGenerationManager manager, PBContext context,
+      PBIntermediateNode node, PBGenerationManager manager, PBContext? context,
       {args}) {
-    var widgetName = node.name;
-    context.managerData.hasParams = true;
-    var returnStatement = node.generator.generate(node, context);
-    context.managerData.hasParams = false;
+    var widgetName = node.name!;
+    context!.managerData!.hasParams = true;
+    var returnStatement = node.generator!.generate(node, context);
+    context.managerData!.hasParams = false;
     var overrides = '';
     var overrideVars = '';
 
-    if (node is PBSharedMasterNode && node.overridableProperties.isNotEmpty) {
-      node.overridableProperties.forEach((prop) {
+    if (node is PBSharedMasterNode && node.overridableProperties!.isNotEmpty) {
+      node.overridableProperties!.forEach((prop) {
         var overrideType = 'Widget?';
-        if (prop.ovrType == 'stringValue') {
+        if (prop!.ovrType == 'stringValue') {
           overrideType = 'String?';
         }
         overrides += 'this.${prop.propertyName}, ';

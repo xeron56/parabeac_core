@@ -20,10 +20,10 @@ class AddDependencyCommand extends FileStructureCommand {
 
   /// Appends `package` and `version` to `pubspec.yaml` dependencies.
   @override
-  Future<void> write(FileStructureStrategy strategy) async {
-    strategy.appendDataToFile(
+  Future<void> write(FileStructureStrategy? strategy) async {
+    strategy!.appendDataToFile(
       _addPackage,
-      strategy.GENERATED_PROJECT_PATH,
+      strategy.GENERATED_PROJECT_PATH!,
       _PUBSPEC_YAML_NAME,
       createFileIfNotFound: false,
     );

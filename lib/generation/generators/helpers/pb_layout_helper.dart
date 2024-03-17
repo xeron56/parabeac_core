@@ -15,7 +15,7 @@ class PBLayoutManager implements PBGenHelper {
       var buffer = StringBuffer();
       var body = _registeredGenLayouts
           .firstWhere((layout) => layout.runtimeType == source.runtimeType)
-          .generator
+          .generator!
           .generate(source, generatorContext);
       buffer.write(body);
 
@@ -35,7 +35,7 @@ class PBLayoutManager implements PBGenHelper {
       //throw NullThrownError();
     }
     if (!containsIntermediateNode(generator)) {
-      _registeredGenLayouts.add(generator);
+      _registeredGenLayouts.add(generator as PBLayoutIntermediateNode);
     }
   }
 }

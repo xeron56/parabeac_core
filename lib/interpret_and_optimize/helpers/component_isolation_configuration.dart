@@ -16,20 +16,20 @@ class ComponentIsolationConfiguration {
   ComponentIsolationConfiguration._internal(this.generator, this.service);
 
   factory ComponentIsolationConfiguration.getConfiguration(
-    String type,
-    PBGenerationProjectData projectData,
-    IntegrationLevel integrationLevel,
+    String? type,
+    PBGenerationProjectData? projectData,
+    IntegrationLevel? integrationLevel,
   ) {
     if (integrationLevel == IntegrationLevel.themes) {
       return null;
     }
-    switch (type.toLowerCase()) {
+    switch (type!.toLowerCase()) {
       case 'widgetbook':
         return ComponentIsolationConfiguration._internal(
-            WidgetbookGenerator(projectData), WidgetBookService());
+            WidgetbookGenerator(projectData!), WidgetBookService());
       case 'dashbook':
         return ComponentIsolationConfiguration._internal(
-            DashbookGenerator(projectData), DashbookService());
+            DashbookGenerator(projectData!), DashbookService());
       default:
         return null;
     }

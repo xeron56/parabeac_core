@@ -11,10 +11,10 @@ class ColumnOverlappingException extends LayoutException
   bool testException(
       PBIntermediateNode currentNode, PBIntermediateNode incomingNode) {
     return (areXCoordinatesOverlapping(
-            currentNode.frame.topLeft,
-            currentNode.frame.bottomRight,
-            incomingNode.frame.topLeft,
-            currentNode.frame.bottomRight) &&
+            currentNode.frame!.topLeft,
+            currentNode.frame!.bottomRight,
+            incomingNode.frame!.topLeft,
+            currentNode.frame!.bottomRight) &&
         (currentNode is PBLayoutIntermediateNode &&
             currentNode is! Group &&
             currentNode is! PBIntermediateStackLayout));
@@ -26,10 +26,10 @@ class RowOverlappingException extends LayoutException with AxisComparisonRule {
   bool testException(
       PBIntermediateNode currentNode, PBIntermediateNode incomingNode) {
     return (areYCoordinatesOverlapping(
-            currentNode.frame.topLeft,
-            currentNode.frame.bottomRight,
-            incomingNode.frame.topLeft,
-            incomingNode.frame.bottomRight) &&
+            currentNode.frame!.topLeft,
+            currentNode.frame!.bottomRight,
+            incomingNode.frame!.topLeft,
+            incomingNode.frame!.bottomRight) &&
         (currentNode is PBLayoutIntermediateNode &&
             currentNode is! Group &&
             currentNode is! PBIntermediateStackLayout));

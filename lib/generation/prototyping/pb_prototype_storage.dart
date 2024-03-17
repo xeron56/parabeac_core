@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:parabeac_core/generation/prototyping/pb_prototype_aggregation_service.dart';
 import 'package:parabeac_core/interpret_and_optimize/entities/interfaces/pb_inherited_intermediate.dart';
 import 'package:parabeac_core/interpret_and_optimize/entities/subclasses/pb_intermediate_node.dart';
@@ -50,39 +51,38 @@ class PBPrototypeStorage {
 
   PBIntermediateNode getAllPrototypeByID(String id) {
     var node = getPrototype(id);
-    node ??= getPrototypeInstance(id);
+    node ??= getPrototypeInstance(id)!;
     return node;
   }
 
   PBIntermediateNode getPrototype(String id) {
     var node = getPrototypeNode(id);
     node ??= getPageNode(id);
-    return node;
+    return node!;
   }
 
   bool removePageWithID(String id) {
     return (_pbPages.remove(id) != null);
   }
 
-  PBIntermediateNode getPrototypeInstance(String id) {
+  PBIntermediateNode? getPrototypeInstance(String id) {
     return _pbPrototypeInstanceNodes[id];
   }
 
-  PBIntermediateNode getPageNode(String id) => _pbPages['$id'];
+  PBIntermediateNode? getPageNode(String id) => _pbPages['$id'];
 
-  PBIntermediateNode getPageNodeById(String pageID) =>
-      _pbPages.values.firstWhere(
+  PBIntermediateNode? getPageNodeById(String? pageID) =>
+      _pbPages.values.firstWhereOrNull(
         (element) => element.UUID == pageID,
-        orElse: () => null,
       );
 
-  PBIntermediateNode getPrototypeNode(String id) =>
+  PBIntermediateNode? getPrototypeNode(String id) =>
       _pbPrototypeInstanceNodes['$id'];
 
-  String getNameOfPageWithID(String id) {
+  String? getNameOfPageWithID(String id) {
     return (_pbPages.containsKey(id) && _pbPages[id] is PBInheritedIntermediate)
         ? (_pbPages[id] as PBInheritedIntermediate)
-            .prototypeNode
+            .prototypeNode!
             .destinationName
         : null;
   }

@@ -13,7 +13,7 @@ class WriteScreenCommand extends NodeFileStructureCommand {
 
   static final SCREEN_PATH = GetIt.I.get<PathService>().viewsRelativePath;
 
-  WriteScreenCommand(String UUID, this.name, this.relativePath, String code,
+  WriteScreenCommand(String? UUID, this.name, this.relativePath, String? code,
       {FileOwnership ownership = FileOwnership.PBC,
       this.fileExtension = '.dart'})
       : super(UUID, code, ownership);
@@ -22,9 +22,9 @@ class WriteScreenCommand extends NodeFileStructureCommand {
   ///
   /// Returns path to the file that was created.
   @override
-  Future<String> write(FileStructureStrategy strategy) {
+  Future<String> write(FileStructureStrategy? strategy) {
     var absPath =
-        p.join(strategy.GENERATED_PROJECT_PATH, SCREEN_PATH, relativePath);
+        p.join(strategy!.GENERATED_PROJECT_PATH!, SCREEN_PATH, relativePath);
     strategy.writeDataToFile(code, absPath, name,
         UUID: UUID, ownership: ownership, ext: fileExtension);
     return Future.value(p.join(absPath, name));

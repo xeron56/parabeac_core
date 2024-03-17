@@ -6,10 +6,10 @@ import 'package:path/path.dart' as p;
 /// The [FileStructureCommand]s are send to the [FileStructureCommand] that is responsible for
 /// executing the command and actually writing them into the file system.
 abstract class FileStructureCommand {
-  final String UUID;
+  final String? UUID;
 
   FileStructureCommand(this.UUID);
 
   /// Method that executes the [FileStructureCommand]'s action.
-  Future<dynamic> write(FileStructureStrategy strategy);
+  Future<dynamic> write(FileStructureStrategy? strategy);
 }

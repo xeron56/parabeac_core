@@ -10,7 +10,7 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 import '../import_generator.dart';
 
 class PBBitmapGenerator extends PBGenerator {
-  var _sizehelper;
+  late var _sizehelper;
 
   PBBitmapGenerator() : super() {
     _sizehelper = PBSizeHelper();
@@ -18,19 +18,19 @@ class PBBitmapGenerator extends PBGenerator {
 
   @override
   String generate(
-    PBIntermediateNode source,
-    PBContext generatorContext,
+    PBIntermediateNode? source,
+    PBContext? generatorContext,
   ) {
     var buffer = StringBuffer();
-    var imageOverride = OverrideHelper.getProperty(source.UUID, 'image');
+    var imageOverride = OverrideHelper.getProperty(source!.UUID, 'image');
 
     var imageFormat = 'Image';
 
-    if ((source as InheritedBitmap).referenceImage.endsWith('.svg')) {
-      generatorContext.project.genProjectData
+    if ((source as InheritedBitmap).referenceImage!.endsWith('.svg')) {
+      generatorContext!.project!.genProjectData!
           .addDependencies('flutter_svg', '^1.0.3');
 
-      generatorContext.managerData
+      generatorContext.managerData!
           .addImport(FlutterImport('flutter_svg.dart', 'flutter_svg'));
 
       imageFormat = 'SvgPicture';
@@ -51,7 +51,7 @@ class PBBitmapGenerator extends PBGenerator {
 
     var imagePath = source is InheritedBitmap
         ? 'assets/${source.referenceImage}' // Assuming PBDL will give us reference to image in the form of `image/<image_name>.png`
-        : ('assets/images/' + source.UUID + '.png');
+        : ('assets/images/' + source.UUID! + '.png');
 
     buffer.write('\'$imagePath\', ');
     // Point package to self (for component isolation support)
@@ -72,24 +72,24 @@ class PBBitmapGenerator extends PBGenerator {
       return isVertical ? 'fit: BoxFit.fitHeight,' : 'fit: BoxFit.fitWidth,';
     }
 
-    var constraints = node.constraints;
-    if (constraints.pinLeft &&
-        constraints.pinBottom &&
-        constraints.pinRight &&
-        constraints.pinTop) {
+    var constraints = node.constraints!;
+    if (constraints.pinLeft! &&
+        constraints.pinBottom! &&
+        constraints.pinRight! &&
+        constraints.pinTop!) {
       // In case all pins are set
       return 'fit: BoxFit.contain,';
-    } else if (constraints.pinLeft && constraints.pinRight) {
+    } else if (constraints.pinLeft! && constraints.pinRight!) {
       // In case it has set both horizontal pins
       return 'fit: BoxFit.fitWidth,';
-    } else if (constraints.pinBottom && constraints.pinTop) {
+    } else if (constraints.pinBottom! && constraints.pinTop!) {
       // In case it has set both vertical pins
       return 'fit: BoxFit.fitHeight,';
-    } else if ((constraints.pinLeft ^ constraints.pinRight) &&
-        (constraints.pinTop ^ constraints.pinBottom)) {
+    } else if ((constraints.pinLeft! ^ constraints.pinRight!) &&
+        (constraints.pinTop! ^ constraints.pinBottom!)) {
       // In case it has set one pin per side
       return 'fit: BoxFit.none,';
-    } else if (constraints.fixedHeight && constraints.fixedWidth) {
+    } else if (constraints.fixedHeight! && constraints.fixedWidth!) {
       // In case scale is set on both directions
       return 'fit: BoxFit.scaleDown,';
     } else {

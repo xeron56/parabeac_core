@@ -11,7 +11,7 @@ import 'package:uuid/uuid.dart';
 import 'package:path/path.dart' as p;
 
 mixin PBPlatformOrientationGeneration {
-  NodeFileStructureCommand generatePlatformInstance(
+  NodeFileStructureCommand? generatePlatformInstance(
       Map<String, List<String>> platformsMap,
       String screenName,
       FileStructureStrategy strategy,
@@ -20,7 +20,7 @@ mixin PBPlatformOrientationGeneration {
     var cookedImports = _cookImports(
         rawImports,
         p.join(
-          strategy.GENERATED_PROJECT_PATH,
+          strategy.GENERATED_PROJECT_PATH!,
           WriteScreenCommand.SCREEN_PATH,
           formatedName,
           '${formatedName}_platform_builder.dart',
@@ -79,21 +79,21 @@ mixin PBPlatformOrientationGeneration {
     return result;
   }
 
-  void getPlatformOrientationName(PBIntermediateNode node, PBContext context) {
+  void getPlatformOrientationName(PBIntermediateNode? node, PBContext context) {
     var map = PBPlatformOrientationLinkerService()
-        .getPlatformOrientationData(context.tree.identifier);
+        .getPlatformOrientationData(context.tree!.identifier);
 
     if (map.length > 1) {
       var platform = PBPlatformOrientationLinkerService()
-          .stripPlatform(context.tree.generationViewData.platform);
-      if (!node.name.contains('_$platform')) {
+          .stripPlatform(context.tree!.generationViewData!.platform);
+      if (!node!.name!.contains('_$platform')) {
         node.name += '_$platform';
       }
     }
-    if (map[context.tree.generationViewData.platform].length > 1) {
+    if (map[context.tree!.generationViewData!.platform]!.length > 1) {
       var orientation = PBPlatformOrientationLinkerService()
-          .stripOrientation(context.tree.generationViewData.orientation);
-      if (!node.name.contains('_$orientation')) {
+          .stripOrientation(context.tree!.generationViewData!.orientation);
+      if (!node!.name!.contains('_$orientation')) {
         node.name += '_$orientation';
       }
     }

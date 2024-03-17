@@ -8,7 +8,7 @@ class PBSizeHelper extends PBAttributesHelper {
   PBSizeHelper() : super();
 
   @override
-  String generate(PBIntermediateNode source, PBContext context) {
+  String generate(PBIntermediateNode? source, PBContext? context) {
     if (context == null) {
       print('Tried generating a size but couldn\'t retrieve [currentContext]');
       return '';
@@ -22,16 +22,16 @@ class PBSizeHelper extends PBAttributesHelper {
     return buffer.toString();
   }
 
-  String getSize(PBIntermediateNode source, PBContext context, bool isHeight) {
+  String getSize(PBIntermediateNode? source, PBContext context, bool isHeight) {
     var dimentionString = isHeight ? 'Height' : 'Width';
     var lowerCaseDimentionString = dimentionString.toLowerCase();
     String sizeString;
     final buffer = StringBuffer();
 
-    double relativeSize = isHeight ? source.frame.height : source.frame.width;
+    double relativeSize = isHeight ? source!.frame!.height as double : source!.frame!.width as double;
 
     // Add relative sizing if the widget has context
-    num screenSize;
+    num? screenSize;
 
     if (context.screenFrame != null) {
       screenSize =
@@ -46,16 +46,16 @@ class PBSizeHelper extends PBAttributesHelper {
               : relativeSize;
 
       var size = (isHeight
-              ? source.constraints.fixedHeight
-              : source.constraints.fixedWidth)
+              ? source.constraints!.fixedHeight!
+              : source.constraints!.fixedWidth!)
           ? (isHeight
-              ? source.frame.height.toString()
-              : source.frame.width.toString())
+              ? source.frame!.height.toString()
+              : source.frame!.width.toString())
           : 'MediaQuery.of(context).size.$lowerCaseDimentionString * ${relativeSize.toString()}';
 
       sizeString = '$lowerCaseDimentionString: $size,';
     } else if (context.sizingContext == SizingValueContext.LayoutBuilderValue) {
-      relativeSize = relativeSize / screenSize;
+      relativeSize = relativeSize / screenSize!;
 
       // Size for LayoutBuilder
       sizeString =
@@ -64,14 +64,14 @@ class PBSizeHelper extends PBAttributesHelper {
         SizingValueContext.LayoutBuilderStatefulValue) {
       // Add case where width and/or height is static
       var isFixed = isHeight
-          ? source.constraints.fixedHeight
-          : source.constraints.fixedWidth;
+          ? source.constraints!.fixedHeight!
+          : source.constraints!.fixedWidth!;
 
       if (isFixed) {
         // Size for constants value
         sizeString = '$lowerCaseDimentionString: ${relativeSize.toString()},';
       } else {
-        relativeSize = relativeSize / screenSize;
+        relativeSize = relativeSize / screenSize!;
 
         // Size for LayoutBuilder
         sizeString =
@@ -83,12 +83,12 @@ class PBSizeHelper extends PBAttributesHelper {
     }
 
     // Determine if it is going to show width and height
-    var show = true;
+    bool? show = true;
     if (source is PBContainer) {
       show = isHeight ? source.showHeight : source.showWidth;
     }
 
-    if (relativeSize != null && relativeSize > 0 && show) {
+    if (relativeSize != null && relativeSize > 0 && show!) {
       buffer.write(sizeString);
     }
 

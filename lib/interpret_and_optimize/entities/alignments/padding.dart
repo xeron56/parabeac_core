@@ -8,15 +8,15 @@ import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 import 'dart:math';
 
 class Padding extends PBVisualIntermediateNode {
-  double left, right, top, bottom, screenWidth, screenHeight;
+  double? left, right, top, bottom, screenWidth, screenHeight;
 
-  Map padding;
+  Map? padding;
 
-  PBIntermediateConstraints childToParentConstraints;
+  PBIntermediateConstraints? childToParentConstraints;
   
   Padding(
-    String UUID,
-    Rectangle3D frame,
+    String? UUID,
+    Rectangle3D? frame,
     this.childToParentConstraints, {
     this.left = 0,
     this.right = 0,
@@ -33,29 +33,29 @@ class Padding extends PBVisualIntermediateNode {
 
   @override
   void handleChildren(PBContext context) {
-    screenHeight = context.screenFrame.height;
-    screenWidth = context.screenFrame.width;
+    screenHeight = context.screenFrame.height as double?;
+    screenWidth = context.screenFrame.width as double?;
 
     /// Calculating the percentage of the padding in relation to the [screenHeight] and the [screenWidth].
     /// FIXME: creating a lifecyle between the [PBGenerator] and the [PBIntermediateNode] where it provides a callback that
     /// executes just before the generator generates the code for the [PBIntermediateNode].
     screenHeight = screenHeight == 0 ? 1 : screenHeight;
     screenWidth = screenWidth == 0 ? 1 : screenWidth;
-    if (left != null && !childToParentConstraints.pinLeft) {
-      left = (left / screenWidth);
-      left = left < 0.01 ? 0.0 : left;
+    if (left != null && !childToParentConstraints!.pinLeft!) {
+      left = (left! / screenWidth!);
+      left = left! < 0.01 ? 0.0 : left;
     }
-    if (right != null && !childToParentConstraints.pinRight) {
-      right = right / screenWidth;
-      right = right < 0.01 ? 0.0 : right;
+    if (right != null && !childToParentConstraints!.pinRight!) {
+      right = right! / screenWidth!;
+      right = right! < 0.01 ? 0.0 : right;
     }
-    if (top != null && !childToParentConstraints.pinTop) {
-      top = top / screenHeight;
-      top = top < 0.01 ? 0.0 : top;
+    if (top != null && !childToParentConstraints!.pinTop!) {
+      top = top! / screenHeight!;
+      top = top! < 0.01 ? 0.0 : top;
     }
-    if (bottom != null && !childToParentConstraints.pinBottom) {
-      bottom = bottom / screenHeight;
-      bottom = bottom < 0.01 ? 0.0 : bottom;
+    if (bottom != null && !childToParentConstraints!.pinBottom!) {
+      bottom = bottom! / screenHeight!;
+      bottom = bottom! < 0.01 ? 0.0 : bottom;
     }
     super.handleChildren(context);
   }
@@ -80,5 +80,5 @@ class Padding extends PBVisualIntermediateNode {
   // }
 
   @override
-  PBIntermediateNode fromJson(Map<String, dynamic> json) => null;
+  PBIntermediateNode? fromJson(Map<String, dynamic> json) => null;
 }
