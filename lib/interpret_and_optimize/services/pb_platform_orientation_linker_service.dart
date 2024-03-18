@@ -77,7 +77,8 @@ class PBPlatformOrientationLinkerService extends AITHandler {
                 currTree.generationViewData!.platform) {
           // Rename the tree if both trees have the same orientation and platform
           tree.rootNode!.name = treeName + '_${_mapCounter[iterTreeName]}';
-          _mapCounter[treeName]++;
+          //_mapCounter[treeName]++;
+          _mapCounter[iterTreeName] = _mapCounter[iterTreeName]! + 1;
         }
       }
 

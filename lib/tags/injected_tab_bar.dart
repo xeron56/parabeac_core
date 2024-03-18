@@ -176,6 +176,7 @@ class PBTabBarGenerator extends PBGenerator {
 
       return '$className()';
     }
+    throw UnsupportedError('Source is not of type InjectedTabBar');
   }
 
   String tabBarBody(

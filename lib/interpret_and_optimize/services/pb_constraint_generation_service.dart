@@ -10,6 +10,8 @@ import 'package:parabeac_core/interpret_and_optimize/entities/subclasses/pb_layo
 import 'package:parabeac_core/interpret_and_optimize/helpers/pb_context.dart';
 import 'package:parabeac_core/interpret_and_optimize/helpers/pb_intermediate_node_tree.dart';
 
+import '../entities/subclasses/pb_intermediate_node.dart';
+
 ///tree.where((element) => element != null).toList().reversed.map((e) => e.name).toList()
 class PBConstraintGenerationService extends AITHandler {
   PBConstraintGenerationService();
@@ -22,16 +24,35 @@ class PBConstraintGenerationService extends AITHandler {
       return Future.value(tree);
     }
 
-    for (var node
-        in tree.whereNotNull().toList().reversed) {
-      var children = tree.childrenOf(node);
-      var child = children.isEmpty ? null : children.first;
-      if (node.constraints == null) {
-        if (child!.constraints == null) {
-          node.constraints = PBIntermediateConstraints(
-              pinBottom: false, pinLeft: false, pinRight: false, pinTop: false);
-        } else {
-          node.constraints = child.constraints;
+    // for (var node in tree.whereNotNull().toList().reversed) {
+    //   var children = tree.childrenOf(node);
+    //   var child = children.isEmpty ? null : children.first;
+
+    //   if (node.constraints == null) {
+    //     if (child!.constraints == null) {
+    //       node.constraints = PBIntermediateConstraints(
+    //           pinBottom: false, pinLeft: false, pinRight: false, pinTop: false);
+    //     } else {
+    //       node.constraints = child.constraints;
+    //     }
+    //   }
+    // }
+
+    for (var node in tree.whereNotNull().toList().reversed) {
+      if (node is PBIntermediateNode) {
+        var children = tree.childrenOf(node);
+        var child = children.isEmpty ? null : children.first;
+
+        if (node.constraints == null) {
+          if (child!.constraints == null) {
+            node.constraints = PBIntermediateConstraints(
+                pinBottom: false,
+                pinLeft: false,
+                pinRight: false,
+                pinTop: false);
+          } else {
+            node.constraints = child.constraints;
+          }
         }
       }
     }

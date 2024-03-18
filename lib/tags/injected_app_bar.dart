@@ -159,6 +159,7 @@ class PBAppBarGenerator extends PBGenerator {
 
       return '$className()';
     }
+    throw UnsupportedError('Source is not an InjectedAppbar');
   }
 
   String appBarBody(

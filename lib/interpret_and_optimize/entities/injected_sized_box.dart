@@ -44,5 +44,6 @@ class PBSizedBoxGenerator extends PBGenerator {
 
       return buffer.toString();
     }
+    return '';
   }
 }

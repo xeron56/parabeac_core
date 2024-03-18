@@ -22,7 +22,7 @@ class PBAlignGenerator extends PBGenerator {
       try {
         // source.child.currentContext = source.currentContext;
         buffer.write(
-            'child: ${sourceChild.generator!.generate(sourceChild, context)},');
+            'child: ${sourceChild!.generator!.generate(sourceChild, context)},');
       } catch (e, stackTrace) {
         Sentry.captureException(e, stackTrace: stackTrace);
         log.error(e.toString());
@@ -31,5 +31,7 @@ class PBAlignGenerator extends PBGenerator {
       buffer.write(')');
       return buffer.toString();
     }
+    // return an empty string if the source is not of type InjectedAlign
+    return '';
   }
 }

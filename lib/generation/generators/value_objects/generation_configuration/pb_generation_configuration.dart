@@ -251,26 +251,25 @@ abstract class GenerationConfiguration with PBPlatformOrientationGeneration {
   /// This method takes a command and checks if one of its child screens
   /// is the home screen for the project, if so modify main
   /// to redirect to the proper builder
-  bool setMainForPlatform(WriteScreenCommand newCommand, String screenName) {
-    var platformOrientationMap =
-        poLinker!.getPlatformOrientationData(screenName);
+bool setMainForPlatform(WriteScreenCommand newCommand, String screenName) {
+  var platformOrientationMap = poLinker!.getPlatformOrientationData(screenName);
 
-    platformOrientationMap.forEach((key, map) {
-      map.forEach((key, tree) {
-        if (tree.rootNode is InheritedScaffold &&
-            (tree.rootNode as InheritedScaffold).isHomeScreen!) {
-          fileStructureStrategy!.commandCreated(EntryFileCommand(
-              entryScreenName:
-                  newCommand.name.replaceAll('.dart', '').pascalCase,
-              entryScreenImport: _importProcessor!
-                  .getFormattedImports(newCommand.UUID,
-                      importMapper: (import) =>
-                          FlutterImport(import, MainInfo().projectName))
-                  .join('\n')));
-          return true;
-        }
-      });
-    });
-    return false;
+  for (var entry in platformOrientationMap.entries) {
+    for (var tree in entry.value.values) {
+      if (tree.rootNode is InheritedScaffold &&
+          (tree.rootNode as InheritedScaffold).isHomeScreen!) {
+        fileStructureStrategy!.commandCreated(EntryFileCommand(
+            entryScreenName:
+                newCommand.name.replaceAll('.dart', '').pascalCase,
+            entryScreenImport: _importProcessor!
+                .getFormattedImports(newCommand.UUID,
+                    importMapper: (import) =>
+                        FlutterImport(import, MainInfo().projectName))
+                .join('\n')));
+        return true;
+      }
+    }
   }
+  return false;
+}
 }

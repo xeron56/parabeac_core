@@ -70,5 +70,6 @@ class MyApp extends StatelessWidget {
     strategy!.writeDataToFile(
         code, strategy.GENERATED_PROJECT_PATH!, p.join('lib', mainFileName),
         UUID: UUID, ownership: ownership);
+   return Future.value(null);     
   }
 }

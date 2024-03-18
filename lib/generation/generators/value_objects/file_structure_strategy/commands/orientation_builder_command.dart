@@ -65,5 +65,6 @@ class OrientationBuilderCommand extends FileStructureCommand {
       UUID: UUID,
       ownership: FileOwnership.DEV,
     );
+    return Future.value(null);
   }
 }

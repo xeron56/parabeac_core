@@ -14,7 +14,7 @@ class SimpleBuilder extends Builder {
   @override
   Future<void> build(BuildStep buildStep) async {
     print('GENERATING CODE');
-    late Map<String, Object> source;
+    late Map<String, Object> source = {};
     final outputId = buildStep.inputId.changeExtension('.dart');
 
     if (source.containsKey(GLOBAL_SYMBOL_KEY)) {

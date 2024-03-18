@@ -19,5 +19,6 @@ class PBShapeGroupGen extends PBGenerator {
           'Image.asset(\'assets/images/${source.UUID}.png\', ${_sizehelper.generate(source)}), package: \'${MainInfo().projectName}\',');
       return buffer.toString();
     }
+    throw UnsupportedError('Source $source is not supported');
   }
 }

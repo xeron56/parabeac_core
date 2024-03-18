@@ -86,6 +86,7 @@ class FlutterProjectBuilder {
     } catch (e, stackStrace) {
       await Sentry.captureException(e, stackTrace: stackStrace);
       log.error(e.toString());
+      return Tuple2('', e.toString());
     }
   }
 

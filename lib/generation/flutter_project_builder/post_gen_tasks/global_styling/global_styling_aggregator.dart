@@ -60,7 +60,7 @@ class GlobalStylingAggregator {
         (globalStyles.themeColors != null &&
             globalStyles.themeColors!.isNotEmpty)) {
       /// Aggregate all colors
-      final globalColors = globalStyles.colors
+      final globalColors = globalStyles.colors!
         ..addAll(globalStyles.themeColors!);
       builder.postGenTasks.add(
         ColorsPostGenTask(
@@ -75,7 +75,7 @@ class GlobalStylingAggregator {
             globalStyles.textStyles!.isNotEmpty) ||
         (globalStyles.themeTextStyles != null &&
             globalStyles.themeTextStyles!.isNotEmpty)) {
-      final globalTextStyles = globalStyles.textStyles
+      final globalTextStyles = globalStyles.textStyles!
         ..addAll(globalStyles.themeTextStyles!);
       builder.postGenTasks.add(
         TextStylesPostGenTask(

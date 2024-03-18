@@ -21,7 +21,7 @@ class ComponentIsolationConfiguration {
     IntegrationLevel? integrationLevel,
   ) {
     if (integrationLevel == IntegrationLevel.themes) {
-      return null;
+      throw Exception('Themes are not supported for component isolation');
     }
     switch (type!.toLowerCase()) {
       case 'widgetbook':
@@ -31,7 +31,7 @@ class ComponentIsolationConfiguration {
         return ComponentIsolationConfiguration._internal(
             DashbookGenerator(projectData!), DashbookService());
       default:
-        return null;
+        throw ArgumentError('Invalid type: $type' );
     }
   }
 }

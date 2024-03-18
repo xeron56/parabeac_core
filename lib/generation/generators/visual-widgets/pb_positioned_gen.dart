@@ -68,6 +68,8 @@ class PBPositionedGenerator extends PBGenerator {
       buffer.write(')');
       return buffer.toString();
     }
+    // return an empty string if the source is not of type InjectedPositioned
+    return '';
   }
 
   /// Getting the boilerplate needed to fill in the generation depending on the [sizingValueContext].
