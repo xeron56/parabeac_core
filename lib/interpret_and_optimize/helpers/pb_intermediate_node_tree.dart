@@ -168,7 +168,7 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode?> {
 
   @override
   void addEdges(Vertex<PBIntermediateNode?> parent,
-      [List<Vertex<PBIntermediateNode?>?> children]) {
+      [List<Vertex<PBIntermediateNode?>?>? children]) {
     if (children == null) {}
     // var children = childrenVertices.map((e) => e).toList();
 
@@ -195,7 +195,7 @@ class PBIntermediateTree extends DirectedGraph<PBIntermediateNode?> {
       return super.addEdges(parent!, children);
     };
     (parent as PBIntermediateNode).childrenStrategy.addChild(
-        parent, children.cast<PBIntermediateNode>(), addChildren, this);
+        parent, children?.cast<PBIntermediateNode>(), addChildren, this);
   }
 
   @override

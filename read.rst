@@ -9,3 +9,11 @@ https://www.figma.com/file/QfnVkTxGTygR4lERQ5EUkq/Simy---AI-Chatbot-App?type=des
 fvm dart --debug --no-sound-null-safety parabeac.dart -f NFpMwPburgAd1UuYEs53UH -k figd_diKCE9I9wq8B27ncXFtVDlSznRiTAeDoBTW6j1n4 -o /workspaces/testapps/
 
  fvm dart  parabeac.dart -f QfnVkTxGTygR4lERQ5EUkq -k figd_diKCE9I9wq8B27ncXFtVDlSznRiTAeDoBTW6j1n4 -o /workspaces/codeoutput/aichatapp/
+
+ echo 'export PATH="$PATH:/opt/flutter/bin"' >> $HOME/.bashrc
+//set dart path
+echo 'export PATH="$PATH:/opt/flutter/bin/cache/dart-sdk/bin"' >> $HOME/.bashrc
+
+ source $HOME/.bashrc
+
+

@@ -109,8 +109,10 @@ abstract class PBIntermediateNode
   /// null if the [PBAttribute] does not exist.
   PBIntermediateNode? getAttributeNamed(
       PBIntermediateTree tree, String attributeName) {
-    return tree.edges(this).cast<PBIntermediateNode>().firstWhereOrNull(
-        (child) => child.attributeName == attributeName);
+    return tree
+        .edges(this)
+        .cast<PBIntermediateNode>()
+        .firstWhereOrNull((child) => child.attributeName == attributeName);
   }
 
   List<PBIntermediateNode> getAllAtrributeNamed(
@@ -130,9 +132,10 @@ abstract class PBIntermediateNode
           this,
           allApperences
               ? tree
-                  .edges(this)
-                  .cast<PBIntermediateNode>()
-                  .map((child) => child.attributeName = attributeName) as List<Vertex<PBIntermediateNode?>>?
+                      .edges(this)
+                      .cast<PBIntermediateNode>()
+                      .map((child) => child.attributeName = attributeName)
+                  as List<Vertex<PBIntermediateNode?>>?
               : tree.edges(this).first as List<Vertex<PBIntermediateNode?>>?);
       tree.addEdges(this, [node]);
     }
@@ -232,8 +235,10 @@ class Rectangle3D<T extends num> extends Rectangle<T> {
   ///is primarly for sorting elements in [PBStackIntermediateLayout] to
   ///place to correct [PBIntermediateNode]s on top.
   num? z;
+  // Rectangle3D(num left, num top, num width, num height, this.z)
+  //     : super(left as T*, top as T*, width as T*, height as T*);
   Rectangle3D(num left, num top, num width, num height, this.z)
-      : super(left as T*, top as T*, width as T*, height as T*);
+      : super(left as T, top as T, width as T, height as T);
 
   @override
   Rectangle<T> boundingBox(Rectangle<T> frame) {
@@ -261,13 +266,20 @@ class Rectangle3D<T extends num> extends Rectangle<T> {
     return Rectangle3D<T>(left, top, width, height, z);
   }
 
-  static Map toJson(Rectangle3D Rectangle3D) => {
-        'height': Rectangle3D.height,
-        'width': Rectangle3D.width,
-        'x': Rectangle3D.left,
-        'y': Rectangle3D.top,
-        'z': Rectangle3D.z
-      };
+  static Map toJson(Rectangle3D? rectangle3D) {
+    if (rectangle3D == null) {
+      return {};
+    }
+    return {
+      'height': rectangle3D.height,
+      'width': rectangle3D.width,
+      'x': rectangle3D.left,
+      'y': rectangle3D.top,
+      'z': rectangle3D.z
+    };
+  }
+
+
 
   Rectangle3D copyWith({
     num? left,

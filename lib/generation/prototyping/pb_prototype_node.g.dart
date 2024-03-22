@@ -6,12 +6,11 @@ part of 'pb_prototype_node.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PrototypeNode _$PrototypeNodeFromJson(Map<String, dynamic> json) {
-  return PrototypeNode(
-    destinationUUID: json['destinationUUID'] as String?,
-    destinationName: json['destinationName'] as String?,
-  );
-}
+PrototypeNode _$PrototypeNodeFromJson(Map<String, dynamic> json) =>
+    PrototypeNode(
+      destinationUUID: json['destinationUUID'] as String?,
+      destinationName: json['destinationName'] as String?,
+    );
 
 Map<String, dynamic> _$PrototypeNodeToJson(PrototypeNode instance) =>
     <String, dynamic>{

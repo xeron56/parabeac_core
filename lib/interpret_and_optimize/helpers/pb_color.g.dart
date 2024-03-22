@@ -6,14 +6,12 @@ part of 'pb_color.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PBColor _$PBColorFromJson(Map<String, dynamic> json) {
-  return PBColor(
-    json['a'] as num?,
-    json['r'] as num?,
-    json['g'] as num?,
-    json['b'] as num?,
-  );
-}
+PBColor _$PBColorFromJson(Map<String, dynamic> json) => PBColor(
+      json['a'] as num?,
+      json['r'] as num?,
+      json['g'] as num?,
+      json['b'] as num?,
+    );
 
 Map<String, dynamic> _$PBColorToJson(PBColor instance) => <String, dynamic>{
       'a': instance.a,

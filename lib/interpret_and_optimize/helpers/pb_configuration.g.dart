@@ -1,30 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-import 'package:collection/collection.dart' show IterableExtension;
 part of 'pb_configuration.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PBConfiguration _$PBConfigurationFromJson(Map<String, dynamic> json) {
-  return PBConfiguration(
-    json['scaling'] as bool? ?? true,
-    json['breakpoints'] as Map<String, dynamic>?,
-    figmaOauthToken: json['oauth'] as String?,
-    figmaKey: json['figKey'] as String?,
-    figmaProjectID: json['fig'] as String?,
-    projectName: json['project-name'] as String? ?? 'foo',
-    outputPath: json['out'] as String?,
-    pbdlPath: json['pbdl-in'] as String?,
-    exportPBDL: json['export-pbdl'] as bool? ?? false,
-    folderArchitecture: json['folderArchitecture'] as String? ?? 'domain',
-    componentIsolation: json['componentIsolation'] as String? ?? 'None',
-    integrationLevel:
-        _$enumDecodeNullable(_$IntegrationLevelEnumMap, json['project-type']) ??
-            IntegrationLevel.screens,
-  )..designSystem = json['designSystem'] as String? ?? 'material3';
-}
+PBConfiguration _$PBConfigurationFromJson(Map<String, dynamic> json) =>
+    PBConfiguration(
+      json['scaling'] as bool? ?? true,
+      json['breakpoints'] as Map<String, dynamic>?,
+      figmaOauthToken: json['oauth'] as String?,
+      figmaKey: json['figKey'] as String?,
+      figmaProjectID: json['fig'] as String?,
+      projectName: json['project-name'] as String? ?? 'foo',
+      outputPath: json['out'] as String?,
+      pbdlPath: json['pbdl-in'] as String?,
+      exportPBDL: json['export-pbdl'] as bool? ?? false,
+      folderArchitecture: json['folderArchitecture'] as String? ?? 'domain',
+      componentIsolation: json['componentIsolation'] as String? ?? 'None',
+      integrationLevel: $enumDecodeNullable(
+              _$IntegrationLevelEnumMap, json['project-type']) ??
+          IntegrationLevel.screens,
+    )..designSystem = json['designSystem'] as String? ?? 'material3';
 
 Map<String, dynamic> _$PBConfigurationToJson(PBConfiguration instance) =>
     <String, dynamic>{
@@ -42,38 +40,6 @@ Map<String, dynamic> _$PBConfigurationToJson(PBConfiguration instance) =>
       'componentIsolation': instance.componentIsolation,
       'project-type': _$IntegrationLevelEnumMap[instance.integrationLevel],
     };
-
-T? _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-
-  final value = enumValues.entries
-      .singleWhereOrNull((e) => e.value == source)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T? _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
 
 const _$IntegrationLevelEnumMap = {
   IntegrationLevel.themes: 'themes',

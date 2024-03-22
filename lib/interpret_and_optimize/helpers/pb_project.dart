@@ -127,7 +127,7 @@ class PBProject {
         }).toList();
         // Remove screens so they do not get added
         screens.removeWhere((element) => element == null);
-        trees.addAll(screens);
+        trees.addAll(screens as Iterable<PBIntermediateTree>);
       }
     });
 

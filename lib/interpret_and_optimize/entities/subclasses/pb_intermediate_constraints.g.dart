@@ -7,16 +7,15 @@ part of 'pb_intermediate_constraints.dart';
 // **************************************************************************
 
 PBIntermediateConstraints _$PBIntermediateConstraintsFromJson(
-    Map<String, dynamic> json) {
-  return PBIntermediateConstraints(
-    pinLeft: json['pinLeft'] as bool?,
-    pinRight: json['pinRight'] as bool?,
-    pinTop: json['pinTop'] as bool?,
-    pinBottom: json['pinBottom'] as bool?,
-    fixedHeight: json['fixedHeight'] as bool?,
-    fixedWidth: json['fixedWidth'] as bool?,
-  );
-}
+        Map<String, dynamic> json) =>
+    PBIntermediateConstraints(
+      pinLeft: json['pinLeft'] as bool? ?? false,
+      pinRight: json['pinRight'] as bool? ?? false,
+      pinTop: json['pinTop'] as bool? ?? false,
+      pinBottom: json['pinBottom'] as bool? ?? false,
+      fixedHeight: json['fixedHeight'] as bool? ?? false,
+      fixedWidth: json['fixedWidth'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PBIntermediateConstraintsToJson(
         PBIntermediateConstraints instance) =>
