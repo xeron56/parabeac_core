@@ -16,4 +16,6 @@ echo 'export PATH="$PATH:/opt/flutter/bin/cache/dart-sdk/bin"' >> $HOME/.bashrc
 
  source $HOME/.bashrc
 
+https://www.figma.com/file/tq3jCTLwcAoHX0HDFPGvDL/Robot-Wallet---Crypto-iOS-UI-Kit?type=design&node-id=0%3A1&mode=design&t=W2da0KfxJPm15lEy-1
 
+dart  parabeac.dart -f tq3jCTLwcAoHX0HDFPGvDL -k figd_diKCE9I9wq8B27ncXFtVDlSznRiTAeDoBTW6j1n4 -o /workspaces/codeoutput/crypto/

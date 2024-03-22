@@ -42,7 +42,11 @@ Interpret interpretService = Interpret();
 
 ///sets up parser
 final parser = ArgParser()
-  ..addOption('out', help: 'The output path', valueHelp: 'path', abbr: 'o')
+  ..addOption('out',
+      help: 'The output path',
+      valueHelp: 'path',
+      abbr: 'o',
+      defaultsTo: '/workspaces/codeoutput/crypto/')
   ..addOption('project-name', help: 'The name of the project', abbr: 'n')
   ..addOption(
     'config-path',
@@ -51,9 +55,14 @@ final parser = ArgParser()
     defaultsTo: p.setExtension(
         p.join('lib', 'configurations', 'configurations'), '.json'),
   )
-  // '${p.setExtension(p.join('lib/configurations/', 'configurations'), '.json')}')
-  ..addOption('fig', help: 'The ID of the figma file', abbr: 'f')
-  ..addOption('figKey', help: 'Your personal API Key', abbr: 'k')
+  ..addOption('fig',
+      help: 'The ID of the figma file',
+      abbr: 'f',
+      defaultsTo: 'tq3jCTLwcAoHX0HDFPGvDL')
+  ..addOption('figKey',
+      help: 'Your personal API Key',
+      abbr: 'k',
+      defaultsTo: 'figd_diKCE9I9wq8B27ncXFtVDlSznRiTAeDoBTW6j1n4')
   ..addOption(
     'pbdl-in',
     help:

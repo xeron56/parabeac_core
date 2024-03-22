@@ -7,7 +7,7 @@ late ArgResults argResults;
 
 // ignore: always_declare_return_types
 main(List<String> args) async {
-  var arguments = <String>['lib/main.dart'];
+  var arguments = <String>['/home/codespace/parabeac_core/lib/main.dart'];
 
   //sets up parser
   //wil set the hide option for help flag to true to
@@ -113,9 +113,13 @@ ${parser.usage}
   }
 
   /// To run parabeac-core
+  // var parabeaccore = await Process.start(
+  //   'dart',
+  //   arguments,
+  // );
   var parabeaccore = await Process.start(
-    'dart',
-    arguments,
+    'fvm',
+    ['dart', ...arguments],
   );
   await for (var event in parabeaccore.stdout.transform(utf8.decoder)) {
     print(event);
