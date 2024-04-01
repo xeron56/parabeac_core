@@ -20,3 +20,4 @@ debug
 
 # FVM Version Cache
 .fvm/
+read.rst
